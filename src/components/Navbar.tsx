@@ -7,7 +7,7 @@ import { LogIn, UserRoundPlus } from "lucide-react";
 import logo from "@/assets/dark-logo.png";
 import { useSetAtom, useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
-import { User } from "@/types";
+// import { User } from "@/types";
 import axios from "axios";
 import { env } from "@/config/env";
 export default function Navbar() {
@@ -17,7 +17,7 @@ export default function Navbar() {
     navigate("/");
   };
   const [token, setToken] = useState<string>("");
-  const [userInfo, setUserInfo] = useState<User>({} as User);
+  // const [userInfo, setUserInfo] = useState<User>({} as User);
   const setUserInfoGlobal = useSetAtom(userAtom);
   const [userInfoGlobal] = useAtom(userAtom);
   useEffect(() => {
@@ -27,13 +27,15 @@ export default function Navbar() {
       setUserInfoGlobal(jwtDecode(userToken));
       // setUserInfoGlobal(jwtDecode(userToken));
     }
-  }, [userInfo]);
+  }, []);
   useEffect(() => {
-    axios
-      .post(`${env.BASE_URL}/profile/get`, { email: userInfo.email })
-      .then((res) => {
-        setUserInfoGlobal(res.data.data.user);
-      });
+    if (userInfoGlobal) {
+      axios
+        .post(`${env.BASE_URL}/profile/get`, { email: userInfoGlobal?.email })
+        .then((res) => {
+          setUserInfoGlobal(res.data.data.user);
+        });
+    }
   }, []);
   const getFirstLetterUppercase = (str: string) => {
     if (str.length === 0) return "";
@@ -91,7 +93,7 @@ export default function Navbar() {
                   />
                 ) : (
                   <div className="w-10 h-10 rounded-full border border-accent/50  text-3xl">
-                    {getFirstLetterUppercase(userInfo.email)}
+                    {getFirstLetterUppercase(userInfoGlobal?.email || "")}
                   </div>
                 )}
               </button>
@@ -120,7 +122,7 @@ export default function Navbar() {
       {token != "" && (
         <UserMenu
           isOpen={isMenuOpen}
-          email={userInfo.email}
+          email={userInfoGlobal?.email || ""}
           picture={userInfoGlobal?.picture || ""}
           onClose={() => setIsMenuOpen(false)}
         />
