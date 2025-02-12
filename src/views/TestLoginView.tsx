@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { useCreateMetaAccount } from '../hooks/useMetaAccount';
+// import { useCreateMetaAccount } from '../hooks/useMetaAccount';
 import { Loader, CheckCircle2, AlertTriangle, RefreshCw, HelpCircle } from 'lucide-react';
 import Tooltip from '../components/ui/Tooltip';
 
 export default function TestLoginView() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [accountData, setAccountData] = useState<any>(null);
-  const createAccount = useCreateMetaAccount();
+  const [accountData] = useState<any>(null);
+  // const createAccount = useCreateMetaAccount();
 
   // Form state
   const [platform, setPlatform] = useState<'mt4' | 'mt5'>('mt5');
@@ -26,16 +26,16 @@ export default function TestLoginView() {
         throw new Error('All fields are required');
       }
 
-      const result = await createAccount.mutateAsync({
-        name: `${broker} ${platform.toUpperCase()}`,
-        login,
-        password,
-        server,
-        platform,
-        broker
-      });
+      // const result = await createAccount.mutateAsync({
+      //   name: `${broker} ${platform.toUpperCase()}`,
+      //   login,
+      //   password,
+      //   server,
+      //   platform,
+      //   broker
+      // });
 
-      setAccountData(result);
+      // setAccountData(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to connect to broker');
     } finally {
