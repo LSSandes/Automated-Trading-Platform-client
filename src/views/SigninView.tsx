@@ -23,7 +23,7 @@ const SigninView: React.FC = () => {
           access_token: tokenResponse.access_token,
         });
         localStorage.setItem("token", response.data.token);
-        navigate('/dashboard')
+        navigate("/dashboard");
       } catch (error) {
         console.error("Error during authentication:", error);
         toast.warn("Error during authentication!");
@@ -41,7 +41,6 @@ const SigninView: React.FC = () => {
         password: password,
       });
       localStorage.setItem("token", response.data.token);
-      
     } catch (error) {
       console.error("error during authentication", error);
       toast.warn("Authentication is failed!");

@@ -24,10 +24,10 @@ export default function Navbar() {
     const userToken = localStorage.getItem("token") || "";
     if (userToken) {
       setToken(userToken);
-      setUserInfo(jwtDecode(userToken));
+      setUserInfoGlobal(jwtDecode(userToken));
       // setUserInfoGlobal(jwtDecode(userToken));
     }
-  }, []);
+  }, [userInfo]);
   useEffect(() => {
     axios
       .post(`${env.BASE_URL}/profile/get`, { email: userInfo.email })

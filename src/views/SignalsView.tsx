@@ -18,7 +18,7 @@ export default function SignalsView() {
       dispatch(getCloseOrders(user?.email));
     });
   }, []);
-
+  console.log("---------------->", user?.email);
   const handleChangeColor = (id: string) => {
     console.log("Change color for webhook:", id);
   };
