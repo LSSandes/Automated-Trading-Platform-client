@@ -46,6 +46,7 @@ export function getAccounts(email: string) {
       dispatch(
         metaAccount.actions.getAccountsSuccess(response.data.data.accounts)
       );
+      dispatch(metaAccount.actions.hasError(""));
     } catch (err) {
       dispatch(metaAccount.actions.hasError(err));
     }
@@ -93,6 +94,7 @@ export function addAccount({
       dispatch(
         metaAccount.actions.addAccountSuccess(response.data.data.newAccount)
       );
+      dispatch(metaAccount.actions.hasError(""));
     } catch (err) {
       dispatch(metaAccount.actions.hasError(err));
     }
@@ -108,6 +110,7 @@ export function deleteAccount(accountId: string) {
           response.data.data.deletedAccount
         )
       );
+      dispatch(metaAccount.actions.hasError(""));
     } catch (err) {
       dispatch(metaAccount.actions.hasError(err));
     }
@@ -134,8 +137,11 @@ export function updateAccount({
         server,
       });
       dispatch(
-        metaAccount.actions.updateAccountSuccess(response.data.data.updatedAccount)
+        metaAccount.actions.updateAccountSuccess(
+          response.data.data.updatedAccount
+        )
       );
+      dispatch(metaAccount.actions.hasError(""));
     } catch (err) {
       dispatch(metaAccount.actions.hasError(err));
     }
