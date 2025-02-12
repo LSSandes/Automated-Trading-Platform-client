@@ -7,7 +7,10 @@ import { Loader } from "lucide-react";
 import { useState, useEffect } from "react";
 import { dispatch } from "@/app/store";
 import { getAccounts } from "@/app/reducers/metaAccount";
-import { connectCloseOrder } from "@/app/reducers/webhook";
+import {
+  connectCloseOrder,
+  disconnectCloseOrder,
+} from "@/app/reducers/webhook";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
 import {
@@ -54,12 +57,25 @@ export default function CloseOrderAppModal({
         })
       ).then(() => {
         setLoadingConnect(false);
-        toast.success("This CloseOrder is connected to account");
+        toast.success("This CloseOrder has connected");
+        onClose();
       });
     }
   };
   const handleDisconnect = () => {
-    setLoadingDisconnect(false);
+    setLoadingDisconnect(true);
+    dispatch(
+      disconnectCloseOrder({
+        accountId,
+        webhookName: closeOrder.webhookName,
+        webhookMode: closeOrder.webhookMode,
+        symbol: closeOrder.symbol,
+      })
+    ).then(() => {
+      setLoadingDisconnect(false);
+      toast.success("This CloseOrder has disconnected");
+      onClose();
+    });
   };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">

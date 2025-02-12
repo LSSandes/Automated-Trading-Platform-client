@@ -401,4 +401,35 @@ export function deleteCloseOrder({
     }
   };
 }
+
+export function disconnectCloseOrder({
+  accountId,
+  webhookName,
+  symbol,
+  webhookMode,
+}: {
+  accountId: string;
+  webhookName: string;
+  symbol: string;
+  webhookMode: string;
+}) {
+  return async () => {
+    try {
+      const response = await axios.post("webhook/disconnect-closeorder", {
+        accountId,
+        webhookName,
+        symbol,
+        webhookMode,
+      });
+      dispatch(
+        webhook.actions.updateCloseOrderSuccess(
+          response.data.data.updatedCloseOrder
+        )
+      );
+      dispatch(webhook.actions.hasError(""));
+    } catch (err) {
+      dispatch(webhook.actions.hasError(err));
+    }
+  };
+}
 export default webhook.reducer;

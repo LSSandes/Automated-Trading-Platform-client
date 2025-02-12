@@ -100,6 +100,21 @@ export default function CloseOrderCard({
               {closeOrder.symbol}
             </span>
           </div>
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="glass-panel rounded-lg p-3 border border-dark-300/30">
+              <div className="text-gray-400 text-sm mb-1">Last Signal</div>
+              <div className="text-white font-medium">
+                {"Never"}
+              </div>
+            </div>
+
+            <div className="glass-panel rounded-lg p-3 border border-dark-300/30">
+              <div className="text-gray-400 text-sm mb-1">Success Rate</div>
+              <div className="text-emerald-400 font-medium">
+                {"N/A"}
+              </div>
+            </div>
+          </div>
         </div>
         {showMenu && (
           <div ref={menuRef}>
