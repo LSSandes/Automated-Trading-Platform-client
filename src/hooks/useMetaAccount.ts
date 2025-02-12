@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { metaApiService, type CreateAccountParams, type MetaAccount } from '../api/meta-api';
+import { metaApiService, type CreateAccountParams } from '../api/meta-api';
 
 export function useMetaAccounts() {
   return useQuery({
@@ -18,6 +18,12 @@ export function useCreateMetaAccount() {
       return metaApiService.createAccount({
         ...params,
         userId: '313902' // Using demo account ID
+        ,
+        name: '',
+        login: '',
+        password: '',
+        server: '',
+        broker: ''
       });
     },
     onSuccess: () => {

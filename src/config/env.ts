@@ -22,6 +22,8 @@ export const env = {
   WEBHOOK_RECEIVER_URL: import.meta.env.VITE_WEBHOOK_RECEIVER_URL || 'http://localhost:4000',
   TRADE_MANAGEMENT_URL: import.meta.env.VITE_TRADE_MANAGEMENT_URL || 'http://localhost:4001',
   
+  //
+  VITE_TELEGRAM_API_TOKEN: import.meta.env.VITE_TELEGRAM_API_TOKEN,
   // Feature Flags
   IS_PRODUCTION: import.meta.env.PROD,
   IS_DEVELOPMENT: import.meta.env.DEV,
@@ -30,6 +32,9 @@ export const env = {
   //Backend URL
 
   BASE_URL: import.meta.env.VITE_BASE_URL || 'http://localhost:5000/api',
-  AVATAR_URL: import.meta.env.VITE_IMAGE_URL || 'http://localhost:5000'
+  AVATAR_URL: import.meta.env.VITE_IMAGE_URL || 'http://localhost:5000',
 
+
+  SELLIX_API_KEY: import.meta.env.SELLIX_API_KEY,
+  SELLIX_MERCHANT_ID: import.meta.env.SELLIX_MERCHANT_ID,
 };

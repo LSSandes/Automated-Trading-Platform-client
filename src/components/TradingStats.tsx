@@ -1,5 +1,4 @@
-import React from 'react';
-import { TrendingUp, Users, BarChart2, Award, Clock, Zap } from 'lucide-react';
+import { TrendingUp, Award, Zap } from 'lucide-react';
 
 export default function TradingStats() {
   return (

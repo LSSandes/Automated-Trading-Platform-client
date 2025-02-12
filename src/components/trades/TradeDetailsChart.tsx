@@ -1,4 +1,3 @@
-import React from 'react';
 import { LineChart, Clock, TrendingUp, TrendingDown } from 'lucide-react';
 
 interface TradeDetailsChartProps {

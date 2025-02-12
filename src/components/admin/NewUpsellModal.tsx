@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, DollarSign, Users, Calendar, Gift, Target, Clock, Shield } from 'lucide-react';
+import { useState } from 'react';
+import { X, DollarSign } from 'lucide-react';
 
 interface NewUpsellModalProps {
   isOpen: boolean;

@@ -1,5 +1,4 @@
-import React from 'react';
-import { Brain, TrendingUp, TrendingDown, AlertTriangle, Clock, BarChart2, Target, Zap } from 'lucide-react';
+import { Brain, TrendingUp, AlertTriangle, Clock, BarChart2, Target, Zap } from 'lucide-react';
 
 interface InsightCard {
   type: 'success' | 'warning' | 'info';

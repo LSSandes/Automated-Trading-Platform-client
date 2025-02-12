@@ -1,4 +1,3 @@
-import React from 'react';
 import { BarChart2, TrendingUp, DollarSign } from 'lucide-react';
 
 export default function TradingChart() {

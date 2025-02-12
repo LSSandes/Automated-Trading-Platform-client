@@ -1,4 +1,3 @@
-import React from 'react';
 import { DollarSign, Target } from 'lucide-react';
 
 interface TotalProfitDisplayProps {
@@ -21,8 +20,8 @@ export default function TotalProfitDisplay({ profit, dailyTarget = 1000 }: Total
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   // Calculate target meter properties
-  const meterWidth = 200;
-  const meterHeight = 6;
+  // const meterWidth = 200;
+  // const meterHeight = 6;
 
   return (
     <div className="text-center space-y-8">

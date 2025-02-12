@@ -1,4 +1,3 @@
-import React from 'react';
 import { TrendingUp, TrendingDown, Target, AlertCircle } from 'lucide-react';
 
 interface TradeProgressionCardProps {

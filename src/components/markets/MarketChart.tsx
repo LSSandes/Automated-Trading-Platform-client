@@ -1,4 +1,3 @@
-import React from 'react';
 import { 
   TrendingUp, TrendingDown, Bot, DollarSign, 
   Percent, Zap, Clock 

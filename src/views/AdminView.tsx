@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Lock, Plus, Users, Bell, DollarSign, TrendingUp, Filter, Search } from 'lucide-react';
+import { useState } from 'react';
+import { Lock, Plus, Bell, DollarSign } from 'lucide-react';
 import NewAnnouncementModal from '../components/admin/NewAnnouncementModal';
 import NewUpsellModal from '../components/admin/NewUpsellModal';
 
 const AdminView = () => {
   const [showNewAnnouncement, setShowNewAnnouncement] = useState(false);
   const [showNewUpsell, setShowNewUpsell] = useState(false);
-  const [filterType, setFilterType] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  // const [filterType, setFilterType] = useState('all');
+  // const [searchQuery, setSearchQuery] = useState('');
 
   return (
     <div className="space-y-6">

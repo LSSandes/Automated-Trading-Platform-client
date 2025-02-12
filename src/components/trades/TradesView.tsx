@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { useState } from 'react';
+import { ChevronRight } from 'lucide-react';
 import TradeStats from './TradeStats';
 import TradesCalendar from './TradesCalendar';
 import TradesTable from './TradesTable';

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, Info, Calendar, Users, Bell, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { useState } from 'react';
+import { X, Info, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 interface NewAnnouncementModalProps {
   isOpen: boolean;

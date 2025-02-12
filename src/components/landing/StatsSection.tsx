@@ -1,4 +1,3 @@
-import React from 'react';
 import FloatingStats from './FloatingStats';
 
 export default function StatsSection() {

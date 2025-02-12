@@ -1,6 +1,5 @@
-import React from 'react';
 import { 
-  X, TrendingUp, TrendingDown, Clock, ArrowRight, 
+  X, Clock, ArrowRight, 
   AlertCircle, CheckCircle2, Webhook, Users,
   PlayCircle, Edit3, BarChart2, DollarSign
 } from 'lucide-react';

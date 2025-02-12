@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Trophy, TrendingUp, Users, Star, ArrowRight, DollarSign, Clock, BarChart2 } from 'lucide-react';
 
 interface Trader {

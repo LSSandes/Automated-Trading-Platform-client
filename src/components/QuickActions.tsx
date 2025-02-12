@@ -1,4 +1,3 @@
-import React from 'react';
 import { Plus, Bot, Webhook, Users } from 'lucide-react';
 
 interface QuickActionsProps {

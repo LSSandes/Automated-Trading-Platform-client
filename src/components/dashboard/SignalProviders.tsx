@@ -1,5 +1,4 @@
-import React from 'react';
-import { Users, Star, MessageCircle } from 'lucide-react';
+import { Star, MessageCircle } from 'lucide-react';
 
 interface SignalProvidersProps {
   copyingTraders: string[];

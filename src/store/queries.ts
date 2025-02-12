@@ -1,77 +1,88 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { trading, webhooks } from '../api/endpoints';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { trading } from "../api/endpoints/trading";
+import { webhooks } from "@/api/endpoints/webhooks";
 
 // Trading Queries
 export const useTrades = (params?: Parameters<typeof trading.getTrades>[0]) => {
   return useQuery({
-    queryKey: ['trades', params],
+    queryKey: ["trades", params],
     queryFn: () => trading.getTrades(params),
     staleTime: 30000, // Consider data fresh for 30 seconds
-    refetchInterval: 60000 // Refetch every minute
+    refetchInterval: 60000, // Refetch every minute
   });
 };
 
-export const useTradeStats = (params?: Parameters<typeof trading.getStats>[0]) => {
+export const useTradeStats = (
+  params?: Parameters<typeof trading.getStats>[0]
+) => {
   return useQuery({
-    queryKey: ['tradeStats', params],
+    queryKey: ["tradeStats", params],
     queryFn: () => trading.getStats(params),
-    staleTime: 60000 // Consider data fresh for 1 minute
+    staleTime: 60000, // Consider data fresh for 1 minute
   });
 };
 
 // Trading Mutations
 export const useOpenTrade = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: trading.openTrade,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['trades'] });
-      queryClient.invalidateQueries({ queryKey: ['tradeStats'] });
-    }
+      queryClient.invalidateQueries({ queryKey: ["trades"] });
+      queryClient.invalidateQueries({ queryKey: ["tradeStats"] });
+    },
   });
 };
 
 export const useCloseTrade = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: ({ tradeId, params }: { tradeId: string; params?: { partial?: number } }) => 
-      trading.closeTrade(tradeId, params),
+    mutationFn: ({
+      tradeId,
+      params,
+    }: {
+      tradeId: string;
+      params?: { partial?: number };
+    }) => trading.closeTrade(tradeId, params),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['trades'] });
-      queryClient.invalidateQueries({ queryKey: ['tradeStats'] });
-    }
+      queryClient.invalidateQueries({ queryKey: ["trades"] });
+      queryClient.invalidateQueries({ queryKey: ["tradeStats"] });
+    },
   });
 };
 
 export const useModifyTrade = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: ({ tradeId, data }: { 
-      tradeId: string; 
+    mutationFn: ({
+      tradeId,
+      data,
+    }: {
+      tradeId: string;
       data: Parameters<typeof trading.modifyTrade>[1];
     }) => trading.modifyTrade(tradeId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['trades'] });
-    }
+      queryClient.invalidateQueries({ queryKey: ["trades"] });
+    },
   });
 };
 
 // Webhook Queries
 export const useWebhooks = () => {
   return useQuery({
-    queryKey: ['webhooks'],
+    queryKey: ["webhooks"],
     queryFn: webhooks.getAll,
-    staleTime: 300000 // Consider data fresh for 5 minutes
+    staleTime: 300000, // Consider data fresh for 5 minutes
   });
 };
 
 export const useWebhookStats = (webhookId: string) => {
   return useQuery({
-    queryKey: ['webhookStats', webhookId],
+    queryKey: ["webhookStats", webhookId],
     queryFn: () => webhooks.getStats(webhookId),
-    staleTime: 60000 // Consider data fresh for 1 minute
+    staleTime: 60000, // Consider data fresh for 1 minute
   });
 };

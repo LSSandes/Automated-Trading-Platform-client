@@ -1,4 +1,3 @@
-import React from 'react';
 import { X, Check, Shield, Zap, Clock } from 'lucide-react';
 
 interface CheckoutModalProps {

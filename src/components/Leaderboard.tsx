@@ -1,4 +1,3 @@
-import React from 'react';
 import { Trophy, TrendingUp, DollarSign } from 'lucide-react';
 
 interface LeaderboardEntry {

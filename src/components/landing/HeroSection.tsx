@@ -1,15 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Award,
-  ArrowRight,
   Star,
   Shield,
-  Users,
   Clock,
-  Bot,
-  DollarSign,
-  Zap,
-  TrendingUp,
   ChevronRight,
 } from "lucide-react";
 import DemoModal from "./DemoModal";

@@ -1,4 +1,3 @@
-import React from 'react';
 import { BarChart2, TrendingUp, Clock, DollarSign, Target, Shield } from 'lucide-react';
 
 export default function QuickStats() {

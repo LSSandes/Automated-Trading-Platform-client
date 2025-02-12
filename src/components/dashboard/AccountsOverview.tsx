@@ -1,4 +1,3 @@
-import React from 'react';
 import { Plus, Wallet, TrendingUp, TrendingDown } from 'lucide-react';
 
 const accounts = [

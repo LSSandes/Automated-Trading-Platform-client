@@ -1,4 +1,3 @@
-import React from 'react';
 import { TrendingUp, TrendingDown, Clock, DollarSign } from 'lucide-react';
 
 interface ActiveTradesProps {

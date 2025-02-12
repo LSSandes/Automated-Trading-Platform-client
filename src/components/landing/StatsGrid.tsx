@@ -1,4 +1,3 @@
-import React from 'react';
 import { DollarSign, TrendingUp, Users, Clock } from 'lucide-react';
 
 const stats = [

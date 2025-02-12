@@ -10,7 +10,7 @@ interface TelegramResponse {
   description?: string;
 }
 
-interface TelegramVerificationResponse {
+export interface TelegramVerificationResponse {
   success: boolean;
   chatId: string;
   error?: string;

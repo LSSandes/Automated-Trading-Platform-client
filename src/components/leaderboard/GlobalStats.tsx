@@ -1,4 +1,3 @@
-import React from 'react';
 import { BarChart2, Users, Target, Zap } from 'lucide-react';
 
 const globalStats = [

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   AlertCircle, CheckCircle2, Clock, Webhook, Users, 
-  TrendingUp, TrendingDown, ArrowRightLeft, X, 
+  TrendingUp, TrendingDown, X, 
   Edit3, PlayCircle
 } from 'lucide-react';
 import TradeDetailsModal from './TradeDetailsModal';

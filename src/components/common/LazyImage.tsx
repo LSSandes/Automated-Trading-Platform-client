@@ -31,7 +31,7 @@ export default function LazyImage({
 
   return (
     <div
-      ref={ref as React.RefCallback<HTMLDivElement>}
+      ref={ref as unknown as React.RefCallback<HTMLDivElement>}
       className={`relative overflow-hidden ${className}`}
       style={{ backgroundColor: placeholderColor }}
       {...props}

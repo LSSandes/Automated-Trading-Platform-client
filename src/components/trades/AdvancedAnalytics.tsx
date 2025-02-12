@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
-  Shield, AlertTriangle, Target, TrendingUp, Clock, 
-  BarChart2, DollarSign, Percent, Users, Activity 
+  Shield, AlertTriangle, Target, Clock, 
+  BarChart2, DollarSign, Percent, Activity 
 } from 'lucide-react';
 
 const MetricsCard = ({ 

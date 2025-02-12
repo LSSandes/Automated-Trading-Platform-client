@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, Plus, Check, ArrowRight, Users, Bot, Shield, Zap } from 'lucide-react';
+import { useState } from 'react';
+import { X, Plus, Check, ArrowRight, Users, Bot, Shield } from 'lucide-react';
 
 interface AddonsModalProps {
   isOpen: boolean;

@@ -1,5 +1,4 @@
-import React from 'react';
-import { X, ArrowRight, TrendingUp, Users, Star } from 'lucide-react';
+import { X, ArrowRight } from 'lucide-react';
 
 interface DemoModalProps {
   isOpen: boolean;

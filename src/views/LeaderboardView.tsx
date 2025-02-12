@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   Trophy, Search, Filter, ChevronDown, Users, ArrowRight,
-  TrendingUp, Star, Shield, DollarSign, Clock, BarChart2
+  TrendingUp, Star, Shield, DollarSign,
 } from 'lucide-react';
 import GlobalStats from '../components/leaderboard/GlobalStats';
 import CategoryTabs from '../components/leaderboard/CategoryTabs';

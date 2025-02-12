@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { telegram } from '../api/telegram';
+import { useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
+import { telegram, TelegramVerificationResponse } from '../api/telegram';
 import type { Trade } from '../types';
 
 export function useSendTelegramMessage() {
@@ -30,7 +30,7 @@ export function useSendTradeAlert() {
   });
 }
 
-export function useVerifyTelegramBot() {
+export function useVerifyTelegramBot(): UseMutationResult<TelegramVerificationResponse, unknown, string, unknown> {
   const queryClient = useQueryClient();
 
   return useMutation({

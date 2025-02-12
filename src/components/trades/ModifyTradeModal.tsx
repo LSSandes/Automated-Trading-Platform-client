@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, AlertTriangle, ArrowRight } from 'lucide-react';
-import { formatCurrency } from '../../utils/format';
 
 interface ModifyTradeModalProps {
   isOpen: boolean;

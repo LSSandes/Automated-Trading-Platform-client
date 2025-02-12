@@ -1,14 +1,20 @@
-import React from 'react';
-import { 
-  Activity, DollarSign, Clock, Target, Shield, 
-  TrendingUp, BarChart2, AlertTriangle, Percent
-} from 'lucide-react';
+import React from "react";
+import {
+  Activity,
+  DollarSign,
+  Clock,
+  Target,
+  Shield,
+  BarChart2,
+  AlertTriangle,
+  Percent,
+} from "lucide-react";
 
-const MetricsCard = ({ 
-  title, 
-  icon, 
-  metrics 
-}: { 
+const MetricsCard = ({
+  title,
+  icon,
+  metrics,
+}: {
   title: string;
   icon: React.ReactNode;
   metrics: {
@@ -27,11 +33,15 @@ const MetricsCard = ({
       {metrics.map((metric, index) => (
         <div key={index} className="flex justify-between items-center">
           <span className="text-gray-400">{metric.label}</span>
-          <span className={`font-medium ${
-            metric.highlight ? 'text-accent' :
-            metric.negative ? 'text-red-400' :
-            'text-white'
-          }`}>
+          <span
+            className={`font-medium ${
+              metric.highlight
+                ? "text-accent"
+                : metric.negative
+                ? "text-red-400"
+                : "text-white"
+            }`}
+          >
             {metric.value}
           </span>
         </div>
@@ -45,13 +55,13 @@ const RiskCard = ({
   icon,
   value,
   description,
-  status = 'normal'
+  status = "normal",
 }: {
   title: string;
   icon: React.ReactNode;
   value: string;
   description: string;
-  status?: 'normal' | 'warning' | 'success';
+  status?: "normal" | "warning" | "success";
 }) => (
   <div className="glass-panel rounded-xl p-6">
     <div className="flex items-center space-x-3 mb-4">
@@ -60,11 +70,15 @@ const RiskCard = ({
     </div>
     <div className="space-y-2">
       <div className="text-3xl font-bold text-white">{value}</div>
-      <div className={`text-sm ${
-        status === 'warning' ? 'text-yellow-400' :
-        status === 'success' ? 'text-emerald-400' :
-        'text-gray-400'
-      }`}>
+      <div
+        className={`text-sm ${
+          status === "warning"
+            ? "text-yellow-400"
+            : status === "success"
+            ? "text-emerald-400"
+            : "text-gray-400"
+        }`}
+      >
         {description}
       </div>
     </div>
@@ -85,7 +99,7 @@ export default function PerformanceMetrics() {
             { label: "Loss Rate", value: "10.5%", negative: true },
             { label: "Best Streak", value: "12 trades", highlight: true },
             { label: "Worst Streak", value: "3 trades", negative: true },
-            { label: "Monthly Target", value: "85% achieved", highlight: true }
+            { label: "Monthly Target", value: "85% achieved", highlight: true },
           ]}
         />
 
@@ -98,7 +112,7 @@ export default function PerformanceMetrics() {
             { label: "Best Trade", value: "$2,850.75", highlight: true },
             { label: "Worst Trade", value: "-$450.25", negative: true },
             { label: "Profit Factor", value: "2.8" },
-            { label: "Monthly Growth", value: "+12.5%", highlight: true }
+            { label: "Monthly Growth", value: "+12.5%", highlight: true },
           ]}
         />
 
@@ -111,7 +125,7 @@ export default function PerformanceMetrics() {
             { label: "Best Day", value: "Tuesday", highlight: true },
             { label: "Trade Frequency", value: "8.5/day" },
             { label: "Active Hours", value: "6.2/day" },
-            { label: "Efficiency Score", value: "92.5%", highlight: true }
+            { label: "Efficiency Score", value: "92.5%", highlight: true },
           ]}
         />
       </div>
@@ -153,7 +167,7 @@ export default function PerformanceMetrics() {
             { label: "Max Position", value: "5.0 lots" },
             { label: "Margin Usage", value: "28.5%" },
             { label: "Free Margin", value: "$25,450", highlight: true },
-            { label: "Risk Per Trade", value: "1.2%" }
+            { label: "Risk Per Trade", value: "1.2%" },
           ]}
         />
 
@@ -165,7 +179,7 @@ export default function PerformanceMetrics() {
             { label: "Sortino Ratio", value: "2.8", highlight: true },
             { label: "Win/Loss Ratio", value: "2.5" },
             { label: "Recovery Factor", value: "3.2" },
-            { label: "Overall Rating", value: "Excellent", highlight: true }
+            { label: "Overall Rating", value: "Excellent", highlight: true },
           ]}
         />
 
@@ -177,7 +191,7 @@ export default function PerformanceMetrics() {
             { label: "Currency Exposure", value: "EUR (45%)" },
             { label: "Correlation Risk", value: "Low", highlight: true },
             { label: "Market Risk", value: "Moderate" },
-            { label: "Risk Level", value: "Within Limits", highlight: true }
+            { label: "Risk Level", value: "Within Limits", highlight: true },
           ]}
         />
       </div>

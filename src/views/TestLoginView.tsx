@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useCreateMetaAccount } from '../hooks/useMetaAccount';
 import { Loader, CheckCircle2, AlertTriangle, RefreshCw, HelpCircle } from 'lucide-react';
 import Tooltip from '../components/ui/Tooltip';

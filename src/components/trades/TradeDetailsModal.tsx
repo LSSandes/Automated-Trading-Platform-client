@@ -1,15 +1,17 @@
-import React from 'react';
-import { 
-  X, TrendingUp, TrendingDown, Clock, ArrowRight, 
-  AlertCircle, CheckCircle2, Webhook, Users,
-  PlayCircle, Edit3, BarChart2, DollarSign
-} from 'lucide-react';
-import { formatCurrency } from '../../utils/format';
+import {
+  X,
+  TrendingUp,
+  TrendingDown,
+  Webhook,
+  Users,
+  Edit3,
+} from "lucide-react";
+import { formatCurrency } from "../../utils/format";
 
 interface Trade {
   id: string;
   symbol: string;
-  type: 'buy' | 'sell';
+  type: "buy" | "sell";
   openPrice: number;
   currentPrice: number;
   stopLoss?: number;
@@ -19,7 +21,7 @@ interface Trade {
   profitPercentage: number;
   time: string;
   source: {
-    type: 'webhook' | 'copy_trade';
+    type: "webhook" | "copy_trade";
     name: string;
     avatar?: string;
   };
@@ -28,29 +30,36 @@ interface Trade {
 interface TradeDetailsModalProps {
   trade: Trade;
   isOpen: boolean;
-  onClose: () => void;
+  onCloseTrade : () => void;
   onModify?: () => void;
-  onClose?: () => void;
+  onClose: () => void;
 }
 
-export default function TradeDetailsModal({ 
-  trade, 
-  isOpen, 
-  onClose, 
+export default function TradeDetailsModal({
+  trade,
+  isOpen,
+  onCloseTrade,
   onModify,
-  onCloseTrade 
+  onClose
 }: TradeDetailsModalProps) {
   if (!isOpen) return null;
 
   const isProfit = trade.profit > 0;
-  const riskRewardRatio = trade.takeProfit && trade.stopLoss 
-    ? Math.abs((trade.takeProfit - trade.openPrice) / (trade.openPrice - trade.stopLoss))
-    : null;
+  const riskRewardRatio =
+    trade.takeProfit && trade.stopLoss
+      ? Math.abs(
+          (trade.takeProfit - trade.openPrice) /
+            (trade.openPrice - trade.stopLoss)
+        )
+      : null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
       <div className="glass-panel rounded-2xl w-full max-w-2xl z-10 p-0 overflow-hidden">
         {/* Header */}
         <div className="relative p-6 border-b border-dark-300/50">
@@ -61,14 +70,16 @@ export default function TradeDetailsModal({
           >
             <X className="h-5 w-5" />
           </button>
-          
+
           <div className="flex items-center space-x-4">
-            <div className={`p-2 rounded-lg ${
-              trade.source.type === 'webhook' 
-                ? 'bg-accent/10' 
-                : 'bg-purple-500/10'
-            }`}>
-              {trade.source.type === 'webhook' ? (
+            <div
+              className={`p-2 rounded-lg ${
+                trade.source.type === "webhook"
+                  ? "bg-accent/10"
+                  : "bg-purple-500/10"
+              }`}
+            >
+              {trade.source.type === "webhook" ? (
                 <Webhook className="h-5 w-5 text-accent" />
               ) : (
                 <Users className="h-5 w-5 text-purple-400" />
@@ -76,20 +87,24 @@ export default function TradeDetailsModal({
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h3 className="text-xl font-medium text-white">{trade.symbol}</h3>
-                <span className={`px-2 py-1 text-xs rounded-full ${
-                  trade.type === 'buy'
-                    ? 'bg-emerald-500/20 text-emerald-400'
-                    : 'bg-red-500/20 text-red-400'
-                }`}>
+                <h3 className="text-xl font-medium text-white">
+                  {trade.symbol}
+                </h3>
+                <span
+                  className={`px-2 py-1 text-xs rounded-full ${
+                    trade.type === "buy"
+                      ? "bg-emerald-500/20 text-emerald-400"
+                      : "bg-red-500/20 text-red-400"
+                  }`}
+                >
                   {trade.type.toUpperCase()}
                 </span>
               </div>
               <div className="flex items-center space-x-2 mt-1">
                 <span className="text-gray-400">{trade.source.name}</span>
                 {trade.source.avatar && (
-                  <img 
-                    src={trade.source.avatar} 
+                  <img
+                    src={trade.source.avatar}
                     alt={trade.source.name}
                     className="w-6 h-6 rounded-full border border-accent/20"
                   />
@@ -105,15 +120,19 @@ export default function TradeDetailsModal({
           <div className="grid grid-cols-3 gap-4">
             <div className="glass-panel rounded-lg p-4">
               <div className="text-sm text-gray-400 mb-1">Entry Price</div>
-              <div className="text-lg font-medium text-white">{trade.openPrice}</div>
+              <div className="text-lg font-medium text-white">
+                {trade.openPrice}
+              </div>
             </div>
             <div className="glass-panel rounded-lg p-4">
               <div className="text-sm text-gray-400 mb-1">Current Price</div>
-              <div className={`text-lg font-medium ${
-                trade.currentPrice > trade.openPrice 
-                  ? 'text-emerald-400' 
-                  : 'text-red-400'
-              }`}>
+              <div
+                className={`text-lg font-medium ${
+                  trade.currentPrice > trade.openPrice
+                    ? "text-emerald-400"
+                    : "text-red-400"
+                }`}
+              >
                 {trade.currentPrice}
               </div>
             </div>
@@ -127,7 +146,11 @@ export default function TradeDetailsModal({
           <div className="glass-panel rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div className="text-gray-400">Profit/Loss</div>
-              <div className={`flex items-center ${isProfit ? 'text-emerald-400' : 'text-red-400'}`}>
+              <div
+                className={`flex items-center ${
+                  isProfit ? "text-emerald-400" : "text-red-400"
+                }`}
+              >
                 {isProfit ? (
                   <TrendingUp className="h-4 w-4 mr-2" />
                 ) : (
@@ -144,7 +167,7 @@ export default function TradeDetailsModal({
           {(trade.stopLoss || trade.takeProfit) && (
             <div className="glass-panel rounded-lg p-4 space-y-4">
               <h4 className="text-white font-medium">Risk Management</h4>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 {trade.stopLoss && (
                   <div>
@@ -154,7 +177,9 @@ export default function TradeDetailsModal({
                 )}
                 {trade.takeProfit && (
                   <div>
-                    <div className="text-sm text-gray-400 mb-1">Take Profit</div>
+                    <div className="text-sm text-gray-400 mb-1">
+                      Take Profit
+                    </div>
                     <div className="text-emerald-400">{trade.takeProfit}</div>
                   </div>
                 )}
@@ -162,8 +187,12 @@ export default function TradeDetailsModal({
 
               {riskRewardRatio && (
                 <div className="pt-4 border-t border-dark-300/30">
-                  <div className="text-sm text-gray-400 mb-1">Risk/Reward Ratio</div>
-                  <div className="text-white">1:{riskRewardRatio.toFixed(2)}</div>
+                  <div className="text-sm text-gray-400 mb-1">
+                    Risk/Reward Ratio
+                  </div>
+                  <div className="text-white">
+                    1:{riskRewardRatio.toFixed(2)}
+                  </div>
                 </div>
               )}
             </div>
@@ -172,7 +201,7 @@ export default function TradeDetailsModal({
           {/* Actions */}
           <div className="flex items-center space-x-4">
             {onModify && (
-              <button 
+              <button
                 onClick={onModify}
                 className="flex-1 premium-button py-2.5 flex items-center justify-center"
               >
@@ -181,7 +210,7 @@ export default function TradeDetailsModal({
               </button>
             )}
             {onCloseTrade && (
-              <button 
+              <button
                 onClick={onCloseTrade}
                 className="flex-1 px-4 py-2.5 text-red-400 border border-red-400/30 
                          rounded-lg hover:bg-red-400/10 transition-all duration-300"

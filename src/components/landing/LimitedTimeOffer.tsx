@@ -1,4 +1,3 @@
-import React from 'react';
 import { X, Clock, Zap, Check, ArrowRight } from 'lucide-react';
 import CountdownTimer from './CountdownTimer';
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TrendingUp, Clock, DollarSign, Shield } from 'lucide-react';
 
 interface DataPoint {
@@ -9,8 +9,8 @@ interface DataPoint {
 export default function LivePerformanceChart() {
   const [data, setData] = useState<DataPoint[]>([]);
   const [totalProfit, setTotalProfit] = useState(0);
-  const [winRate, setWinRate] = useState(89.5);
-  const [trades, setTrades] = useState(145);
+  // const [winRate, setWinRate] = useState(89.5);
+  // const [trades, setTrades] = useState(145);
   const [lastUpdate, setLastUpdate] = useState(new Date());
 
   // Stats

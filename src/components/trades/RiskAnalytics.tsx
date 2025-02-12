@@ -1,4 +1,3 @@
-import React from 'react';
 import { Shield, AlertTriangle, Target, TrendingUp } from 'lucide-react';
 
 export default function RiskAnalytics() {

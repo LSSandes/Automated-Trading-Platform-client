@@ -62,9 +62,9 @@ export const sellixService = {
     }
   },
 
-  verifyWebhook: (signature: string, body: string): boolean => {
-    // Implement webhook signature verification using env.SELLIX_WEBHOOK_SECRET
-    // This is a placeholder - implement actual HMAC verification
-    return true;
-  }
+  // verifyWebhook: (signature: string, body: string): boolean => {
+  //   // Implement webhook signature verification using env.SELLIX_WEBHOOK_SECRET
+  //   // This is a placeholder - implement actual HMAC verification
+  //   return true;
+  // }
 };

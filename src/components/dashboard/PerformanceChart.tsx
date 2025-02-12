@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar, TrendingUp, ArrowRight, TrendingDown } from 'lucide-react';
 
 interface DataPoint {

@@ -1,24 +1,34 @@
-import React, { useState } from 'react';
-import { 
-  ArrowUpRight, ArrowDownRight, ChevronDown, Clock, 
-  DollarSign, TrendingUp, TrendingDown, Webhook, Users,
-  ExternalLink
-} from 'lucide-react';
-import { formatCurrency } from '../../utils/format';
-import TradeDetailsModal from './TradeDetailsModal';
+import { useState } from "react";
+import {
+  ArrowUpRight,
+  ArrowDownRight,
+  ChevronDown,
+  Clock,
+  TrendingUp,
+  TrendingDown,
+  Webhook,
+  Users,
+  ExternalLink,
+} from "lucide-react";
+import { formatCurrency } from "../../utils/format";
+import TradeDetailsModal from "./TradeDetailsModal";
 
 interface Trade {
   id: string;
   symbol: string;
-  type: 'buy' | 'sell';
+  type: "buy" | "sell";
   openPrice: number;
   closePrice: number;
   profit: number;
   lots: number;
   openTime: string;
   closeTime: string;
+  currentPrice: number;
+  lot: number;
+  profitPercentage: number;
+  time: string;
   source: {
-    type: 'webhook' | 'copy_trade';
+    type: "webhook" | "copy_trade";
     name: string;
     avatar?: string;
   };
@@ -29,42 +39,47 @@ interface TradeHistoryTableProps {
   onViewDetails?: (trade: Trade) => void;
 }
 
-export default function TradeHistoryTable({ trades, onViewDetails }: TradeHistoryTableProps) {
+export default function TradeHistoryTable({
+  trades,
+  onViewDetails,
+}: TradeHistoryTableProps) {
   const [selectedTrade, setSelectedTrade] = useState<Trade | null>(null);
-  const [sortField, setSortField] = useState<keyof Trade>('openTime');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [sortField, setSortField] = useState<keyof Trade>("openTime");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
 
   const handleSort = (field: keyof Trade) => {
     if (sortField === field) {
-      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
     } else {
       setSortField(field);
-      setSortDirection('asc');
+      setSortDirection("asc");
     }
   };
 
   const sortedTrades = [...trades].sort((a, b) => {
     const aValue = a[sortField];
     const bValue = b[sortField];
-    const direction = sortDirection === 'asc' ? 1 : -1;
+    const direction = sortDirection === "asc" ? 1 : -1;
 
-    if (typeof aValue === 'string' && typeof bValue === 'string') {
+    if (typeof aValue === "string" && typeof bValue === "string") {
       return aValue.localeCompare(bValue) * direction;
     }
-    if (typeof aValue === 'number' && typeof bValue === 'number') {
+    if (typeof aValue === "number" && typeof bValue === "number") {
       return (aValue - bValue) * direction;
     }
     return 0;
   });
 
   const SortIcon = ({ field }: { field: keyof Trade }) => (
-    <ChevronDown className={`h-4 w-4 transition-transform ${
-      sortField === field 
-        ? sortDirection === 'desc' 
-          ? 'rotate-180' 
-          : ''
-        : 'text-gray-600'
-    }`} />
+    <ChevronDown
+      className={`h-4 w-4 transition-transform ${
+        sortField === field
+          ? sortDirection === "desc"
+            ? "rotate-180"
+            : ""
+          : "text-gray-600"
+      }`}
+    />
   );
 
   return (
@@ -74,90 +89,100 @@ export default function TradeHistoryTable({ trades, onViewDetails }: TradeHistor
           <table className="w-full">
             <thead>
               <tr className="bg-dark-200/50">
-                <th 
+                <th
                   className="text-left text-xs font-medium text-gray-400 p-4 cursor-pointer"
-                  onClick={() => handleSort('symbol')}
+                  onClick={() => handleSort("symbol")}
                 >
                   <div className="flex items-center space-x-2">
                     <span>Symbol</span>
                     <SortIcon field="symbol" />
                   </div>
                 </th>
-                <th 
+                <th
                   className="text-left text-xs font-medium text-gray-400 p-4 cursor-pointer"
-                  onClick={() => handleSort('type')}
+                  onClick={() => handleSort("type")}
                 >
                   <div className="flex items-center space-x-2">
                     <span>Type</span>
                     <SortIcon field="type" />
                   </div>
                 </th>
-                <th className="text-left text-xs font-medium text-gray-400 p-4">Source</th>
-                <th 
+                <th className="text-left text-xs font-medium text-gray-400 p-4">
+                  Source
+                </th>
+                <th
                   className="text-left text-xs font-medium text-gray-400 p-4 cursor-pointer"
-                  onClick={() => handleSort('openPrice')}
+                  onClick={() => handleSort("openPrice")}
                 >
                   <div className="flex items-center space-x-2">
                     <span>Entry</span>
                     <SortIcon field="openPrice" />
                   </div>
                 </th>
-                <th 
+                <th
                   className="text-left text-xs font-medium text-gray-400 p-4 cursor-pointer"
-                  onClick={() => handleSort('closePrice')}
+                  onClick={() => handleSort("closePrice")}
                 >
                   <div className="flex items-center space-x-2">
                     <span>Exit</span>
                     <SortIcon field="closePrice" />
                   </div>
                 </th>
-                <th 
+                <th
                   className="text-left text-xs font-medium text-gray-400 p-4 cursor-pointer"
-                  onClick={() => handleSort('lots')}
+                  onClick={() => handleSort("lots")}
                 >
                   <div className="flex items-center space-x-2">
                     <span>Size</span>
                     <SortIcon field="lots" />
                   </div>
                 </th>
-                <th 
+                <th
                   className="text-left text-xs font-medium text-gray-400 p-4 cursor-pointer"
-                  onClick={() => handleSort('profit')}
+                  onClick={() => handleSort("profit")}
                 >
                   <div className="flex items-center space-x-2">
                     <span>Profit</span>
                     <SortIcon field="profit" />
                   </div>
                 </th>
-                <th 
+                <th
                   className="text-left text-xs font-medium text-gray-400 p-4 cursor-pointer"
-                  onClick={() => handleSort('openTime')}
+                  onClick={() => handleSort("openTime")}
                 >
                   <div className="flex items-center space-x-2">
                     <span>Time</span>
                     <SortIcon field="openTime" />
                   </div>
                 </th>
-                <th className="text-right text-xs font-medium text-gray-400 p-4">Actions</th>
+                <th className="text-right text-xs font-medium text-gray-400 p-4">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-dark-300/20">
               {sortedTrades.map((trade) => (
-                <tr 
+                <tr
                   key={trade.id}
                   onClick={() => setSelectedTrade(trade)}
                   className="hover:bg-dark-200/30 transition-colors cursor-pointer"
                 >
                   <td className="p-4">
                     <div className="flex items-center space-x-2">
-                      <span className="text-white font-medium">{trade.symbol}</span>
+                      <span className="text-white font-medium">
+                        {trade.symbol}
+                      </span>
                     </div>
                   </td>
                   <td className="p-4">
-                    <div className={`flex items-center ${
-                      trade.type === 'buy' ? 'text-emerald-400' : 'text-red-400'
-                    }`}>
-                      {trade.type === 'buy' ? (
+                    <div
+                      className={`flex items-center ${
+                        trade.type === "buy"
+                          ? "text-emerald-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      {trade.type === "buy" ? (
                         <ArrowUpRight className="h-4 w-4 mr-1" />
                       ) : (
                         <ArrowDownRight className="h-4 w-4 mr-1" />
@@ -167,13 +192,13 @@ export default function TradeHistoryTable({ trades, onViewDetails }: TradeHistor
                   </td>
                   <td className="p-4">
                     <div className="flex items-center space-x-2">
-                      {trade.source.type === 'webhook' ? (
+                      {trade.source.type === "webhook" ? (
                         <div className="p-1.5 bg-accent/10 rounded-lg">
                           <Webhook className="h-4 w-4 text-accent" />
                         </div>
                       ) : (
                         <div className="flex items-center space-x-2">
-                          <img 
+                          <img
                             src={trade.source.avatar}
                             alt={trade.source.name}
                             className="w-6 h-6 rounded-full border border-accent/20"
@@ -194,9 +219,11 @@ export default function TradeHistoryTable({ trades, onViewDetails }: TradeHistor
                     <span className="text-gray-300">{trade.lots} lots</span>
                   </td>
                   <td className="p-4">
-                    <div className={`flex items-center ${
-                      trade.profit >= 0 ? 'text-emerald-400' : 'text-red-400'
-                    }`}>
+                    <div
+                      className={`flex items-center ${
+                        trade.profit >= 0 ? "text-emerald-400" : "text-red-400"
+                      }`}
+                    >
                       {trade.profit >= 0 ? (
                         <TrendingUp className="h-4 w-4 mr-1" />
                       ) : (
@@ -214,7 +241,7 @@ export default function TradeHistoryTable({ trades, onViewDetails }: TradeHistor
                     </div>
                   </td>
                   <td className="p-4 text-right">
-                    <button 
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         onViewDetails?.(trade);
@@ -236,8 +263,10 @@ export default function TradeHistoryTable({ trades, onViewDetails }: TradeHistor
             Showing {trades.length} trades
           </div>
           <div className="flex items-center space-x-2">
-            <button className="px-3 py-1.5 text-sm border border-accent/30 text-accent rounded-lg
-                           hover:bg-accent/10 transition-all duration-300">
+            <button
+              className="px-3 py-1.5 text-sm border border-accent/30 text-accent rounded-lg
+                           hover:bg-accent/10 transition-all duration-300"
+            >
               Export CSV
             </button>
             <button className="px-3 py-1.5 text-sm premium-button">
@@ -249,6 +278,7 @@ export default function TradeHistoryTable({ trades, onViewDetails }: TradeHistor
 
       {selectedTrade && (
         <TradeDetailsModal
+          onCloseTrade={() => setSelectedTrade(null)}
           trade={selectedTrade}
           isOpen={true}
           onClose={() => setSelectedTrade(null)}

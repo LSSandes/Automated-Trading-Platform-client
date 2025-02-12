@@ -24,11 +24,10 @@ function App() {
   const [activeChats, setActiveChats] = useState<string[]>([]);
   const [copyingTraders, setCopyingTraders] = useState<string[]>([]);
   const [checkoutTrader, setCheckoutTrader] = useState<any>(null);
-  const menuCollapsed : boolean = false;
+  const menuCollapsed: boolean = false;
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [activeView, setActiveView] = useState("landing");
-
-
+  console.log(activeView);
 
   const handleCopyTrader = (
     traderId: string,
@@ -70,7 +69,6 @@ function App() {
     setIsLoggedIn(true);
     // setActiveView("dashboard");
   };
-
 
   return (
     <Router>

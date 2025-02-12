@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, TrendingDown, BarChart2, Clock, DollarSign, Target, Award, Zap } from 'lucide-react';
+import { TrendingUp, TrendingDown, BarChart2, Clock, DollarSign, Target, Zap } from 'lucide-react';
 
 interface StatCardProps {
   label: string;

@@ -1,7 +1,6 @@
-import React from 'react';
 import { 
   Settings, RefreshCw, Terminal, 
-  Trash2, AlertTriangle, Link2
+  Trash2, Link2
 } from 'lucide-react';
 
 interface AccountMenuProps {
@@ -9,7 +8,7 @@ interface AccountMenuProps {
   onClose: () => void;
 }
 
-export default function AccountMenu({ accountId, onClose }: AccountMenuProps) {
+export default function AccountMenu(_: AccountMenuProps) {
   return (
     <div className="absolute right-2 top-2 bg-dark-200/95 rounded-lg border border-dark-300/50 
                     shadow-xl backdrop-blur-xl p-1 z-10">

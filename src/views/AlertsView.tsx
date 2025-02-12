@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Bell, Filter, Search } from 'lucide-react';
-import AlertsList from '../components/AlertsList';
+// import AlertsList from '../components/AlertsList';
 
 export default function AlertsView() {
   const [filterType, setFilterType] = useState('all');
@@ -105,13 +105,13 @@ export default function AlertsView() {
     }
   ];
 
-  const filteredAlerts = alerts.filter(alert => {
-    const matchesType = filterType === 'all' || alert.type === filterType;
-    const matchesSearch = 
-      alert.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      alert.message.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesType && matchesSearch;
-  });
+  // const filteredAlerts = alerts.filter(alert => {
+  //   const matchesType = filterType === 'all' || alert.type === filterType;
+  //   const matchesSearch = 
+  //     alert.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     alert.message.toLowerCase().includes(searchQuery.toLowerCase());
+  //   return matchesType && matchesSearch;
+  // });
 
   return (
     <div className="space-y-6">
@@ -179,7 +179,7 @@ export default function AlertsView() {
       </div>
 
       {/* Alerts List */}
-      <AlertsList alerts={filteredAlerts} expanded={true} />
+      {/* <AlertsList alerts={filteredAlerts} expanded={true} /> */}
     </div>
   );
 }

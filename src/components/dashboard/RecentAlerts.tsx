@@ -1,5 +1,4 @@
-import React from 'react';
-import { Bell, CheckCircle2, Clock, AlertTriangle } from 'lucide-react';
+import { CheckCircle2, Clock, AlertTriangle } from 'lucide-react';
 
 const alerts = [
   {

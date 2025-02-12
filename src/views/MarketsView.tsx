@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BarChart2 } from 'lucide-react';
 import { Market } from '../types/market';
 import MarketStats from '../components/markets/MarketStats';
@@ -10,7 +10,7 @@ export default function MarketsView() {
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMarket, setSelectedMarket] = useState<Market | null>(null);
-  const [showAutomation, setShowAutomation] = useState(false);
+  const [, setShowAutomation] = useState(false);
 
   const markets: Market[] = [
     {

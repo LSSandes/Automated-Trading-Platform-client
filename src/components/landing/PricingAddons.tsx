@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Check, ChevronRight, Shield, Bot, Zap, Users, Lock, Star, Clock, ArrowRight, DollarSign } from 'lucide-react';
+import { useState } from 'react';
+import { Check, Shield, Bot, Zap, Users, Lock, Star, Clock, ArrowRight, DollarSign } from 'lucide-react';
 import UpsellModal from './UpsellModal';
 import DownsellModal from './DownsellModal';
 import AddonsModal from './AddonsModal';
 
 export default function PricingAddons() {
-  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [selectedPlan, setSelectedPlan] = useState<PricingTier | null>(null);
   const [showUpsell, setShowUpsell] = useState(false);
   const [showDownsell, setShowDownsell] = useState(false);
   const [showAddons, setShowAddons] = useState(false);
@@ -81,7 +81,22 @@ export default function PricingAddons() {
     }
   ];
 
-  const handlePlanSelect = (plan) => {
+  interface PricingTier {
+    id: string;
+    name: string;
+    price: {
+      monthly: number;
+      yearly: number;
+    };
+    description: string;
+    icon: JSX.Element;
+    upsellTo?: string;
+    color: string;
+    features: string[];
+    popular?: boolean;
+  }
+
+  const handlePlanSelect = (plan: PricingTier) => {
     setSelectedPlan(plan);
     if (plan.upsellTo) {
       setShowUpsell(true);
@@ -105,7 +120,7 @@ export default function PricingAddons() {
     setShowAddons(false);
   };
 
-  const savings = {
+  const savings: { [key: string]: number } = {
     basic: 98,
     pro: 198,
     enterprise: 598

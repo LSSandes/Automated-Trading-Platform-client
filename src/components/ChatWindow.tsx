@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Send, MinimizeIcon } from 'lucide-react';
 
 interface Message {
@@ -14,7 +14,7 @@ interface ChatWindowProps {
   onMinimize: () => void;
 }
 
-export default function ChatWindow({ traderId, traderName, onMinimize }: ChatWindowProps) {
+export default function ChatWindow({ traderName, onMinimize }: ChatWindowProps) {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([
     { id: 1, sender: traderName, content: "Hey! Thanks for copying my trades.", timestamp: "10:30 AM" },

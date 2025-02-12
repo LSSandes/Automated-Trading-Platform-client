@@ -1,4 +1,3 @@
-import React from 'react';
 import { TrendingUp, Users, MessageCircle, DollarSign } from 'lucide-react';
 
 interface CopyTraderCardProps {

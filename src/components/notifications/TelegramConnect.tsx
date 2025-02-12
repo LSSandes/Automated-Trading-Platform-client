@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { MessageCircle, Check, Loader } from 'lucide-react';
 import { useSendTelegramMessage } from '../../hooks/useTelegram';
 import { env } from '../../config/env';
@@ -22,7 +22,6 @@ export default function TelegramConnect({ onConnect, className = '' }: TelegramC
       await sendMessage.mutateAsync({
         chatId: '@AutomatedTraderBot',
         text: `🔐 Verification Code: ${verificationCode}\n\nPlease enter this code on the website to complete the connection.`,
-        parseMode: 'HTML'
       });
 
       // In a real implementation, you would:

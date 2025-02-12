@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
-  Brain, TrendingUp, TrendingDown, AlertTriangle, Clock, 
-  BarChart2, Target, Zap, Shield, DollarSign, Users,
-  ArrowRight, Calendar, Filter, Search
+  Brain, TrendingUp, TrendingDown, AlertTriangle, 
+  BarChart2, Target, Zap,
+  ArrowRight, Filter, Search
 } from 'lucide-react';
 
 interface TradePattern {

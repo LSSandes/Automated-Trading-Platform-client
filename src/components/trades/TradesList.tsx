@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Edit2, X } from 'lucide-react';
 import TradeCounts from './TradeCounts';
 
@@ -21,7 +21,7 @@ interface TradesListProps {
 }
 
 export default function TradesList({ trades, onModify, onClose }: TradesListProps) {
-  const [selectedTrades, setSelectedTrades] = useState<string[]>([]);
+  const [selectedTrades] = useState<string[]>([]);
   const [filterType, setFilterType] = useState<'all' | 'buy' | 'sell'>('all');
 
   const tradeCounts = trades.reduce((acc, trade) => ({

@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function LoadingFallback() {
   return (
     <div className="min-h-[200px] flex items-center justify-center">

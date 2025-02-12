@@ -1,5 +1,4 @@
-import React from 'react';
-import { Clock, Copy, MoreVertical, Power } from 'lucide-react';
+import { Clock, Copy, MoreVertical } from 'lucide-react';
 import AssetBadge from './AssetBadge';
 
 interface WebhookCardProps {
@@ -10,7 +9,7 @@ interface WebhookCardProps {
   isPublic: boolean;
 }
 
-export default function WebhookCard({ title, symbol, assets, isActive, isPublic }: WebhookCardProps) {
+export default function WebhookCard({ title, assets, isActive, isPublic }: WebhookCardProps) {
   return (
     <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-indigo-500/50 transition-all">
       <div className="flex justify-between items-start mb-4">

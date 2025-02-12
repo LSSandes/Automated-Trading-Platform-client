@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Bot, Zap, Users, Star, Clock, Check, ArrowRight, DollarSign, Plus, Toggle } from 'lucide-react';
+import { Shield, Bot, Zap, Users, Star, Clock, ArrowRight, DollarSign, Plus } from 'lucide-react';
 
 interface Feature {
   id: string;

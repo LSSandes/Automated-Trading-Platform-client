@@ -1,41 +1,39 @@
-import React from 'react';
-import { X, TrendingUp, BarChart2, Clock, AlertCircle, ArrowRight, 
-         Calendar, Activity, LineChart, PieChart, Info, CheckCircle2,
-         PlayCircle, Edit3, TrendingDown } from 'lucide-react';
-import { Alert, WebhookStatsModalProps } from '@/types/webhook';
+import { X, TrendingUp, BarChart2, 
+          Activity } from 'lucide-react';
+import { WebhookStatsModalProps } from '@/types/webhook';
 
-const mockAlerts: Alert[] = [
-  {
-    id: '1',
-    type: 'market_execution',
-    symbol: 'EURUSD',
-    message: 'Buy EURUSD at 1.0950',
-    timestamp: '2 minutes ago',
-    status: 'success',
-    profitAmount: 125.50,
-    profitPercentage: 1.25
-  },
-  {
-    id: '2',
-    type: 'modify_order',
-    symbol: 'XAUUSD',
-    message: 'Modified SL to 2010.00, TP to 2025.00',
-    timestamp: '15 minutes ago',
-    status: 'success',
-    profitAmount: -45.20,
-    profitPercentage: -0.45
-  },
-  {
-    id: '3',
-    type: 'close_trade',
-    symbol: 'BTCUSD',
-    message: 'Closed BTCUSD position',
-    timestamp: '1 hour ago',
-    status: 'success',
-    profitAmount: 230.50,
-    profitPercentage: 2.3
-  }
-];
+// const mockAlerts: Alert[] = [
+//   {
+//     id: '1',
+//     type: 'market_execution',
+//     symbol: 'EURUSD',
+//     message: 'Buy EURUSD at 1.0950',
+//     timestamp: '2 minutes ago',
+//     status: 'success',
+//     profitAmount: 125.50,
+//     profitPercentage: 1.25
+//   },
+//   {
+//     id: '2',
+//     type: 'modify_order',
+//     symbol: 'XAUUSD',
+//     message: 'Modified SL to 2010.00, TP to 2025.00',
+//     timestamp: '15 minutes ago',
+//     status: 'success',
+//     profitAmount: -45.20,
+//     profitPercentage: -0.45
+//   },
+//   {
+//     id: '3',
+//     type: 'close_trade',
+//     symbol: 'BTCUSD',
+//     message: 'Closed BTCUSD position',
+//     timestamp: '1 hour ago',
+//     status: 'success',
+//     profitAmount: 230.50,
+//     profitPercentage: 2.3
+//   }
+// ];
 
 export default function WebhookStatsModal({ isOpen, onClose, webhook }: WebhookStatsModalProps) {
   if (!isOpen) return null;

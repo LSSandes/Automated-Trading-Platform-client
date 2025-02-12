@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { X, Copy, AlertTriangle, Check } from 'lucide-react';
 
 interface NewWebhookModalProps {

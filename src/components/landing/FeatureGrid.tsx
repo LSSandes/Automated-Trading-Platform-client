@@ -1,4 +1,3 @@
-import React from 'react';
 import { 
   Cpu, Shield, Webhook, Users, BellRing, LineChart 
 } from 'lucide-react';

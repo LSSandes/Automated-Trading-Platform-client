@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface TestimonialStats {

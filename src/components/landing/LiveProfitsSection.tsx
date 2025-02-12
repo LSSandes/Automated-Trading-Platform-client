@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface LiveStat {
   id: number;
   trader: string;

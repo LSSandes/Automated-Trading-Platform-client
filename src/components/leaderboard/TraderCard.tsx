@@ -1,4 +1,3 @@
-import React from 'react';
 import { 
   TrendingUp, Users, Shield, Star, MessageCircle, 
   ArrowRight, DollarSign, Activity, BarChart2

@@ -1,4 +1,3 @@
-import React from 'react';
 import LivePerformanceChart from '../charts/LivePerformanceChart';
 
 export default function WebhookStatsSection() {
