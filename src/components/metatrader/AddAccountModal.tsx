@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { X, HelpCircle, AlertTriangle, Loader, Check } from "lucide-react";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
-import { dispatch } from "@/app/store";
+import { dispatch, useSelector } from "@/app/store";
 import { addAccount } from "@/app/reducers/metaAccount";
+import { toast } from "react-toastify";
 import Tooltip from "../ui/Tooltip";
 
 interface AddAccountModalProps {
@@ -46,6 +47,7 @@ export default function AddAccountModal({
 }: AddAccountModalProps) {
   const [user] = useAtom(userAtom);
   const [platform, setPlatform] = useState<"mt4" | "mt5">("mt4");
+  const error = useSelector((state) => state.metaAccount.error);
   // const [broker, setBroker] = useState("ICMarkets");
   const [server, setServer] = useState("ICMarketsSC-Demo06");
   const [login, setLogin] = useState("");
@@ -114,27 +116,27 @@ export default function AddAccountModal({
         await dispatch(
           addAccount({
             email: user.email,
-            // broker,
-            // name,
             login,
             password,
             server,
             platform,
           }) as any
         ).then(() => {
-          setTimeout(() => {
-            onClose();
-            onSuccess?.();
-            // Reset form
-            // setBroker('');
-            setServer('');
-            setLogin('');
-            setPassword('');
-            // setName('');
-            setConnectionSuccess(false);
-            setIsConnecting(false);
-          }, 500);
-          });
+          if (error != "") {
+            toast.warn("Internal Server Error");
+          } else {
+            setTimeout(() => {
+              onClose();
+              onSuccess?.();
+              setServer("");
+              setLogin("");
+              setPassword("");
+              setConnectionSuccess(false);
+              setIsConnecting(false);
+            }, 500);
+            toast.success("New Account has added");
+          }
+        });
       } else {
         setErrors({ general: "User email is required" });
         setIsConnecting(false);
@@ -160,7 +162,7 @@ export default function AddAccountModal({
     setShowCommonServers(false);
   };
 
-  const isFormValid = /*broker &&*/ server && login && password /*&& name;*/
+  const isFormValid = /*broker &&*/ server && login && password; /*&& name;*/
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
