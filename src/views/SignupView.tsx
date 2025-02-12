@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import logo from "@/assets/dark-logo.png";
@@ -8,6 +8,7 @@ import { env } from "@/config/env";
 import { toast } from "react-toastify";
 
 const SignupView: React.FC = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -19,7 +20,7 @@ const SignupView: React.FC = () => {
         });
         console.log("Backend Response:", response.data);
         localStorage.setItem("token", response.data.token);
-        window.location.href = "/dashboard";
+        navigate("/dashboard");
       } catch (error) {
         console.error("Error during authentication:", error);
         toast.warn("Error during authentication!");

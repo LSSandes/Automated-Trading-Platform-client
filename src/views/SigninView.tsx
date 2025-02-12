@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
@@ -7,6 +8,7 @@ import DynamicSvg from "@/components/DynamicSvg";
 import { toast } from "react-toastify";
 import { env } from "@/config/env";
 const SigninView: React.FC = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleSubmit = (e: React.FormEvent) => {
@@ -21,7 +23,7 @@ const SigninView: React.FC = () => {
           access_token: tokenResponse.access_token,
         });
         localStorage.setItem("token", response.data.token);
-        window.location.href = "/dashboard";
+        navigate('/dashboard')
       } catch (error) {
         console.error("Error during authentication:", error);
         toast.warn("Error during authentication!");
@@ -39,7 +41,7 @@ const SigninView: React.FC = () => {
         password: password,
       });
       localStorage.setItem("token", response.data.token);
-      window.location.href = "/dashboard";
+      
     } catch (error) {
       console.error("error during authentication", error);
       toast.warn("Authentication is failed!");
