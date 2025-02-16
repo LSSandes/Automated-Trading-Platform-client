@@ -42,7 +42,7 @@ export default function Navbar() {
     return str.charAt(0).toUpperCase();
   };
   const handleSignin = () => {
-    navigate("/signin");
+    navigate("/login");
   };
   const handleSignup = () => {
     navigate("/signup");
