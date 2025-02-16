@@ -47,7 +47,7 @@ export default function Navbar() {
   const handleSignup = () => {
     navigate("/signup");
   };
-  console.log("------navbar userinfo--------", userInfoGlobal?.picture);
+  console.log("------navbar picture--------", userInfoGlobal?.picture);
   return (
     <nav className="fixed w-full bg-dark/80 backdrop-blur-xl border-b border-dark-300/50 z-50 py-5 px-16">
       <div className="">
@@ -81,7 +81,7 @@ export default function Navbar() {
                        hover:text-white hover:bg-dark-200/50 rounded-lg 
                        transition-all duration-300"
               >
-                {userInfoGlobal?.picture != null ? (
+                {userInfoGlobal?.picture !== "" ? (
                   <img
                     src={`${
                       userInfoGlobal?.picture?.includes("uploads")

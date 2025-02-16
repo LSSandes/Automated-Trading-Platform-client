@@ -9,7 +9,7 @@ import {
   // Bot,
   ChevronLeft,
   // Cpu,
-  // Globe,
+  Globe,
   // LineChart,
   // Settings,
   Webhook,
@@ -91,7 +91,7 @@ const SideMenu = ({
       label: "Webhooks",
       badge: "5",
     },
-    // { id: "markets", icon: <Globe className="h-5 w-5" />, label: "Markets" },
+    { id: "markets", icon: <Globe className="h-5 w-5" />, label: "Markets" },
     // {
     //   id: "leaderboard",
     //   icon: <Trophy className="h-5 w-5" />,

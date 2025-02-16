@@ -2,14 +2,8 @@ import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   User,
-  // Settings,
-  // CreditCard,
-  // Bell,
   LogOut,
-  // Moon,
   ChevronRight,
-  // Shield,
-  // Wallet,
   SettingsIcon,
 } from "lucide-react";
 import { env } from "@/config/env";
@@ -89,7 +83,7 @@ export default function UserMenu({
   };
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.href = "/signin";
+    window.location.href = "/login";
   };
   console.log("----->picture----->", picture);
   return (

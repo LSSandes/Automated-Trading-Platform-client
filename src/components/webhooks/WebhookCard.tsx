@@ -1,18 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { Clock, Copy, MoreVertical, DollarSign } from "lucide-react";
 import WebhookMenu from "./WebhookMenu";
-// import WebhookColorPicker from "./WebhookColorPicker";
 import { WebhookCardProps } from "@/types/webhook";
-// import WebhookStatsModal from "./WebhookStatsModal";
 import EditWebhookModal from "./EditWebhookModal";
 import SetPriceModal from "./SetPriceModal";
 import RiskManagementModal from "./RiskManagementModal";
 import WebhookAppsModal from "./WebhookAppsModal";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
-import { dispatch } from "@/app/store";
-import { deleteMarketOrder } from "@/app/reducers/webhook";
+import { dispatch, useSelector } from "@/app/store";
+import { deleteMarketOrder, openMarketOrder } from "@/app/reducers/webhook";
+import { FaChartBar } from "react-icons/fa";
 import { toast } from "react-toastify";
+import axios from "../../utils/api";
+import OpenTradeModal from "./OpenTradeModal";
 
 export default function WebhookCard({
   webhook,
@@ -22,42 +23,69 @@ export default function WebhookCard({
   onSetPrice,
 }: WebhookCardProps) {
   const [user] = useAtom(userAtom);
+  const accounts = useSelector((state) => state.metaAccount.accounts);
   const [showMenu, setShowMenu] = useState(false);
-  // const [showColorPicker, setShowColorPicker] = useState(false);
-  // const [showStats, setShowStats] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showPriceModal, setShowPriceModal] = useState(false);
   const [showRiskModal, setShowRiskModal] = useState(false);
   const [showAppsModal, setShowAppsModal] = useState(false);
+  const findAccount = accounts.find(
+    (account) => account.accountId == webhook.accountId
+  )?.accountName;
+  const [accountName, setAccountName] = useState<string>(findAccount ?? "");
+  const [openTradeModal, setOpenTradeModal] = useState<boolean>(false);
+  const [openTradeLoading, setOpenTradeLoading] = useState<boolean>(false);
+  const [price, setPrice] = useState<number>(0);
   const [copied, setCopied] = useState(false);
   const [timeDiff, setTimeDiff] = useState("");
   useEffect(() => {
+    const findAccount = accounts.find(
+      (account) => account.accountId == webhook.accountId
+    );
+    if (findAccount) {
+      setAccountName(findAccount.accountName);
+    }
+  }, [accounts]);
+  useEffect(() => {
+    const fetchPrice = async () => {
+      try {
+        const response = await axios.get("webhook/get-price");
+        if (response.data) {
+          console.log("symbol Price--------->", response.data);
+          setPrice(response.data.data[`${webhook.symbol}`]);
+        }
+      } catch (error) {
+        console.error("Error fetching price:", error);
+      }
+    };
+    fetchPrice();
+    const intervalId = setInterval(fetchPrice, 5000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
     const updateTimeDiff = () => {
-      const now = new Date();
+      const now = Date.now();
       if (webhook.tradeExecutionTime) {
         const tradeExecutionTime = webhook.tradeExecutionTime
           ? new Date(webhook.tradeExecutionTime).getTime()
           : 0;
-        const diffInMilliseconds = now.getTime() - tradeExecutionTime;
-
+        const diffInMilliseconds = now - tradeExecutionTime;
         const hours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
         const minutes = Math.floor(
           (diffInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
         );
-        if (hours == 0) {
-          setTimeDiff(`${minutes} minutes ago`);
+        if (hours === 0) {
+          setTimeDiff(`${minutes} m ago`);
         } else {
-          setTimeDiff(`${hours} hours ${minutes} minutes ago`);
+          setTimeDiff(`${hours} h ${minutes} m ago`);
         }
       }
     };
-
     updateTimeDiff();
-    const intervalId = setInterval(updateTimeDiff, 60000); // update every minute
-
-    return () => clearInterval(intervalId); // cleanup on unmount
-  }, []);
-
+    const intervalId = setInterval(updateTimeDiff, 60000);
+    return () => clearInterval(intervalId);
+  }, [webhook]);
   //  ***************************Card menu disable and enable**********************************//
   const menuRef = useRef<HTMLDivElement>(null);
   const handleClickOutside = (event: MouseEvent) => {
@@ -107,32 +135,40 @@ export default function WebhookCard({
             orderDirection: webhook.orderDirection,
             symbol: webhook.symbol,
           })
-        ).then(() => {
-          toast.success("The webhook has been successfully deleted.");
-        });
+        );
       }
     }
   };
-  //  ***************************************************************************//
-  // const getBgGradient = () => {
-  //   if (!webhook.color) return "from-dark-200/20 to-dark-200/5";
-  //   return webhook.color;
-  // };
-
+  const handleOpenTrade = () => {
+    if (webhook.connectionStatus == true) {
+      setOpenTradeLoading(true);
+      dispatch(
+        openMarketOrder({
+          accountId: webhook.accountId,
+          webhookName: webhook.webhookName,
+          symbol: webhook.symbol,
+          orderDirection: webhook.orderDirection,
+          webhookMode: webhook.webhookMode,
+        })
+      ).then(() => {
+        setOpenTradeLoading(false);
+        setOpenTradeModal(false);
+      });
+    } else {
+      toast.info("The account needs to be connected.");
+    }
+  };
+  console.log("------111----accountname------->", accountName);
   return (
     <>
       <div
         className={`relative rounded-xl overflow-hidden transition-all duration-300 
-                      hover:translate-y-[-2px] hover:shadow-2xl hover:shadow-accent/5`}
+                      hover:translate-y-[-2px] hover:shadow-2xl hover:shadow-accent/5 border border-gray-500`}
       >
-        {/* Background Gradient */}
         <div
           className={`absolute inset-0 bg-gradient-to-br from-dark-200/20 to-dark-200/5 opacity-10`}
         />
-
-        {/* Content */}
         <div className="relative glass-panel rounded-xl p-6 border border-dark-300/30">
-          {/* Header */}
           <div className="flex justify-between items-start mb-6">
             <div className="flex items-center space-x-3">
               <div
@@ -156,7 +192,7 @@ export default function WebhookCard({
                         : "text-purple-400"
                     }`}
                   >
-                    {webhook.webhookName}
+                    {accountName}
                   </span>
                   <span className="text-gray-400">•</span>
                   <div className="flex items-center text-sm">
@@ -192,8 +228,6 @@ export default function WebhookCard({
               </button>
             </div>
           </div>
-
-          {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="glass-panel rounded-lg p-3 border border-dark-300/30">
               <div className="text-gray-400 text-sm mb-1">Last Signal</div>
@@ -201,16 +235,23 @@ export default function WebhookCard({
                 {timeDiff || "Never"}
               </div>
             </div>
-
             <div className="glass-panel rounded-lg p-3 border border-dark-300/30">
-              <div className="text-gray-400 text-sm mb-1">Success Rate</div>
-              <div className="text-emerald-400 font-medium">
-                {webhook.successRate ? `${webhook.successRate}%` : "N/A"}
+              <div className="grid grid-cols-2 gap-2">
+                <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
+                  Volume: {webhook.volume}
+                </div>
+                <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
+                  SL: {webhook.stopLoss}
+                </div>
+                <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
+                  TP: {webhook.takeProfit}
+                </div>
+                <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
+                  {webhook.orderDirection.toUpperCase()} order
+                </div>
               </div>
             </div>
           </div>
-
-          {/* Symbols */}
           <div className="flex flex-wrap gap-1.5 mb-6">
             <span
               className="px-2 py-1 text-xs rounded-lg bg-dark-200/50 text-gray-300
@@ -219,8 +260,6 @@ export default function WebhookCard({
               {webhook.symbol}
             </span>
           </div>
-
-          {/* Controls */}
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-6">
               <div className="flex flex-col items-center space-y-1">
@@ -255,32 +294,31 @@ export default function WebhookCard({
                 </button>
               </div>
 
-              {webhook.isPublic && (
-                <div className="flex flex-col items-center space-y-1">
+              {price != 0 && (
+                <div className="flex flex-col items-start space-y-1">
                   <span className="text-xs text-gray-400">Price</span>
                   <button
                     onClick={() => setShowPriceModal(true)}
                     className="flex items-center space-x-1 text-emerald-400 hover:text-emerald-300 transition-colors"
                   >
                     <DollarSign className="h-4 w-4" />
-                    <span>{webhook.price || 0}/mo</span>
+                    <span>{price?.toFixed(6) || 0}</span>
                   </button>
                 </div>
               )}
             </div>
 
-            {/* <button
-              onClick={() => setShowStats(true)}
-              className="px-3 py-1.5 text-sm bg-dark-200/50 text-gray-300 rounded-lg
+            <button
+              onClick={() => setOpenTradeModal(true)}
+              className="px-3 py-1.5 text-[16px] bg-dark-200/50 text-gray-300 rounded-lg
                        border border-dark-300/30 hover:bg-dark-200/80 transition-colors
                        flex items-center space-x-1"
             >
-              <Power className="h-4 w-4 mr-1" />
-              <span>View Stats</span>
-            </button> */}
+              <FaChartBar className="h-4 w-4" />
+              <span>Open Trade</span>
+            </button>
           </div>
         </div>
-
         {showMenu && (
           <div ref={menuRef}>
             <WebhookMenu
@@ -294,32 +332,7 @@ export default function WebhookCard({
             />
           </div>
         )}
-
-        {/* {showColorPicker && (
-          <div
-            className="absolute right-2 top-12 bg-dark-200/95 rounded-xl border border-dark-300/50 
-                        shadow-xl backdrop-blur-xl p-4 z-50"
-          >
-            <h4 className="text-sm font-medium text-white mb-3">
-              Choose Color
-            </h4>
-            <WebhookColorPicker
-              selectedColor={webhook.color || ""}
-              onColorSelect={(color) => {
-                onChangeColor(webhook.id);
-                setShowColorPicker(false);
-              }}
-            />
-          </div>
-        )} */}
       </div>
-{/* 
-      <WebhookStatsModal
-        isOpen={showStats}
-        onClose={() => setShowStats(false)}
-        webhook={webhook}
-      /> */}
-
       <EditWebhookModal
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
@@ -344,6 +357,14 @@ export default function WebhookCard({
         isOpen={showAppsModal}
         onClose={() => setShowAppsModal(false)}
         webhook={webhook}
+        accountName={accountName}
+      />
+      <OpenTradeModal
+        open={openTradeModal}
+        setOpen={setOpenTradeModal}
+        handleOk={handleOpenTrade}
+        webhook={webhook}
+        loading={openTradeLoading}
       />
     </>
   );

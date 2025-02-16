@@ -15,7 +15,7 @@ import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
 import { useSelector, dispatch } from "@/app/store";
 import { getAccounts } from "@/app/reducers/metaAccount";
-import { connectMarketOrder, disconnectWebhook } from "@/app/reducers/webhook";
+import { connectMarketOrder, disconnectMarketOrder } from "@/app/reducers/webhook";
 import { toast } from "react-toastify";
 
 interface LoadingType {
@@ -26,15 +26,13 @@ export default function WebhookAppsModal({
   isOpen,
   onClose,
   webhook,
+  accountName,
 }: WebhookAppsModalProps) {
+  console.log("---------222--accountName--->", accountName);
   const [user] = useAtom(userAtom);
   const metaAccounts = useSelector((state) => state.metaAccount.accounts);
-  const error = useSelector((state) => state.webhook.error);
   const [accountId, setAccountId] = useState<string>("");
-  useEffect(() => {
-    dispatch(getAccounts(user?.email ?? ""));
-  }, []);
-  const [selected, setSelected] = useState(metaAccounts[0]?.accountName);
+  const [selected, setSelected] = useState(accountName);
   const [loadingConnect, setLoadingConnect] = useState<LoadingType>({
     appName: "",
     loader: false,
@@ -43,7 +41,9 @@ export default function WebhookAppsModal({
     appName: "",
     loader: false,
   });
-  console.log("accountId", accountId);
+  useEffect(() => {
+    dispatch(getAccounts(user?.email ?? ""));
+  }, []);
   useEffect(() => {
     const findAccount = metaAccounts.find(
       (account) => account.accountName == selected
@@ -52,6 +52,7 @@ export default function WebhookAppsModal({
       setAccountId(findAccount?.accountId);
     }
   }, [selected]);
+
   const handleConnect = (appName: string) => {
     if (appName == "MetaTrader") {
       setLoadingConnect({ appName, loader: true });
@@ -63,11 +64,6 @@ export default function WebhookAppsModal({
           orderDirection: webhook.orderDirection,
         })
       ).then(() => {
-        if (error != "") {
-          toast.warn("Internal Server Error");
-        } else {
-          toast.success("Successfully connected to the account");
-        }
         setLoadingConnect({ appName, loader: false });
         onClose();
       });
@@ -77,26 +73,25 @@ export default function WebhookAppsModal({
     }
   };
   const handleDisconnect = (appName: string) => {
-    if (appName == "MetaTrader") {
-      dispatch(
-        disconnectWebhook({
-          accountId,
-          webhookName: webhook.webhookName,
-          symbol: webhook.symbol,
-          orderDirection: webhook.orderDirection,
-        })
-      ).then(() => {
-        if (error != "") {
-          toast.warn("Internal Server Error");
-        } else {
-          toast.success("Disconnected from the account.");
-        }
-        setLoadingDisconnect({ appName, loader: false });
-        onClose();
-      });
-    } else if (appName == "Binance") {
-    } else if (appName == "Bitget") {
+    if (accountId == "") {
+      toast.info(`Please select account: ${accountName}`);
     } else {
+      if (appName == "MetaTrader") {
+        dispatch(
+          disconnectMarketOrder({
+            accountId,
+            webhookName: webhook.webhookName,
+            symbol: webhook.symbol,
+            orderDirection: webhook.orderDirection,
+          })
+        ).then(() => {
+          setLoadingDisconnect({ appName, loader: false });
+          onClose();
+        });
+      } else if (appName == "Binance") {
+      } else if (appName == "Bitget") {
+      } else {
+      }
     }
   };
 

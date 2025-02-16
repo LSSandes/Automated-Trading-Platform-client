@@ -1,5 +1,6 @@
 export interface WebhookConfig {
   id: string;
+  accountId: string;
   webhookName: string;
   symbol: string;
   isActive: boolean;
@@ -23,6 +24,12 @@ export interface WebhookCardProps {
   onToggleActive: (id: string) => void;
   onTogglePublic: (id: string) => void;
   onSetPrice?: (id: string, price: number, interval: string) => void;
+}
+
+export interface CloseOrderCardProps {
+  closeOrder: CloseOrderConfig;
+  onToggleActive: (id: number) => void;
+  onTogglePublic: (id: number) => void;
 }
 
 export interface WebhookStats {
@@ -67,18 +74,31 @@ export interface EditCloseOrderModalProps {
   closeOrder: CloseOrderConfig;
 }
 
+export interface MarketOrderStrategyProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
 export interface WebhookStateProps {
   webhooks: WebhookConfig[];
+  error: object | string | null;
+}
+
+export interface CloseOrderStateProps {
   closeOrders: CloseOrderConfig[];
   error: object | string | null;
 }
 
 export interface CloseOrderConfig {
   id: number;
+  accountId: string;
   webhookName: string;
   webhookMode: string;
   symbol: string;
   connectionStatus: boolean;
+  tradeStartTime: string;
+  isActive: boolean;
+  isPublic: boolean;
 }
 
 export interface WebhookStatsModalProps {
@@ -134,6 +154,7 @@ export interface WebhookAppsModalProps {
   isOpen: boolean;
   onClose: () => void;
   webhook: WebhookConfig;
+  accountName: string;
 }
 
 export interface NewWebhookModalProps {

@@ -4,9 +4,9 @@ import Tooltip from "../ui/Tooltip";
 import { NewWebhookModalProps } from "@/types/webhook";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
-import { dispatch, useSelector } from "@/app/store";
-import { createMarketOrder, addCloseOrder } from "@/app/reducers/webhook";
-import { toast } from "react-toastify";
+import { dispatch } from "@/app/store";
+import { createMarketOrder } from "@/app/reducers/webhook";
+import { addCloseOrder } from "@/app/reducers/closeOrder";
 
 type WebhookMode = "basic" | "advanced";
 type OrderType = "Market Order" | "Modify Order" | "Close Order";
@@ -42,7 +42,6 @@ export default function NewWebhookModal({
   const [fixedSize, setFixedSize] = useState(2);
   const [stopLoss, setStopLoss] = useState("");
   const [takeProfit, setTakeProfit] = useState("");
-  const error = useSelector((state) => state.webhook.error);
   const handleCreateWebhook = async () => {
     if (orderType == "Market Order") {
       dispatch(
@@ -58,13 +57,7 @@ export default function NewWebhookModal({
           stopLoss: Number(stopLoss).toFixed(6).toString(),
           takeProfit: Number(takeProfit).toFixed(6).toString(),
         })
-      ).then(() => {
-        if (error != "") {
-          toast.warn("Internal Server Error");
-        } else {
-          toast.success("New Webhook is created");
-        }
-      });
+      );
     } else if (orderType == "Close Order") {
       if (user) {
         dispatch(
@@ -74,9 +67,7 @@ export default function NewWebhookModal({
             webhookMode: mode,
             symbol: pair,
           })
-        ).then(() => {
-          toast.success("New CloseOrder is added");
-        });
+        );
       }
     }
   };

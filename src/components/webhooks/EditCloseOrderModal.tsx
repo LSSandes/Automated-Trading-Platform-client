@@ -4,10 +4,9 @@ import { X, Check, HelpCircle } from "lucide-react";
 import Tooltip from "../ui/Tooltip";
 import { tooltips } from "@/constant/webhook";
 import { dispatch } from "@/app/store";
-import { editCloseOrder } from "@/app/reducers/webhook";
+import { editCloseOrder } from "@/app/reducers/closeOrder";
 import { userAtom } from "@/store/atoms";
 import { useAtom } from "jotai";
-import { toast } from "react-toastify";
 export default function EditCloseOrderModal({
   isOpen,
   onClose,
@@ -22,7 +21,6 @@ export default function EditCloseOrderModal({
     closeOrder.webhookName
   );
   const [symbol, setSymbol] = useState<string>(closeOrder.symbol);
-  console.log("close order---not redux", closeOrder);
   const handleSave = () => {
     if (user) {
       dispatch(
@@ -35,7 +33,6 @@ export default function EditCloseOrderModal({
           symbol_new: symbol,
         })
       ).then(() => {
-        toast.success("The CloseOrder is updated");
         onClose();
       });
     }

@@ -4,7 +4,7 @@ import Tooltip from "../ui/Tooltip";
 import { EditWebhookModalProps } from "@/types/webhook";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
-import { dispatch, useSelector } from "@/app/store";
+import { dispatch } from "@/app/store";
 import { editMarketOrder } from "@/app/reducers/webhook";
 import { toast } from "react-toastify";
 import { tooltips } from "@/constant/webhook";
@@ -38,7 +38,6 @@ export default function EditWebhookModal({
   const [modifyPrice, setModifyPrice] = useState("");
   const [modifyType, setModifyType] = useState("Stop Loss");
 
-  const error = useSelector((state) => state.webhook.error);
 
   useEffect(() => {
     if (webhook) {
@@ -70,11 +69,6 @@ export default function EditWebhookModal({
           takeProfit_new: takeProfit.toFixed(6).toString(),
         })
       ).then(() => {
-        if (error != "") {
-          toast.warn("Internal Server Error");
-        } else {
-          toast.success("Webhook is updated successfully.");
-        }
         onClose();
       });
     }

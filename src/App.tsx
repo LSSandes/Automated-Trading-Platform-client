@@ -5,7 +5,7 @@ import DashboardView from "./views/DashboardView";
 // import TradesView from "./views/TradesView";
 import SignalsView from "./views/SignalsView";
 // import AnalyticsView from "./views/AnalyticsView";
-// import MarketsView from "./views/MarketsView";
+import MarketsView from "./views/MarketsView";
 // import AlertsView from "./views/AlertsView";
 import MetaTraderView from "./views/MetaTraderView";
 // import LeaderboardView from "./views/LeaderboardView";
@@ -82,7 +82,7 @@ function App() {
             <Routes>
               <Route path="/test-login" element={<TestLoginView />} />
               <Route path="/signup" element={<SignupView />} />
-              <Route path="/signin" element={<SigninView />} />
+              <Route path="/login" element={<SigninView />} />
               <Route path="/" element={<Layout />}>
                 <Route
                   path="dashboard"
@@ -99,7 +99,7 @@ function App() {
                 {/* <Route path="trades" element={<TradesView />} /> */}
                 <Route path="signals" element={<SignalsView />} />
                 {/* <Route path="analytics" element={<AnalyticsView />} /> */}
-                {/* <Route path="markets" element={<MarketsView />} /> */}
+                <Route path="markets" element={<MarketsView />} />
                 {/* <Route path="alerts" element={<AlertsView />} /> */}
                 <Route path="settings" element={<ProfileSettingView />} />
                 <Route

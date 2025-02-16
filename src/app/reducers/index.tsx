@@ -7,7 +7,8 @@ import metaAccountInfo from "./metaAccountInfo";
 import webhook from "./webhook";
 import metaStats from "./metaStats";
 import metaTotalStats from "./metaTotalStats";
-import metaViualTrades from "./metaVisualTrades"
+import metaViualTrades from "./metaVisualTrades";
+import closeOrder from "./closeOrder";
 
 // ==============================|| COMBINE REDUCERS ||============================== //
 
@@ -17,7 +18,8 @@ const reducers = combineReducers({
   webhook,
   metaStats,
   metaTotalStats,
-  metaViualTrades
+  metaViualTrades,
+  closeOrder,
 });
 
 export default reducers;

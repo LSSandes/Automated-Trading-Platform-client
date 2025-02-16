@@ -2,11 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "../../utils/api";
 import { dispatch } from "../store";
 import { WebhookStateProps } from "@/types/webhook";
+import { toast } from "react-toastify";
 
 const initialState: WebhookStateProps = {
   error: null,
   webhooks: [],
-  closeOrders: [],
 };
 
 const webhook = createSlice({
@@ -19,33 +19,20 @@ const webhook = createSlice({
     getWebhooksSuccess(state, action) {
       state.webhooks = action.payload;
     },
-    getCloseOrdersSuccess(state, action) {
-      state.closeOrders = action.payload;
-    },
+
     addWebhookSuccess(state, action) {
       state.webhooks = [...state.webhooks, action.payload];
     },
-    addCloseOrderSuccess(state, action) {
-      state.closeOrders = [...state.closeOrders, action.payload];
-    },
+
     deleteWebhookSuccess(state, action) {
       state.webhooks = state.webhooks.filter(
         (webhook) => webhook.id !== action.payload.id
       );
     },
-    deleteCloseOrderSuccess(state, action) {
-      state.closeOrders = state.closeOrders.filter(
-        (closeOrder) => closeOrder.id !== action.payload.id
-      );
-    },
+
     udpateWebhookSuccess(state, action) {
       state.webhooks = state.webhooks.map((webhook) =>
         webhook.id === action.payload.id ? action.payload : webhook
-      );
-    },
-    updateCloseOrderSuccess(state, action) {
-      state.closeOrders = state.closeOrders.map((closeOrder) =>
-        closeOrder.id === action.payload.id ? action.payload : closeOrder
       );
     },
   },
@@ -57,24 +44,10 @@ export const { hasError, getWebhooksSuccess, addWebhookSuccess } =
 export function getWebhooks(email: string | undefined) {
   return async () => {
     try {
+      console.log("-----webhook------", email);
       const response = await axios.post("webhook/get-marketorders", { email });
       dispatch(
         webhook.actions.getWebhooksSuccess(response.data.data.existingWebhooks)
-      );
-    } catch (err) {
-      dispatch(webhook.actions.hasError(err));
-    }
-  };
-}
-
-export function getCloseOrders(email: string | undefined) {
-  return async () => {
-    try {
-      const response = await axios.post("webhook/get-closeorders", { email });
-      dispatch(
-        webhook.actions.getCloseOrdersSuccess(
-          response.data.data.existingCloseOrders
-        )
       );
     } catch (err) {
       dispatch(webhook.actions.hasError(err));
@@ -116,9 +89,11 @@ export function createMarketOrder({
       dispatch(
         webhook.actions.addWebhookSuccess(response.data.data.newWebhook)
       );
-      dispatch(webhook.actions.hasError(""));
+      dispatch(webhook.actions.hasError(null));
+      toast.success("New MarketOrder is created");
     } catch (err) {
       dispatch(webhook.actions.hasError(err));
+      toast.warn("Internal Server Error");
     }
   };
 }
@@ -152,8 +127,11 @@ export function deleteMarketOrder({
       dispatch(
         webhook.actions.deleteWebhookSuccess(response.data.data.deletedWebhook)
       );
+      toast.success("The webhook has been deleted");
     } catch (err) {
       dispatch(webhook.actions.hasError(err));
+      toast.success("Internal Server Error");
+
     }
   };
 }
@@ -180,47 +158,16 @@ export function connectMarketOrder({
       dispatch(
         webhook.actions.udpateWebhookSuccess(response.data.data.updatedWebhook)
       );
-      dispatch(webhook.actions.hasError(""));
+      dispatch(webhook.actions.hasError(null));
+      toast.success("Successfully connected to the account");
     } catch (err) {
       dispatch(webhook.actions.hasError(err));
+      toast.warn("The market is closed");
     }
   };
 }
 
-export function connectCloseOrder({
-  email,
-  accountId,
-  webhookName,
-  webhookMode,
-  symbol,
-}: {
-  email: string;
-  accountId: string;
-  webhookName: string;
-  webhookMode: string;
-  symbol: string;
-}) {
-  return async () => {
-    try {
-      const response = await axios.post("webhook/connect-closeorder", {
-        email,
-        accountId,
-        webhookName,
-        webhookMode,
-        symbol,
-      });
-      dispatch(
-        webhook.actions.updateCloseOrderSuccess(
-          response.data.data.newCloseOrder
-        )
-      );
-    } catch (err) {
-      dispatch(webhook.actions.hasError(err));
-    }
-  };
-}
-
-export function disconnectWebhook({
+export function disconnectMarketOrder({
   accountId,
   webhookName,
   symbol,
@@ -249,9 +196,11 @@ export function disconnectWebhook({
       dispatch(
         webhook.actions.udpateWebhookSuccess(response.data.data.updatedWebhook)
       );
-      dispatch(webhook.actions.hasError(""));
+      dispatch(webhook.actions.hasError(null));
+      toast.success("Disconnected from the account.");
     } catch (err) {
       dispatch(webhook.actions.hasError(err));
+      toast.warn("Connection Error")
     }
   };
 }
@@ -297,139 +246,55 @@ export function editMarketOrder({
       dispatch(
         webhook.actions.udpateWebhookSuccess(response.data.data.updatedWebhook)
       );
-      dispatch(webhook.actions.hasError(""));
+      dispatch(webhook.actions.hasError(null));
+      toast.success("Webhook is updated successfully.");
     } catch (err) {
       dispatch(webhook.actions.hasError(err));
+      toast.warn("Internal Server Error");
     }
   };
 }
 
-export function addCloseOrder({
-  email,
-  webhookName,
-  webhookMode,
-  symbol,
-}: {
-  email: string;
-  webhookName: string;
-  webhookMode: string;
-  symbol: string;
-}) {
-  return async () => {
-    try {
-      const response = await axios.post("webhook/create-closeorder", {
-        email,
-        webhookName,
-        webhookMode,
-        symbol,
-      });
-      dispatch(
-        webhook.actions.addCloseOrderSuccess(response.data.data.newCloseOrder)
-      );
-    } catch (err) {
-      dispatch(webhook.actions.hasError(err));
-    }
-  };
-}
-
-export function editCloseOrder({
-  email,
-  webhookName,
-  webhookMode,
-  symbol,
-  webhookName_new,
-  symbol_new,
-}: {
-  email: string;
-  webhookName: string;
-  webhookMode: string;
-  symbol: string;
-  webhookName_new: string;
-  symbol_new: string;
-}) {
-  return async () => {
-    try {
-      const response = await axios.post("webhook/edit-closeorder", {
-        email,
-        webhookName,
-        webhookMode,
-        symbol,
-        webhookName_new,
-        symbol_new,
-      });
-      console.log(
-        "-------update close order----",
-        response.data.data.updatedCloseOrder
-      );
-      dispatch(
-        webhook.actions.updateCloseOrderSuccess(
-          response.data.data.updatedCloseOrder
-        )
-      );
-    } catch (err) {
-      dispatch(webhook.actions.hasError(err));
-    }
-  };
-}
-
-export function deleteCloseOrder({
-  email,
-  webhookName,
-  webhookMode,
-  symbol,
-}: {
-  email: string;
-  webhookName: string;
-  webhookMode: string;
-  symbol: string;
-}) {
-  return async () => {
-    try {
-      const response = await axios.post("webhook/delete-closeorder", {
-        email,
-        webhookName,
-        webhookMode,
-        symbol,
-      });
-      dispatch(
-        webhook.actions.deleteCloseOrderSuccess(
-          response.data.data.deletedCloseOrder
-        )
-      );
-    } catch (err) {
-      dispatch(webhook.actions.hasError(err));
-    }
-  };
-}
-
-export function disconnectCloseOrder({
+export function openMarketOrder({
   accountId,
   webhookName,
   symbol,
+  orderDirection,
   webhookMode,
 }: {
   accountId: string;
   webhookName: string;
   symbol: string;
+  orderDirection: string;
   webhookMode: string;
 }) {
   return async () => {
     try {
-      const response = await axios.post("webhook/disconnect-closeorder", {
+      console.log(
+        "openTrademarketOrder-------->",
         accountId,
         webhookName,
         symbol,
+        orderDirection,
+        webhookMode
+      );
+      const response = await axios.post("webhook/open-marketorder", {
+        accountId,
+        webhookName,
+        symbol,
+        orderDirection,
         webhookMode,
       });
       dispatch(
-        webhook.actions.updateCloseOrderSuccess(
-          response.data.data.updatedCloseOrder
-        )
+        webhook.actions.udpateWebhookSuccess(response.data.data.updatedWebhook)
       );
-      dispatch(webhook.actions.hasError(""));
+      dispatch(webhook.actions.hasError(null));
+      toast.success("Trade has opened.");
     } catch (err) {
       dispatch(webhook.actions.hasError(err));
+      toast.info("The market is closed");
     }
   };
 }
+
 export default webhook.reducer;

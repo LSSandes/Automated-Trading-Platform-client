@@ -10,7 +10,7 @@ import { getAccounts } from "@/app/reducers/metaAccount";
 import {
   connectCloseOrder,
   disconnectCloseOrder,
-} from "@/app/reducers/webhook";
+} from "@/app/reducers/closeOrder";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
 import {
@@ -19,7 +19,6 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "@headlessui/react";
-import { toast } from "react-toastify";
 export default function CloseOrderAppModal({
   isOpen,
   onClose,
@@ -27,8 +26,10 @@ export default function CloseOrderAppModal({
 }: CloseOrderAppModalProps) {
   const [user] = useAtom(userAtom);
   const metaAccounts = useSelector((state) => state.metaAccount.accounts);
-
-  const [selected, setSelected] = useState(metaAccounts[0]?.accountName);
+  const findAccount = metaAccounts.find(
+    (account) => account.accountId == closeOrder.accountId
+  )?.accountName;
+  const [selected, setSelected] = useState<string>(findAccount ?? "");
   const [accountId, setAccountId] = useState<string>("");
   const [loadingConnect, setLoadingConnect] = useState<boolean>(false);
   const [loadingDisconnect, setLoadingDisconnect] = useState<boolean>(false);
@@ -57,7 +58,6 @@ export default function CloseOrderAppModal({
         })
       ).then(() => {
         setLoadingConnect(false);
-        toast.success("This CloseOrder has connected");
         onClose();
       });
     }
@@ -73,7 +73,6 @@ export default function CloseOrderAppModal({
       })
     ).then(() => {
       setLoadingDisconnect(false);
-      toast.success("This CloseOrder has disconnected");
       onClose();
     });
   };

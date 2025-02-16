@@ -12,7 +12,7 @@ export default function Layout() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token && currentPath != "/") {
-      navigate("/signin"); // Redirect to login page if no token
+      navigate("/login"); // Redirect to login page if no token
     }
   }, [navigate, currentPath]);
   return (
