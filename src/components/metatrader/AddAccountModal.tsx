@@ -102,7 +102,7 @@ export default function AddAccountModal({
             setTimeout(() => {
               onClose();
               onSuccess?.();
-              setServer("");
+              setServer("ICMarketsSC-Demo06");
               setLogin("");
               setPassword("");
               setConnectionSuccess(false);
