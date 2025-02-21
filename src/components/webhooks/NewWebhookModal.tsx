@@ -45,20 +45,36 @@ export default function NewWebhookModal({
   const [takeProfit, setTakeProfit] = useState("");
   const handleCreateWebhook = async () => {
     if (orderType == "Market Order") {
-      dispatch(
-        createMarketOrder({
-          email: user?.email ?? "",
-          webhookName,
-          webhookMode: mode,
-          symbol: pair,
-          orderDirection,
-          volume: usePercentageSize
-            ? (percentageSize / 100).toFixed(4).toString()
-            : fixedSize.toString(),
-          stopLoss: Number(stopLoss).toFixed(6).toString(),
-          takeProfit: Number(takeProfit).toFixed(6).toString(),
-        })
-      );
+      if (user?.email) {
+        dispatch(
+          createMarketOrder({
+            email: user.email,
+            webhookName,
+            webhookMode: mode,
+            symbol: pair,
+            orderDirection,
+            volume: usePercentageSize
+              ? (percentageSize / 100).toFixed(4).toString()
+              : fixedSize.toString(),
+            stopLoss: Number(stopLoss).toFixed(6).toString(),
+            takeProfit: Number(takeProfit).toFixed(6).toString(),
+          })
+        );
+        dispatch(
+          createMarketOrder({
+            email: user?.email ?? "",
+            webhookName,
+            webhookMode: mode,
+            symbol: pair,
+            orderDirection,
+            volume: usePercentageSize
+              ? (percentageSize / 100).toFixed(4).toString()
+              : fixedSize.toString(),
+            stopLoss: Number(stopLoss).toFixed(6).toString(),
+            takeProfit: Number(takeProfit).toFixed(6).toString(),
+          })
+        );
+      }
     } else if (orderType == "Close Order") {
       if (user) {
         dispatch(
@@ -381,6 +397,24 @@ export default function NewWebhookModal({
                   className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-3
                            border border-dark-300/50 focus:outline-none focus:ring-1 
                            focus:ring-accent/50"
+                />
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="flex items-center space-x-2 text-sm text-gray-400">
+                    <span>Fixed Position Size</span>
+                    <Tooltip content={tooltips.fixedSize}>
+                      <HelpCircle className="h-4 w-4" />
+                    </Tooltip>
+                  </label>
+                </div>
+                <input
+                  type="number"
+                  value={fixedSize}
+                  onChange={(e) => setFixedSize(Number(e.target.value))}
+                  className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2
+                                   border border-dark-300/50 focus:outline-none focus:ring-1 
+                                   focus:ring-accent/50 text-sm"
                 />
               </div>
             </div>

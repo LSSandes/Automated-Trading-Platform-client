@@ -88,6 +88,18 @@ export default function AccountStatsModal({
     }
   }, [accountId, index]);
 
+  const [chartWidth, setChartWidth] = useState(700);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setChartWidth(window.innerWidth < 768 ? window.innerWidth - 40 : 700);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       <div
@@ -362,22 +374,20 @@ export default function AccountStatsModal({
         {/* trades visualization */}
         {tradeTab == "visualization" && (
           <div className="flex flex-col justify-between items-center gap-2 overflow-y-auto max-h-[700px] m-10">
-            <div className="xl:grid-cols-2 grid place-items-center gap-20 my-5 grid-cols-1">
-              <div className="flex flex-col items-center justify-between gap-5">
-                <div className="text-white text-xl font-sans font-bold flex justify-start items-center w-[80%] gap-5">
-                  <TrendingUp className="h-6 w-6" />
-                  Profitability
+            <div className="grid grid-cols-1 xl:grid-cols-2 place-items-center gap-10 my-5">
+              <div className="flex flex-col items-center gap-5">
+                <div className="text-white text-xl font-bold flex items-center w-[80%] gap-5">
+                  <TrendingUp className="h-6 w-6" /> Profitability
                 </div>
-                <PieChart width={700} height={300}>
+                <PieChart width={chartWidth} height={150}>
                   <Pie
                     data={wonlostStats}
-                    cx={350}
-                    cy={300}
+                    cx="50%"
+                    cy={150}
                     startAngle={180}
                     endAngle={0}
-                    innerRadius={100}
-                    outerRadius={250}
-                    fill="#8884d8"
+                    innerRadius={60}
+                    outerRadius={150}
                     paddingAngle={2}
                     dataKey="value"
                   >
@@ -389,42 +399,32 @@ export default function AccountStatsModal({
                     ))}
                   </Pie>
                 </PieChart>
-                <div className="text-green-500 font-bold flex flex-col justify-center items-center">
-                  <span className="text-white">Win Rate</span>{" "}
+                <div className="text-green-500 font-bold flex flex-col items-center">
+                  <span className="text-white">Win Rate</span>
                   <span className="text-[#0088FE]">
-                    ${wonlostStats[0]?.value.toFixed(2)}%
+                    {wonlostStats[0]?.value.toFixed(2)}%
                   </span>
                 </div>
               </div>
-              <div className="flex flex-col justify-center items-center gap-5">
-                <div className=" text-white font-bold font-sans text-xl w-[80%] flex justify-start items-center gap-5">
-                  <Clock className="h-6 w-6" />
-                  Profit and Loss Hourly Analysis
+
+              <div className="flex flex-col items-center gap-5">
+                <div className="text-white font-bold text-xl flex items-center w-[80%] gap-5">
+                  <Clock className="h-6 w-6" /> Profit and Loss Hourly Analysis
                 </div>
                 <AreaChart
-                  width={700}
+                  width={chartWidth}
                   height={500}
                   data={tradesbyhourstats}
-                  margin={{
-                    top: 10,
-                    right: 30,
-                    left: 0,
-                    bottom: 0,
-                  }}
                 >
                   <XAxis dataKey="hour" />
                   <YAxis />
-                  <Legend />
                   <Tooltip
-                    labelStyle={{ color: "white" }}
                     contentStyle={{
                       backgroundColor: "rgba(0, 0, 0, 0.7)",
                       borderRadius: "5px",
-                      border: "1px solid rgba(255, 255, 255, 0.2)",
-                      padding: "10px",
-                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.3)",
                     }}
                   />
+                  <Legend />
                   <Area
                     type="monotone"
                     dataKey="wonProfit"
@@ -439,33 +439,19 @@ export default function AccountStatsModal({
                   />
                 </AreaChart>
               </div>
-              <div className="flex flex-col justify-center items-center gap-5">
-                <div className=" text-white font-bold font-sans text-xl flex gap-5 justify-start items-center w-[80%]">
-                <BsCalendar4Week className="h-6 w-6"/>
-                  Profit and Loss Weekly Analysis
+
+              <div className="flex flex-col items-center gap-5">
+                <div className="text-white font-bold text-xl flex gap-5 items-center w-[80%]">
+                  <BsCalendar4Week className="h-6 w-6" /> Profit and Loss Weekly
+                  Analysis
                 </div>
-                <BarChart
-                  width={700}
-                  height={500}
-                  data={byweekdayStats}
-                  stackOffset="sign"
-                  margin={{
-                    top: 5,
-                    right: 0,
-                    left: 0,
-                    bottom: 5,
-                  }}
-                >
-                  <XAxis dataKey="name" fontStyle={"sans"} />
+                <BarChart width={chartWidth} height={500} data={byweekdayStats}>
+                  <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip
-                    labelStyle={{ color: "white" }}
                     contentStyle={{
                       backgroundColor: "rgba(0, 0, 0, 0.7)",
                       borderRadius: "5px",
-                      border: "1px solid rgba(255, 255, 255, 0.2)",
-                      padding: "10px",
-                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.3)",
                     }}
                   />
                   <Legend />
@@ -473,58 +459,24 @@ export default function AccountStatsModal({
                   <Bar
                     dataKey="wonProfit"
                     fill="#50FA7B"
-                    stackId="stack"
-                    radius={[7, 7, 0, 0]}
+                    radius={[5, 5, 0, 0]}
                   />
                   <Bar
                     dataKey="lostProfit"
                     fill="#F25069"
-                    stackId="stack"
-                    radius={[7, 7, 0, 0]}
+                    radius={[5, 5, 0, 0]}
                   />
                 </BarChart>
               </div>
-              <div className="relative flex flex-col justify-center items-center gap-5">
-                <div className="absolute right-5 top-3 flex gap-3 justify-center items-center m-5">
-                  <p
-                    className={`${
-                      index == "month" && "border-b border-white"
-                    } cursor-pointer`}
-                    onClick={() => setIndex("month")}
-                  >
-                    Month
-                  </p>
-                  <p
-                    className={`${
-                      index == "week" && "border-b border-white"
-                    } cursor-pointer`}
-                    onClick={() => setIndex("week")}
-                  >
-                    Week
-                  </p>
-                  <p
-                    className={`${
-                      index == "year" && "border-b border-white"
-                    } cursor-pointer`}
-                    onClick={() => setIndex("year")}
-                  >
-                    Year
-                  </p>
-                </div>
-                <div className=" text-white font-bold font-sans text-xl flex justify-start items-center w-[80%] gap-5">
-                <LuTrendingUpDown className="h-6 w-6"/>
-                  Total Trades Analysis
+
+              <div className="flex flex-col items-center gap-5">
+                <div className="text-white font-bold text-xl flex gap-5 items-center w-[80%]">
+                  <LuTrendingUpDown className="h-6 w-6" /> Total Trades Analysis
                 </div>
                 <ComposedChart
-                  width={700}
+                  width={chartWidth}
                   height={500}
                   data={visualTradesState}
-                  margin={{
-                    top: 20,
-                    right: 20,
-                    bottom: 20,
-                    left: 20,
-                  }}
                 >
                   <XAxis dataKey="date" />
                   <YAxis />
@@ -532,16 +484,13 @@ export default function AccountStatsModal({
                     contentStyle={{
                       backgroundColor: "rgba(0, 0, 0, 0.7)",
                       borderRadius: "5px",
-                      border: "1px solid rgba(255, 255, 255, 0.2)",
-                      padding: "10px",
-                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.3)",
                     }}
                   />
-                  <ReferenceLine y={0} stroke="white" />
                   <Legend />
+                  <ReferenceLine y={0} stroke="white" />
                   <Bar
                     dataKey="loss"
-                    barSize={30}
+                    barSize={20}
                     fill="#FF0022"
                     radius={[5, 5, 0, 0]}
                   />
@@ -549,18 +498,8 @@ export default function AccountStatsModal({
                     type="monotone"
                     dataKey="profit"
                     stroke="#0088FE"
-                    strokeWidth={4}
+                    strokeWidth={3}
                     dot={false}
-                    activeDot={{
-                      r: 3,
-                      stroke: "#0088FE",
-                      strokeWidth: 1,
-                      fill: "white",
-                    }}
-                    isAnimationActive={false}
-                    style={{
-                      filter: "drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.4))",
-                    }}
                   />
                 </ComposedChart>
               </div>
