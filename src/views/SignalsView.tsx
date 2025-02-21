@@ -17,8 +17,10 @@ export default function SignalsView() {
   const webhooksState = useSelector((state) => state.webhook.webhooks);
   const closeOrdersState = useSelector((state) => state.closeOrder.closeOrders);
   useEffect(() => {
-    dispatch(getWebhooks(user?.email));
-    dispatch(getCloseOrders(user?.email));
+    if (user?.email) {
+      dispatch(getWebhooks(user?.email));
+      dispatch(getCloseOrders(user?.email));
+    }
   }, []);
   const handleChangeColor = (id: string) => {
     console.log("Change color for webhook:", id);
