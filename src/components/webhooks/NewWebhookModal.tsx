@@ -137,7 +137,7 @@ export default function NewWebhookModal({
               onClick={() => setMode("basic")}
               className={`flex-1 px-6 py-2 rounded-lg text-sm font-medium transition-all ${
                 mode === "basic"
-                  ? "bg-accent text-white"
+                  ? " text-white bg-blue-500 outline-1 outline-dashed outline-blue-500 outline-offset-2"
                   : "text-gray-400 hover:text-white"
               }`}
             >
@@ -147,7 +147,7 @@ export default function NewWebhookModal({
               onClick={() => setMode("advanced")}
               className={`flex-1 px-6 py-2 rounded-lg text-sm font-medium transition-all ${
                 mode === "advanced"
-                  ? "bg-accent text-white"
+                  ? " text-white bg-blue-500 outline-1 outline-dashed outline-blue-500 outline-offset-2"
                   : "text-gray-400 hover:text-white"
               }`}
             >
@@ -201,7 +201,7 @@ export default function NewWebhookModal({
                     onClick={() => setOrderType(type)}
                     className={`flex-1 px-6 py-2 rounded-lg text-sm font-medium transition-all ${
                       orderType === type
-                        ? "bg-accent text-white"
+                        ? "bg-blue-500 outline-1 outline-dashed outline-blue-500 outline-offset-2 text-white"
                         : "text-gray-400 hover:text-white"
                     }`}
                   >
@@ -224,9 +224,8 @@ export default function NewWebhookModal({
                     value={webhookName}
                     onChange={(e) => setWebhookName(e.target.value)}
                     placeholder="My First Webhook"
-                    className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2
-                             border border-dark-300/50 focus:outline-none focus:ring-1 
-                             focus:ring-accent/50 text-sm"
+                    className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-2
+                             border border-dashed border-blue-500 focus:outline-none text-sm"
                   />
                 </div>
 
@@ -242,9 +241,8 @@ export default function NewWebhookModal({
                     value={pair}
                     onChange={(e) => setPair(e.target.value)}
                     placeholder="BTCUSD"
-                    className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2
-                             border border-dark-300/50 focus:outline-none focus:ring-1 
-                             focus:ring-accent/50 text-sm"
+                    className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-2
+                             border border-dashed border-blue-500 focus:outline-none text-sm"
                   />
                 </div>
               </div>
@@ -263,9 +261,9 @@ export default function NewWebhookModal({
                       <select
                         value={orderDirection}
                         onChange={(e) => setOrderDirection(e.target.value)}
-                        className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2
-                                 border border-dark-300/50 focus:outline-none focus:ring-1 
-                                 focus:ring-accent/50 text-sm"
+                        className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-2
+                                 border border-dashed border-blue-500 focus:outline-none 
+                                  text-sm"
                       >
                         <option value={"buy"}>Buy</option>
                         <option value={"sell"}>Sell</option>
@@ -313,9 +311,8 @@ export default function NewWebhookModal({
                           type="number"
                           value={fixedSize}
                           onChange={(e) => setFixedSize(Number(e.target.value))}
-                          className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2
-                                   border border-dark-300/50 focus:outline-none focus:ring-1 
-                                   focus:ring-accent/50 text-sm"
+                          className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-2
+                                   border border-dashed border-blue-500 focus:outline-none text-sm"
                         />
                       )}
                     </div>
@@ -333,9 +330,8 @@ export default function NewWebhookModal({
                           value={stopLoss}
                           placeholder="0"
                           onChange={(e) => setStopLoss(e.target.value)}
-                          className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2
-                                   border border-dark-300/50 focus:outline-none focus:ring-1 
-                                   focus:ring-accent/50 text-sm"
+                          className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-2
+                                   border border-dashed border-blue-500 focus:outline-none text-sm"
                         />
                       </div>
                       <div>
@@ -350,9 +346,8 @@ export default function NewWebhookModal({
                           value={takeProfit}
                           placeholder="0"
                           onChange={(e) => setTakeProfit(e.target.value)}
-                          className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2
-                                   border border-dark-300/50 focus:outline-none focus:ring-1 
-                                   focus:ring-accent/50 text-sm"
+                          className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-2
+                                   border border-dashed border-blue-500 focus:outline-none text-sm"
                         />
                       </div>
                     </div>
@@ -376,9 +371,8 @@ export default function NewWebhookModal({
                   value={webhookName}
                   onChange={(e) => setWebhookName(e.target.value)}
                   placeholder="My Advanced Webhook"
-                  className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-3
-                           border border-dark-300/50 focus:outline-none focus:ring-1 
-                           focus:ring-accent/50"
+                  className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-3
+                           border border-dashed border-blue-500 focus:outline-none text-sm"
                 />
               </div>
 
@@ -393,10 +387,9 @@ export default function NewWebhookModal({
                   type="text"
                   value={pair}
                   onChange={(e) => setPair(e.target.value)}
-                  placeholder="BTCUSD, ETHUSD, EURUSD"
-                  className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-3
-                           border border-dark-300/50 focus:outline-none focus:ring-1 
-                           focus:ring-accent/50"
+                  placeholder="BTCUSD"
+                  className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-3
+                           border border-dashed border-blue-500 focus:outline-none text-sm"
                 />
               </div>
               <div>
@@ -412,9 +405,8 @@ export default function NewWebhookModal({
                   type="number"
                   value={fixedSize}
                   onChange={(e) => setFixedSize(Number(e.target.value))}
-                  className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2
-                                   border border-dark-300/50 focus:outline-none focus:ring-1 
-                                   focus:ring-accent/50 text-sm"
+                  className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-2
+                                   border border-dashed border-blue-500 focus:outline-none text-sm"
                 />
               </div>
             </div>
@@ -426,8 +418,8 @@ export default function NewWebhookModal({
           <div className="flex items-center justify-between">
             <button
               onClick={onClose}
-              className="lg:px-6 px-4 py-3 text-gray-400 hover:text-gray-300 
-                       transition-colors duration-300"
+              className="lg:px-6 px-4 py-2 text-gray-400 hover:text-gray-300 
+                       transition-colors duration-300 bg-dark-100 outline-1 outline-dashed outline-dark-300 outline-offset-2 rounded-xl text-sm"
             >
               Cancel
             </button>
@@ -437,8 +429,8 @@ export default function NewWebhookModal({
                 onClose();
               }}
               disabled={!webhookName || !pair}
-              className="premium-button lg:px-6 px-4 py-3 flex items-center space-x-2
-                       disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              className="premium-button lg:px-6 px-4 py-2 flex items-center space-x-2
+                       disabled:opacity-50 disabled:cursor-not-allowed text-sm bg-blue-500 outline-1 outline-dashed outline-blue-500 outline-offset-2"
             >
               <span>Create Webhook</span>
               <Plus className="h-5 w-5" />

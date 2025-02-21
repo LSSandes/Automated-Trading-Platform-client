@@ -35,6 +35,8 @@ import { userAtom } from "@/store/atoms";
 import { useAtom } from "jotai";
 import BarLoader from "react-spinners/BarLoader";
 import { getMetaVisualTrades } from "@/app/reducers/metaVisualTrades";
+import { BsCalendarWeek } from "react-icons/bs";
+import { BsCalendarMonth } from "react-icons/bs";
 
 interface AccountStatsModalProps {
   isOpen: boolean;
@@ -475,26 +477,46 @@ export default function AccountStatsModal({
                 <div className="absolute right-5 top-3 flex gap-3 justify-center items-center m-5">
                   <p
                     className={`${
-                      index == "month" && "border-b border-white"
-                    } cursor-pointer`}
+                      index == "month" &&
+                      "border border-blue-500 border-dashed p-1 rounded-lg text-blue-500"
+                    } cursor-pointer flex justify-center items-center gap-2 select-none`}
                     onClick={() => setIndex("month")}
                   >
+                    <BsCalendarMonth className="w-4 h-4" />
                     Month
                   </p>
                   <p
                     className={`${
-                      index == "week" && "border-b border-white"
-                    } cursor-pointer`}
+                      index == "week" &&
+                      "border border-blue-500 border-dashed p-1 rounded-lg text-blue-500"
+                    } cursor-pointer flex justify-center items-center gap-2 select-none`}
                     onClick={() => setIndex("week")}
                   >
+                    <BsCalendarWeek className="h-4 w-4" />
                     Week
                   </p>
                   <p
                     className={`${
-                      index == "year" && "border-b border-white"
-                    } cursor-pointer`}
+                      index == "year" &&
+                      "border-dashed border border-blue-500 p-1 rounded-lg text-blue-500"
+                    } cursor-pointer flex justify-center items-center gap-2 select-none`}
                     onClick={() => setIndex("year")}
                   >
+                    <svg
+                      version="1.1"
+                      id="Layer_1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                      viewBox="0 0 122.84 122.88"
+                      fill="currentColor"
+                      xmlSpace="preserve"
+                      width="16px"
+                      height="16px"
+                    >
+                      <g>
+                        <path d="M81.53,4.71c0-2.62,2.58-4.71,5.77-4.71c3.2,0,5.77,2.13,5.77,4.71V25.4c0,2.62-2.58,4.71-5.77,4.71 c-3.2,0-5.77-2.13-5.77-4.71V4.71L81.53,4.71z M40.25,68.24L33.8,89.93v12.3h-8.16v-12.3l-6.23-21.68h8.11 c1.25,6.65,1.98,11.12,2.16,13.41c0.51-3.62,1.32-8.09,2.46-13.41H40.25L40.25,68.24z M42.52,68.24h14.74v6.79h-5.89v6.49h5.5v6.44 h-5.5v7.48h6.49v6.79H42.52V68.24z M76.37,68.24l5.06,33.99H72.4l-0.48-6.1h-3.19l-0.48,6.1h-9.14l4.48-33.99H76.37z M71.68,90.11 c-0.42-3.85-0.87-8.62-1.34-14.31c-0.87,6.53-1.42,11.3-1.66,14.31H71.68z M83.7,68.24h6.25c4.17,0,6.99,0.16,8.46,0.48 c1.48,0.32,2.68,1.15,3.61,2.47c0.93,1.32,1.4,3.43,1.4,6.32c0,2.64-0.33,4.42-0.99,5.33c-0.65,0.91-1.95,1.45-3.88,1.63 c1.75,0.44,2.93,1.02,3.53,1.75c0.6,0.72,0.97,1.4,1.12,2.01c0.15,0.61,0.22,2.28,0.22,5.03v8.97h-8.21V90.92 c0-1.82-0.14-2.94-0.43-3.38c-0.28-0.44-1.02-0.65-2.23-0.65v15.34H83.7V68.24z M92.56,74.04v7.56c0.99,0,1.68-0.14,2.07-0.41 c0.39-0.27,0.59-1.16,0.59-2.66v-1.87c0-1.08-0.19-1.79-0.57-2.13C94.27,74.21,93.57,74.04,92.56,74.04z M29.53,4.71 C29.53,2.09,32.11,0,35.3,0c3.2,0,5.77,2.13,5.77,4.71V25.4c0,2.62-2.58,4.71-5.77,4.71c-3.2,0-5.77-2.13-5.77-4.71V4.71z M7.56,44.09h107.62V22.66c0-0.8-0.31-1.55-0.84-2.04c-0.53-0.53-1.24-0.84-2.04-0.84h-9.31c-1.78,0-3.2-2.63-3.2-4.41 c0-1.78,1.42-3.2,3.2-3.2h10.53c2.58,0,4.88,1.07,6.57,2.75c1.69,1.69,2.75,4.04,2.75,6.57v92.06c0,2.58-1.07,4.88-2.75,6.57 c-1.69,1.69-4.04,2.75-6.57,2.75H9.33c-2.58,0-4.88-1.07-6.57-2.75C1.07,118.44,0,116.09,0,113.55V21.49 c0-2.58,1.07-4.88,2.75-6.57c1.69-1.69,4.04-2.75,6.57-2.75h11.28c1.78,0,3.2,1.42,3.2,3.2c0,1.78-1.42,4.41-3.2,4.41H10.54 c-0.8,0-1.55,0.31-2.09,0.84c-0.53,0.53-0.84,1.24-0.84,2.09v21.43z M115.18,52.9H7.56v59.4c0,0.8,0.31,1.55,0.84,2.09 c0.53,0.53,1.24,0.84,2.09,0.84h101.76c0.8,0,1.55-0.31,2.09-0.84c0.53-0.53,0.84-1.24,0.84-2.09V52.9z M50.36,19.73 c-1.78,0-3.2-2.63-3.2-4.41c0-1.78,1.42-3.2,3.2-3.2h21.49c1.78,0,3.2,1.42,3.2,3.2c0,1.78-1.42,4.41-3.2,4.41H50.36z" />
+                      </g>
+                    </svg>
                     Year
                   </p>
                 </div>

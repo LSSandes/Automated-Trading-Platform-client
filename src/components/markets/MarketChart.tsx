@@ -60,22 +60,22 @@ export default function MarketChart() {
         <div className="flex justify-end items-center gap-5 lg:flex-row flex-col lg:w-1/2 w-full">
           <button
             onClick={() => setIsOpenTrade(true)}
-            className="premium-button flex items-center lg:w-1/4 w-full justify-center"
+            className="premium-button flex items-center 2xl:w-1/4 w-full justify-center"
           >
             <FaChartBar className="h-5 w-5 mr-2" />
             Open Trade
           </button>
           <button
             onClick={() => setIsCreateStrategy(true)}
-            className="premium-button flex items-center lg:w-1/4 w-full justify-center"
+            className="premium-button flex items-center 2xl:w-1/4 w-full justify-center"
           >
             <MdOutlineWebhook className="h-5 w-5 mr-2" />
             Create Strategy
           </button>
         </div>
       </div>
-      <div className="flex justify-between items-start gap-2 w-full xl:flex-row flex-col overflow-y-auto">
-        <div className="lg:w-[15%] w-full flex flex-col gap-5">
+      <div className="flex justify-between items-start gap-2 w-full 2xl:flex-row flex-col overflow-y-auto">
+        <div className="2xl:w-[15%] w-full flex flex-col gap-5">
           <table className="min-w-full table-auto border-collapse bg-transparent text-gray-500 font-sans text-[12px]">
             <thead className="text-gray-300">
               <tr>

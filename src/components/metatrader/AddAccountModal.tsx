@@ -99,15 +99,15 @@ export default function AddAccountModal({
             platform,
           }) as any
         ).then(() => {
-            setTimeout(() => {
-              onClose();
-              onSuccess?.();
-              setServer("ICMarketsSC-Demo06");
-              setLogin("");
-              setPassword("");
-              setConnectionSuccess(false);
-              setIsConnecting(false);
-            }, 500);
+          setTimeout(() => {
+            onClose();
+            onSuccess?.();
+            setServer("ICMarketsSC-Demo06");
+            setLogin("");
+            setPassword("");
+            setConnectionSuccess(false);
+            setIsConnecting(false);
+          }, 500);
         });
       } else {
         setErrors({ general: "User email is required" });
@@ -168,7 +168,7 @@ export default function AddAccountModal({
               onClick={() => setPlatform("mt4")}
               className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all ${
                 platform === "mt4"
-                  ? "bg-accent text-white"
+                  ? "text-white bg-blue-500 outline-1 outline-dashed outline-blue-500 outline-offset-2"
                   : "text-gray-400 hover:text-white"
               }`}
             >
@@ -178,7 +178,7 @@ export default function AddAccountModal({
               onClick={() => setPlatform("mt5")}
               className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all ${
                 platform === "mt5"
-                  ? "bg-accent text-white"
+                  ? "text-white bg-blue-500 outline-1 outline-dashed outline-blue-500 outline-offset-2"
                   : "text-gray-400 hover:text-white"
               }`}
             >
@@ -372,7 +372,7 @@ export default function AddAccountModal({
             <button
               onClick={handleSubmit}
               disabled={isConnecting || !isFormValid || connectionSuccess}
-              className={`premium-button flex-1 py-2.5 disabled:opacity-50 disabled:cursor-not-allowed text-sm
+              className={`premium-button flex-1 py-2.5 disabled:opacity-50 disabled:cursor-not-allowed text-sm bg-blue-500 outline-1 outline-dashed outline-blue-500 outline-offset-2
                        ${
                          connectionSuccess
                            ? "bg-emerald-500 hover:bg-emerald-600"
@@ -396,7 +396,7 @@ export default function AddAccountModal({
             <button
               onClick={onClose}
               className="flex-1 px-4 py-2.5 border border-dark-300/50 text-gray-400 
-                       rounded-lg hover:bg-dark-200/50 transition-all duration-300 text-sm"
+                       rounded-lg hover:bg-dark-200/50 transition-all duration-300 text-sm bg-dark-200/30 outline-1 outline-dashed outline-dark-400/30 outline-offset-2"
             >
               Cancel
             </button>
