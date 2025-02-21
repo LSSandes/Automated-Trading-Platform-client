@@ -375,33 +375,35 @@ export default function AccountStatsModal({
         {tradeTab == "visualization" && (
           <div className="flex flex-col justify-between items-center gap-2 overflow-y-auto max-h-[700px] m-10">
             <div className="grid grid-cols-1 xl:grid-cols-2 place-items-center gap-10 my-5">
-              <div className="flex flex-col items-center gap-5">
+              <div className="h-[500px] flex flex-col justify-between items-center">
                 <div className="text-white text-xl font-bold flex items-center w-[80%] gap-5">
                   <TrendingUp className="h-6 w-6" /> Profitability
                 </div>
-                <PieChart width={chartWidth} height={150}>
-                  <Pie
-                    data={wonlostStats}
-                    cx="50%"
-                    cy={150}
-                    startAngle={180}
-                    endAngle={0}
-                    innerRadius={60}
-                    outerRadius={150}
-                    paddingAngle={2}
-                    dataKey="value"
-                  >
-                    {wonlostStats?.map((_, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                </PieChart>
-                <div className="text-green-500 font-bold flex flex-col items-center">
-                  <span className="text-white">Win Rate</span>
-                  <span className="text-[#0088FE]">
+                <div className="flex items-center gap-5">
+                  <PieChart width={chartWidth} height={150}>
+                    <Pie
+                      data={wonlostStats}
+                      cx="50%"
+                      cy={150}
+                      startAngle={180}
+                      endAngle={0}
+                      innerRadius={60}
+                      outerRadius={150}
+                      paddingAngle={2}
+                      dataKey="value"
+                    >
+                      {wonlostStats?.map((_, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </div>
+                <div className="text-green-500 font-bold flex items-center gap-5">
+                  <span className="text-white text-xl">Win Rate</span>
+                  <span className="text-[#0088FE] text-xl">
                     {wonlostStats[0]?.value.toFixed(2)}%
                   </span>
                 </div>
