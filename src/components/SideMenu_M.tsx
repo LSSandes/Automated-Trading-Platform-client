@@ -1,12 +1,10 @@
 import {
   BarChart2,
-  LineChart,
   Webhook,
   Globe,
   ChevronDown,
   Box,
   Zap,
-  Bell
 } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
