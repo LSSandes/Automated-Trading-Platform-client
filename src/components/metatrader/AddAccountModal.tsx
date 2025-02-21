@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import { X, HelpCircle, AlertTriangle, Loader, Check } from "lucide-react";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
-import { dispatch, useSelector } from "@/app/store";
+import { dispatch } from "@/app/store";
 import { addAccount } from "@/app/reducers/metaAccount";
-import { toast } from "react-toastify";
 import Tooltip from "../ui/Tooltip";
 
 interface AddAccountModalProps {
@@ -47,12 +46,9 @@ export default function AddAccountModal({
 }: AddAccountModalProps) {
   const [user] = useAtom(userAtom);
   const [platform, setPlatform] = useState<"mt4" | "mt5">("mt4");
-  const error = useSelector((state) => state.metaAccount.error);
-  // const [broker, setBroker] = useState("ICMarkets");
   const [server, setServer] = useState("ICMarketsSC-Demo06");
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
-  // const [name, setName] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectionSuccess, setConnectionSuccess] = useState(false);
@@ -64,53 +60,34 @@ export default function AddAccountModal({
         (s) => s.broker.toLowerCase() === selectedBroker.toLowerCase()
       );
       if (brokerServer) {
-        // setBroker(brokerServer.broker);
         setServer(brokerServer.server);
         setPlatform(brokerServer.server.includes("MT5") ? "mt5" : "mt4");
-        // setName(`${brokerServer.broker} ${platform.toUpperCase()}`);
       }
     }
   }, [selectedBroker]);
-
   if (!isOpen) return null;
-
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
-
-    // if (!broker.trim()) {
-    //   newErrors.broker = "Broker name is required";
-    // }
-
     if (!server.trim()) {
       newErrors.server = "Server address is required";
     }
-
     if (!login.trim()) {
       newErrors.login = "Login number is required";
     } else if (!/^\d+$/.test(login)) {
       newErrors.login = "Login must be a number";
     }
-
     if (!password.trim()) {
       newErrors.password = "Password is required";
     }
-
-    // if (!name.trim()) {
-    //   newErrors.name = "Account name is required";
-    // }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
   const handleSubmit = async () => {
     if (!validateForm()) {
       return;
     }
-
     setIsConnecting(true);
     setErrors({});
-
     try {
       if (user?.email) {
         await dispatch(
@@ -122,9 +99,6 @@ export default function AddAccountModal({
             platform,
           }) as any
         ).then(() => {
-          if (error != "") {
-            toast.warn("Internal Server Error");
-          } else {
             setTimeout(() => {
               onClose();
               onSuccess?.();
@@ -134,8 +108,6 @@ export default function AddAccountModal({
               setConnectionSuccess(false);
               setIsConnecting(false);
             }, 500);
-            toast.success("New Account has added");
-          }
         });
       } else {
         setErrors({ general: "User email is required" });
@@ -189,7 +161,7 @@ export default function AddAccountModal({
           </p>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 max-h-[calc(100vh-300px)] overflow-y-auto">
           {/* Platform Selection */}
           <div className="flex rounded-lg bg-dark-200/30 p-1">
             <button
@@ -400,7 +372,7 @@ export default function AddAccountModal({
             <button
               onClick={handleSubmit}
               disabled={isConnecting || !isFormValid || connectionSuccess}
-              className={`premium-button flex-1 py-2.5 disabled:opacity-50 disabled:cursor-not-allowed
+              className={`premium-button flex-1 py-2.5 disabled:opacity-50 disabled:cursor-not-allowed text-sm
                        ${
                          connectionSuccess
                            ? "bg-emerald-500 hover:bg-emerald-600"
@@ -418,13 +390,13 @@ export default function AddAccountModal({
                   Connected!
                 </div>
               ) : (
-                "Connect Account"
+                "Connect"
               )}
             </button>
             <button
               onClick={onClose}
               className="flex-1 px-4 py-2.5 border border-dark-300/50 text-gray-400 
-                       rounded-lg hover:bg-dark-200/50 transition-all duration-300"
+                       rounded-lg hover:bg-dark-200/50 transition-all duration-300 text-sm"
             >
               Cancel
             </button>

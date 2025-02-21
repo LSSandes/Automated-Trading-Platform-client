@@ -78,7 +78,7 @@ export default function EditWebhookModal({
     switch (orderType) {
       case "Market Order":
         return (
-          <>
+          <div>
             <div>
               <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                 <span>Order type</span>
@@ -175,7 +175,7 @@ export default function EditWebhookModal({
                          focus:ring-accent/50"
               />
             </div>
-          </>
+          </div>
         );
 
       case "Modify Order":
@@ -315,7 +315,7 @@ export default function EditWebhookModal({
         onClick={onClose}
       />
 
-      <div className="glass-panel rounded-2xl w-full max-w-lg z-10 p-0 overflow-hidden">
+      <div className="glass-panel rounded-2xl lg:max-w-xl w-full z-10 p-0 overflow-hidden">
         <div className="relative p-6 border-b border-dark-300/50">
           <button
             onClick={onClose}
@@ -330,7 +330,7 @@ export default function EditWebhookModal({
           </h3>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 lg:max-h-full max-h-[500px] overflow-y-auto">
           {/* Mode Selector */}
           <div className="flex rounded-lg bg-dark-200/30 p-1">
             <button
@@ -356,7 +356,7 @@ export default function EditWebhookModal({
           </div>
 
           {mode === "basic" && (
-            <>
+            <div className="">
               {/* Order Type Selector */}
               <div className="flex rounded-lg bg-dark-200/30 p-1">
                 {(["Market Order", "Modify Order"] as OrderType[]).map(
@@ -435,7 +435,7 @@ export default function EditWebhookModal({
                 {/* Order Type Specific Fields */}
                 {renderOrderTypeFields()}
               </div>
-            </>
+            </div>
           )}
 
           {mode === "advanced" && (

@@ -8,7 +8,7 @@ export default function MetaTrader() {
   
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between lg:items-center items-start lg:flex-row flex-col gap-4">
         <div>
           <h1 className="text-3xl font-medium text-white tracking-tight">MetaTrader</h1>
           <p className="text-gray-400 mt-1">Manage your MT4/MT5 accounts and monitor performance</p>

@@ -1,4 +1,4 @@
-import { useState, Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { Loader } from "lucide-react";
 import {
   Dialog,
@@ -7,11 +7,8 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import {
-  ExclamationTriangleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useAtom } from "jotai";
-import { collapsedAtom } from "@/store/atoms";
 interface DeleteModalProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -24,11 +21,6 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   deleteModalLoading,
   handleDelete,
 }) => {
-  const [isCollapsed] = useAtom(collapsedAtom);
-  const [collapsed, setCollapsed] = useState<boolean>(false);
-  useEffect(() => {
-    setCollapsed(isCollapsed);
-  }, [isCollapsed]);
   return (
     <Dialog open={open} onClose={setOpen} className="relative z-10">
       <DialogBackdrop
@@ -37,12 +29,11 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
       />
 
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
           <DialogPanel
             transition
-            className={`relative ${
-              !collapsed ? "-right-32" : "right-0"
-            }  transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg sm:p-6 data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95`}
+            className={`relative 
+             transform overflow-hidden rounded-lg bg-[#1A1A1D] border border-dark-500 px-4 pb-4 pt-5 text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg sm:p-6 data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95`}
           >
             <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
               <button
@@ -56,20 +47,30 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
             </div>
             <div className="sm:flex sm:items-start">
               <div className="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10">
-                <ExclamationTriangleIcon
-                  aria-hidden="true"
-                  className="size-6 text-red-600"
-                />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="red"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                  />
+                </svg>
               </div>
               <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                 <DialogTitle
                   as="h3"
-                  className="text-base font-semibold text-gray-900"
+                  className="text-base font-semibold text-white"
                 >
                   Delete account
                 </DialogTitle>
                 <div className="mt-2">
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-300">
                     Do you really delete this meta account?
                   </p>
                 </div>
@@ -90,7 +91,10 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                 }}
                 className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
               >
-                {deleteModalLoading && <Loader className="h-5 w-5 mr-2 animate-spin" />}Delete
+                {deleteModalLoading && (
+                  <Loader className="h-5 w-5 mr-2 animate-spin" />
+                )}
+                Delete
               </button>
             </div>
           </DialogPanel>

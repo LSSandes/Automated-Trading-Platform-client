@@ -28,7 +28,6 @@ export default function WebhookAppsModal({
   webhook,
   accountName,
 }: WebhookAppsModalProps) {
-  console.log("---------222--accountName--->", accountName);
   const [user] = useAtom(userAtom);
   const metaAccounts = useSelector((state) => state.metaAccount.accounts);
   const [accountId, setAccountId] = useState<string>("");
@@ -123,7 +122,7 @@ export default function WebhookAppsModal({
         </div>
 
         <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:max-h-[500px] max-h-[300px] overflow-y-auto">
             {apps.map((app, index) => (
               <div
                 key={app.id}

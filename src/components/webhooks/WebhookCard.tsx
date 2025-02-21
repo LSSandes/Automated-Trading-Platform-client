@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Clock, Copy, MoreVertical, DollarSign } from "lucide-react";
+import { Clock, Copy, MoreVertical, DollarSign, CopyCheck } from "lucide-react";
 import WebhookMenu from "./WebhookMenu";
 import { WebhookCardProps } from "@/types/webhook";
 import EditWebhookModal from "./EditWebhookModal";
@@ -45,13 +45,17 @@ export default function WebhookCard({
     if (findAccount) {
       setAccountName(findAccount.accountName);
     }
-  }, [accounts]);
+  }, [accounts, webhook]);
   useEffect(() => {
     const fetchPrice = async () => {
       try {
-        const response = await axios.get("webhook/get-price");
+        const response = await axios.get("webhook/get-price", {
+          headers: {
+            "Cache-Control": "no-cache",
+            "Content-Type": "application/json",
+          },
+        });
         if (response.data) {
-          console.log("symbol Price--------->", response.data);
           setPrice(response.data.data[`${webhook.symbol}`]);
         }
       } catch (error) {
@@ -102,7 +106,7 @@ export default function WebhookCard({
   //  ***************************Handle the URL**********************************//
   const handleCopy = () => {
     navigator.clipboard.writeText(
-      `https://api.automatedtrader.com/webhook/${webhook.id}`
+      `https://api.automatedtrader.com/webhook/${webhook.hashedWebhook}`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -158,7 +162,6 @@ export default function WebhookCard({
       toast.info("The account needs to be connected.");
     }
   };
-  console.log("------111----accountname------->", accountName);
   return (
     <>
       <div
@@ -169,7 +172,7 @@ export default function WebhookCard({
           className={`absolute inset-0 bg-gradient-to-br from-dark-200/20 to-dark-200/5 opacity-10`}
         />
         <div className="relative glass-panel rounded-xl p-6 border border-dark-300/30">
-          <div className="flex justify-between items-start mb-6">
+          <div className="flex justify-between items-start mb-6 border-b border-dark-300 p-1">
             <div className="flex items-center space-x-3">
               <div
                 className={`p-2 rounded-lg ${
@@ -206,7 +209,16 @@ export default function WebhookCard({
               </div>
             </div>
 
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center space-x-1 relative">
+              {copied && (
+                <div
+                  className={`absolute -top-2 -left-8 rounded-lg transition-all -rotate-45 ${
+                    copied ? "animate-pulse" : ""
+                  }`}
+                >
+                  Copied!
+                </div>
+              )}
               <button
                 onClick={handleCopy}
                 className="p-2 text-gray-400 hover:text-white hover:bg-dark-200/50 
@@ -214,7 +226,7 @@ export default function WebhookCard({
                 title="Copy webhook URL"
               >
                 {copied ? (
-                  <Copy className="h-5 w-5" />
+                  <CopyCheck className="h-5 w-5" />
                 ) : (
                   <Copy className="h-5 w-5" />
                 )}
@@ -228,17 +240,17 @@ export default function WebhookCard({
               </button>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="glass-panel rounded-lg p-3 border border-dark-300/30">
+          <div className="flex lg:flex-row flex-col gap-4 mb-6">
+            <div className="glass-panel rounded-lg p-3 border border-dark-300/30 lg:w-1/2 w-full">
               <div className="text-gray-400 text-sm mb-1">Last Signal</div>
               <div className="text-white font-medium">
                 {timeDiff || "Never"}
               </div>
             </div>
-            <div className="glass-panel rounded-lg p-3 border border-dark-300/30">
+            <div className="glass-panel rounded-lg p-3 border border-dark-300/30 lg:w-1/2 w-full">
               <div className="grid grid-cols-2 gap-2">
                 <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
-                  Volume: {webhook.volume}
+                  Lots: {webhook.volume}
                 </div>
                 <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
                   SL: {webhook.stopLoss}
@@ -254,44 +266,46 @@ export default function WebhookCard({
           </div>
           <div className="flex flex-wrap gap-1.5 mb-6">
             <span
-              className="px-2 py-1 text-xs rounded-lg bg-dark-200/50 text-gray-300
+              className="px-2 py-1 text-md rounded-lg bg-dark-200/50 text-gray-300
                          border border-dark-300/30 backdrop-blur-sm"
             >
               {webhook.symbol}
             </span>
           </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
-              <div className="flex flex-col items-center space-y-1">
-                <span className="text-xs text-gray-400">Active</span>
-                <button
-                  onClick={() => onToggleActive(webhook.id)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full ${
-                    webhook.isActive ? "bg-accent" : "bg-dark-300"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-                      webhook.isActive ? "translate-x-6" : "translate-x-1"
+          <div className="flex lg:flex-row flex-col items-center justify-between gap-4">
+            <div className="flex items-center lg:justify-center justify-between space-x-6 lg:w-1/2 w-full">
+              <div className="flex justify-center items-center gap-4">
+                <div className="flex flex-col items-center space-y-1">
+                  <span className="text-xs text-gray-400">Active</span>
+                  <button
+                    onClick={() => onToggleActive(webhook.id)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                      webhook.isActive ? "bg-accent" : "bg-dark-300"
                     }`}
-                  />
-                </button>
-              </div>
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                        webhook.isActive ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
 
-              <div className="flex flex-col items-center space-y-1">
-                <span className="text-xs text-gray-400">Public</span>
-                <button
-                  onClick={() => onTogglePublic(webhook.id)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full ${
-                    webhook.isPublic ? "bg-accent" : "bg-dark-300"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-                      webhook.isPublic ? "translate-x-6" : "translate-x-1"
+                <div className="flex flex-col items-center space-y-1">
+                  <span className="text-xs text-gray-400">Public</span>
+                  <button
+                    onClick={() => onTogglePublic(webhook.id)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                      webhook.isPublic ? "bg-accent" : "bg-dark-300"
                     }`}
-                  />
-                </button>
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                        webhook.isPublic ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
               </div>
 
               {price != 0 && (
@@ -312,7 +326,7 @@ export default function WebhookCard({
               onClick={() => setOpenTradeModal(true)}
               className="px-3 py-1.5 text-[16px] bg-dark-200/50 text-gray-300 rounded-lg
                        border border-dark-300/30 hover:bg-dark-200/80 transition-colors
-                       flex items-center space-x-1"
+                       flex items-center space-x-1 lg:w-1/3 w-full justify-center"
             >
               <FaChartBar className="h-4 w-4" />
               <span>Open Trade</span>

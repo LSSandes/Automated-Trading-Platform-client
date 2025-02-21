@@ -10,7 +10,7 @@ import {
   ChevronLeft,
   // Cpu,
   Globe,
-  // LineChart,
+  LineChart,
   // Settings,
   Webhook,
   // Sliders,
@@ -19,7 +19,7 @@ import {
   // TrendingUp,
   ChevronRight,
   // Home,
-  // Bell,
+  Bell,
   ChevronDown,
   Box,
   // MessageCircle,
@@ -98,9 +98,6 @@ const SideMenu = ({
     //   label: "Leaderboard",
     // },
   ];
-  const handleNavigate = (item: string) => {
-    navigate(`/${item}`);
-  };
   const apps = [
     {
       id: "metatrader",
@@ -187,6 +184,9 @@ const SideMenu = ({
     //   ),
     // },
   ];
+  const handleNavigate = (item: string) => {
+    navigate(`/${item}`);
+  };
 
   // const bottomMenuItems = [
   //   { id: 'admin', icon: <Lock className="h-5 w-5" />, label: 'Admin Panel', adminOnly: true },
@@ -206,7 +206,7 @@ const SideMenu = ({
 
   return (
     <div
-      className={`fixed left-0 top-24 bg-dark/95 backdrop-blur-xl 
+      className={`bg-dark/95 backdrop-blur-xl 
                   border-r border-dark-300/30 transition-all duration-300 z-40 h-full
                   ${isCollapsed ? "w-20" : "w-80"}`}
     >

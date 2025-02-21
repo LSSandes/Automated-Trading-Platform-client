@@ -47,8 +47,11 @@ const SigninView: React.FC = () => {
     }
   };
   return (
-    <div className="relative flex w-full justify-center items-center min-h-screen bg-[#070707]">
+    <div className="relative flex lg:flex-row flex-col w-full justify-center items-center min-h-screen bg-[#070707] lg:gap-0 gap-4">
       <DynamicSvg />
+      <div className="relative flex w-full justify-center items-center lg:hidden">
+        <img src={logo} alt="" className="w-[80%] h-auto" />
+      </div>
       <div className="flex flex-col items-center justify-center z-20">
         <form
           onSubmit={handleSubmit}
@@ -121,7 +124,7 @@ const SigninView: React.FC = () => {
           </div>
         </form>
       </div>
-      <div className="relative flex w-1/2 justify-center items-center">
+      <div className="relative lg:flex w-1/2 justify-center items-center hidden">
         <img src={logo} alt="" className="w-[80%] h-auto" />
       </div>
     </div>

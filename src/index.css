@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @layer base {
   body {
     @apply bg-gradient-to-b from-dark to-dark-100 text-gray-100 min-h-screen;

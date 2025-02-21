@@ -72,7 +72,7 @@ function App() {
 
   return (
     <Router>
-      <div className="  bg-gradient-to-b bg-dark-100">
+      <div className="bg-gradient-to-b bg-dark-100">
         <main
           className={`transition-all duration-300 w-full ${
             menuCollapsed ? "ml-20" : "ml-0"

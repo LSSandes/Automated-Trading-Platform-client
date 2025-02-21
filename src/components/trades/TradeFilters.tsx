@@ -1,16 +1,44 @@
+import { useEffect, useState } from "react";
 import { Search, Filter, Calendar } from "lucide-react";
+import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { useAtom } from "jotai";
+import { userAtom } from "@/store/atoms";
 import { tradesFilterAtom, filterOptions } from "../../store/tradesFilterStore";
-
+import { useSelector, dispatch } from "@/app/store";
+import { getAccounts } from "@/app/reducers/metaAccount";
 export default function TradeFilters() {
+  const [user] = useAtom(userAtom);
   const [filters, setFilters] = useAtom(tradesFilterAtom);
-
   const handleFilterChange = (key: keyof typeof filters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
-
+  useEffect(() => {
+    if (user) {
+      dispatch(getAccounts(user?.email));
+    }
+  }, []);
+  const [selectedAccount, setSelectedAccount] =
+    useState<string>("All Accounts");
+  const metaAccounts = useSelector((state) => state.metaAccount.accounts);
+  console.log("selectedAccount---->", selectedAccount);
   return (
     <div className="flex flex-wrap items-center gap-4">
+      {/* The Account Filter */}
+      <div className="relative min-w-[160px]">
+        <MdOutlineAccountBalanceWallet className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <select
+          value={selectedAccount}
+          onChange={(e) => setSelectedAccount(e.target.value)}
+          className="h-10 w-full pl-10 pr-10 bg-dark-200/50 text-gray-300 rounded-lg
+                   border border-dark-300/30 focus:outline-none focus:ring-1 focus:ring-accent/50"
+        >
+          {metaAccounts.map((account) => (
+            <option key={account.accountId} value={account.accountId}>
+              {account.accountName}
+            </option>
+          ))}
+        </select>
+      </div>
       {/* Time Filter */}
       <div className="relative min-w-[160px]">
         <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />

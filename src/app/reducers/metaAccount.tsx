@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "../../utils/api";
 import { dispatch } from "../store";
 import { MetaAccountStateProps } from "@/types/metaAccount";
+import { toast } from "react-toastify";
 const initialState: MetaAccountStateProps = {
   error: null,
   accounts: [],
@@ -94,9 +95,11 @@ export function addAccount({
       dispatch(
         metaAccount.actions.addAccountSuccess(response.data.data.newAccount)
       );
-      dispatch(metaAccount.actions.hasError(""));
+      dispatch(metaAccount.actions.hasError(null));
+      toast.success("New Account has added");
     } catch (err) {
       dispatch(metaAccount.actions.hasError(err));
+      toast.info("Internal server error");
     }
   };
 }
@@ -110,9 +113,11 @@ export function deleteAccount(accountId: string) {
           response.data.data.deletedAccount
         )
       );
-      dispatch(metaAccount.actions.hasError(""));
+      dispatch(metaAccount.actions.hasError(null));
+      toast.success("Account has deleted");
     } catch (err) {
       dispatch(metaAccount.actions.hasError(err));
+      toast.warn("Internal Server Error");
     }
   };
 }
@@ -141,9 +146,11 @@ export function updateAccount({
           response.data.data.updatedAccount
         )
       );
-      dispatch(metaAccount.actions.hasError(""));
+      dispatch(metaAccount.actions.hasError(null));
+      toast.success("Account has updated");
     } catch (err) {
       dispatch(metaAccount.actions.hasError(err));
+      toast.warn("Internal Server Error");
     }
   };
 }

@@ -14,7 +14,7 @@ export interface WebhookConfig {
   takeProfit: number;
   successRate?: number;
   totalTrades?: number;
-  // color?: string;
+  hashedWebhook: string;
   price?: number;
 }
 

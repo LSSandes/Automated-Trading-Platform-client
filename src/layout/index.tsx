@@ -16,21 +16,24 @@ export default function Layout() {
     }
   }, [navigate, currentPath]);
   return (
-    <div className="relative flex flex-col w-full ">
+    <div className="flex flex-col w-full h-screen">
       <Navbar />
-      <div className="absolute flex left-0 top-[100px] w-full">
-        {currentPath != "/" && (
-          <SideMenu
-            activeView={activeView}
-            onViewChange={setActiveView}
-            isCollapsed={menuCollapsed}
-            onCollapsedChange={setMenuCollapsed}
-          />
-        )}
+      <div className="flex left-0 w-full h-full">
+        <div className="lg:flex hidden h-full">
+          {currentPath != "/" && (
+            <SideMenu
+              activeView={activeView}
+              onViewChange={setActiveView}
+              isCollapsed={menuCollapsed}
+              onCollapsedChange={setMenuCollapsed}
+            />
+          )}
+        </div>
         <div
-          className={`flex-1 ${currentPath == "/" ? "" : "p-10"} ${
-            currentPath != "/" ? "absolute right-0" : ""
-          } ${!menuCollapsed ? "w-[83%]" : "w-[95%]"} overflow-y-auto`}
+          className={`flex-1 ${
+            currentPath == "/" ? "" : "lg:p-10 py-6 px-3"
+          } overflow-y-auto h-full`}
+          style={{ height: "calc(100vh - 82px)" }}
         >
           <Outlet />
         </div>

@@ -1,36 +1,16 @@
 import { useState } from "react";
-import {
-  /*Plus, Shield, DollarSign, Star, Clock, ArrowRight, Globe, Users, Award, Zap, Check,*/ Lock,
-} from "lucide-react";
+import { Lock } from "lucide-react";
 import MetaTrader from "@/components/metatrader/MetaTrader";
-// import AccountList from '@/components/metatrader/AccountList';
 
 interface MetaTraderViewProps {
   onLogin: () => void;
   isLoggedIn: boolean;
 }
 
-// interface RecommendedBroker {
-//   id: string;
-//   name: string;
-//   logo: string;
-//   description: string;
-//   platforms: ("mt4" | "mt5")[];
-//   minDeposit: number;
-//   spread: string;
-//   leverage: string;
-//   features: string[];
-//   featured?: boolean;
-// }
-
 export default function MetaTraderView({
   onLogin,
   isLoggedIn,
 }: MetaTraderViewProps) {
-  // const [showAddAccount, setShowAddAccount] = useState(false);
-  // const [selectedBroker, setSelectedBroker] = useState<string | null>(null);
-
-  // Pre-fill with demo account credentials
   const [login, setLogin] = useState("313902");
   const [password, setPassword] = useState("dKbqXqU835Sz5Zb");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -42,37 +22,6 @@ export default function MetaTraderView({
     onLogin();
     setIsLoggingIn(false);
   };
-
-  // const recommendedBrokers: RecommendedBroker[] = [
-  //   {
-  //     id: "fyntura",
-  //     name: "Fyntura",
-  //     logo: "/mt5-logo.svg",
-  //     description:
-  //       "Premium forex and CFD trading with institutional-grade liquidity",
-  //     platforms: ["mt4", "mt5"],
-  //     minDeposit: 100,
-  //     spread: "From 0.0 pips",
-  //     leverage: "Up to 1:500",
-  //     features: [
-  //       "Zero commission trading",
-  //       "Advanced trading tools",
-  //       "Expert advisor support",
-  //       "Multi-asset trading",
-  //       "VPS hosting included",
-  //       "24/7 support",
-  //     ],
-  //     featured: true,
-  //   },
-  //   // ... rest of the brokers remain the same
-  // ];
-
-  // const handleBrokerSelect = (brokerId: string) => {
-  //   setSelectedBroker(brokerId);
-  //   setShowAddAccount(true);
-  // };
-
-  // If not logged in, show login form first
   if (!isLoggedIn) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center">
@@ -133,18 +82,6 @@ export default function MetaTraderView({
                 </>
               )}
             </button>
-
-            {/* <div className="text-center mt-6">
-              <p className="text-sm text-gray-400">
-                Don't have an account?{" "}
-                <button
-                  onClick={() => handleBrokerSelect("fyntura")}
-                  className="text-accent hover:text-accent-dark"
-                >
-                  Open Demo Account
-                </button>
-              </p>
-            </div> */}
           </div>
 
           {/* Quick Stats */}
@@ -167,10 +104,8 @@ export default function MetaTraderView({
     );
   }
 
-  // Rest of the MetaTraderView component remains the same
   return (
     <div className="space-y-8">
-      {/* ... rest of the component code ... */}
       <MetaTrader />
     </div>
   );

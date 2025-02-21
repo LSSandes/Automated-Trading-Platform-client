@@ -40,6 +40,19 @@ export interface Alert {
   metadata?: Record<string, any>;
 }
 
+export interface AlertParams {
+  id: string;
+  webhookAction?: 'market_execution' | 'modify_order' | 'close_trade';
+  webhookName: string;
+  message: string;
+  traderAvatar?: string;
+  symbol?: string;
+  stopLoss?: number;
+  takeProfit?: number;
+  volume?: number;
+  orderDirection?: 'buy' | 'sell';
+}
+
 // Webhooks
 export interface WebhookConfig {
   id: string;

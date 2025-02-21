@@ -44,8 +44,16 @@ export const { hasError, getWebhooksSuccess, addWebhookSuccess } =
 export function getWebhooks(email: string | undefined) {
   return async () => {
     try {
-      console.log("-----webhook------", email);
-      const response = await axios.post("webhook/get-marketorders", { email });
+      const response = await axios.post(
+        "webhook/get-marketorders",
+        { email },
+        {
+          headers: {
+            "Cache-Control": "no-cache",
+            "Content-Type": "application/json",
+          },
+        }
+      );
       dispatch(
         webhook.actions.getWebhooksSuccess(response.data.data.existingWebhooks)
       );
@@ -131,7 +139,6 @@ export function deleteMarketOrder({
     } catch (err) {
       dispatch(webhook.actions.hasError(err));
       toast.success("Internal Server Error");
-
     }
   };
 }
@@ -200,7 +207,7 @@ export function disconnectMarketOrder({
       toast.success("Disconnected from the account.");
     } catch (err) {
       dispatch(webhook.actions.hasError(err));
-      toast.warn("Connection Error")
+      toast.warn("Connection Error");
     }
   };
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Plus, Brain } from 'lucide-react';
 import TradeStats from '../components/trades/TradeStats';
-import TradesCalendar from '../components/trades/TradesCalendar';
+// import TradesCalendar from '../components/trades/TradesCalendar';
 import TradesTable from '../components/trades/TradesTable';
 import AIInsights from '../components/trades/AIInsights';
 import LiveTradesPanel from '../components/trades/LiveTradesPanel';
@@ -90,7 +90,7 @@ export default function TradesView() {
       {activeTab === 'overview' && (
         <>
           <TradeStats />
-          <TradesCalendar />
+          {/* <TradesCalendar /> */}
           <TradesTable />
         </>
       )}

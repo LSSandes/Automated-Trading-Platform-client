@@ -58,7 +58,7 @@ export default function AccountStatsModal({
   const [index, setIndex] = useState<string>("month");
   const metaStats = useSelector((state) => state.metaStats.stats);
   const wonlostStats = useSelector((state) => state.metaStats.won_lost);
-  const byweekdayStats = useSelector((state) => state.metaStats.by_week_day);
+  const byweekdayStats = useSelector((state) => state.metaStats.trades_by_week);
   const tradesbyhourstats = useSelector(
     (state) => state.metaStats.trades_by_hour
   );
@@ -66,7 +66,7 @@ export default function AccountStatsModal({
     (state) => state.metaViualTrades.visualTrades
   );
 
-  console.log("------2----visual---->", visualTradesState);
+  console.log("------2----visual---->", metaStats);
   const metaTotalStats = useSelector(
     (state) => state.metaTotalStats.totalStats
   );
@@ -95,7 +95,7 @@ export default function AccountStatsModal({
         onClick={onClose}
       />
 
-      <div className="glass-panel rounded-2xl w-[90%]  z-10 p-0 ">
+      <div className="glass-panel rounded-2xl lg:w-[90%] w-full  z-10 p-0 ">
         {/* Header */}
         <div className="relative px-6 pt-6 border-b border-dark-300/50">
           <button
@@ -148,7 +148,7 @@ export default function AccountStatsModal({
 
         {/* trades analysis */}
         {tradeTab == "analysis" && (
-          <div className="p-6 space-y-6">
+          <div className="p-6 space-y-6 lg:h-[95%] lg:max-h-full max-h-[500px] overflow-y-auto">
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="glass-panel rounded-xl p-4">
@@ -266,7 +266,7 @@ export default function AccountStatsModal({
                 </button>
               </div>
 
-              <div className="overflow-x-auto overflow-y-auto max-h-[500px] w-full">
+              <div className=" overflow-auto max-h-[500px] w-full">
                 <table className="w-full">
                   <thead>
                     <tr className="text-left">

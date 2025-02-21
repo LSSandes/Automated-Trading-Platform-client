@@ -17,8 +17,8 @@ export default function SignalsView() {
   const webhooksState = useSelector((state) => state.webhook.webhooks);
   const closeOrdersState = useSelector((state) => state.closeOrder.closeOrders);
   useEffect(() => {
-      dispatch(getWebhooks(user?.email));
-      dispatch(getCloseOrders(user?.email));
+    dispatch(getWebhooks(user?.email));
+    dispatch(getCloseOrders(user?.email));
   }, []);
   const handleChangeColor = (id: string) => {
     console.log("Change color for webhook:", id);
@@ -41,7 +41,7 @@ export default function SignalsView() {
   };
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between lg:items-center items-start lg:flex-row flex-col gap-4">
         <div className="flex items-center space-x-3">
           <Signal className="h-8 w-8 text-accent" />
           <div>
@@ -113,8 +113,9 @@ export default function SignalsView() {
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {closeOrdersState.map((order) => (
+            {closeOrdersState.map((order, index) => (
               <CloseOrderCard
+                key={index}
                 closeOrder={order}
                 onToggleActive={handleToggleActiveCloseOrder}
                 onTogglePublic={handleTogglePublicCloseOrder}

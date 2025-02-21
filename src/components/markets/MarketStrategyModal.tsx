@@ -16,6 +16,7 @@ import { useAtom } from "jotai";
 import { MarketOrderStrategyProps } from "@/types/webhook";
 import { Loader } from "lucide-react";
 import { toast } from "react-toastify";
+import { FaChartBar } from "react-icons/fa";
 
 export default function MarketStrategyModal({
   isOpen,
@@ -40,6 +41,8 @@ export default function MarketStrategyModal({
     dispatch(getWebhooks(user?.email));
     dispatch(getCloseOrders(user?.email));
   }, []);
+
+  console.log("----------------marketOrders---------->", marketOrders);
 
   useEffect(() => {
     console.log("webhook", webhook);
@@ -129,12 +132,12 @@ export default function MarketStrategyModal({
   };
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div className="fixed inset-0 z-50 flex items-start justify-center px-4">
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="glass-panel rounded-2xl w-full max-w-lg z-10 p-0 overflow-hidden">
+      <div className="bg-dark-50 rounded-2xl w-full max-w-lg z-10 p-0 overflow-hidden">
         <div className="relative p-6 border-b border-dark-300/50">
           <button
             onClick={onClose}
@@ -143,15 +146,17 @@ export default function MarketStrategyModal({
           >
             <X className="h-5 w-5" />
           </button>
-
-          <h3 className="text-xl font-medium text-white tracking-tight">
-            Create Strategy
-          </h3>
+          <div className="flex items-center gap-2">
+            <FaChartBar className="h-5 w-5 mr-2" />
+            <h3 className="text-xl font-medium text-white tracking-tight">
+              Open Trade
+            </h3>
+          </div>
         </div>
 
         <div className="p-6 space-y-6">
           {/* Mode Selector */}
-          <div className="flex rounded-lg bg-dark-200/30 p-1">
+          <div className="flex rounded-lg bg-dark-200 p-1">
             <button
               onClick={() => setMode("basic")}
               className={`flex-1 px-4 py-2 text-sm font-medium transition-all ${
@@ -223,14 +228,13 @@ export default function MarketStrategyModal({
                         <option
                           key={item.id}
                           style={{
-                            color:
-                              item.accountId === "" ? "#ef4444" : "#22c55e",
+                            color: item.accountId ? "#ef4444" : "#22c55e",
                             fontSize: "14px",
                           }}
                           value={String(item.webhookName)}
                         >
                           {item.webhookName} &nbsp;-&nbsp;
-                          {item.accountId == "" ? "Not Connected" : "Connected"}
+                          {item.accountId ? "Not Connected" : "Connected"}
                         </option>
                       )
                     )}
@@ -238,7 +242,7 @@ export default function MarketStrategyModal({
                 </div>
               </div>
               {orderType == "market" && (
-                <div className="bg-dark-200/30 p-1 rounded-lg  gap-5 grid grid-cols-2">
+                <div className="bg-dark-200 p-1 rounded-lg  gap-5 grid grid-cols-2">
                   <div className="flex justify-center items-center gap-5">
                     <label className="flex justify-center items-center space-x-2 text-sm text-gray-400 mb-2">
                       <span>Symbol:</span>

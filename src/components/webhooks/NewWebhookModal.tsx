@@ -7,6 +7,7 @@ import { userAtom } from "@/store/atoms";
 import { dispatch } from "@/app/store";
 import { createMarketOrder } from "@/app/reducers/webhook";
 import { addCloseOrder } from "@/app/reducers/closeOrder";
+import { MdOutlineWebhook } from "react-icons/md";
 
 type WebhookMode = "basic" | "advanced";
 type OrderType = "Market Order" | "Modify Order" | "Close Order";
@@ -86,15 +87,15 @@ export default function NewWebhookModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div className="fixed inset-0 z-50 flex lg:items-center items-start justify-center px-4">
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      <div className="glass-panel rounded-2xl w-full max-w-3xl z-10 p-0 overflow-hidden">
+      <div className="bg-dark-50 rounded-2xl w-full max-w-2xl z-10 p-0 overflow-hidden">
         {/* Header */}
-        <div className="relative p-8 border-b border-dark-300/50">
+        <div className="relative px-8 py-6 border-b border-dark-300/50">
           <button
             onClick={onClose}
             className="absolute right-6 top-6 p-2 text-gray-400 hover:text-white 
@@ -102,21 +103,23 @@ export default function NewWebhookModal({
           >
             <X className="h-5 w-5" />
           </button>
-
-          <h3 className="text-2xl font-medium text-white tracking-tight">
-            Create New Webhook
-          </h3>
-          <p className="text-gray-400 mt-2">
+          <div className="flex items-center gap-2">
+            <MdOutlineWebhook className="h-5 w-5 mr-2" />
+            <h3 className="text-xl font-medium text-white tracking-tight">
+              Create New Webhook
+            </h3>
+          </div>
+          <p className="text-gray-400 mt-2 text-sm">
             Set up automated trading with TradingView signals
           </p>
         </div>
 
-        <div className="p-8 space-y-8 max-h-[calc(100vh-200px)] overflow-y-auto">
+        <div className="lg:p-8 p-3 space-y-2 max-h-[calc(100vh-300px)] overflow-y-auto">
           {/* *******************Web Hook Mode******************* */}
           <div className="flex rounded-xl bg-dark-200/30 p-1.5">
             <button
               onClick={() => setMode("basic")}
-              className={`flex-1 px-6 py-3 rounded-lg text-sm font-medium transition-all ${
+              className={`flex-1 px-6 py-2 rounded-lg text-sm font-medium transition-all ${
                 mode === "basic"
                   ? "bg-accent text-white"
                   : "text-gray-400 hover:text-white"
@@ -126,7 +129,7 @@ export default function NewWebhookModal({
             </button>
             <button
               onClick={() => setMode("advanced")}
-              className={`flex-1 px-6 py-3 rounded-lg text-sm font-medium transition-all ${
+              className={`flex-1 px-6 py-2 rounded-lg text-sm font-medium transition-all ${
                 mode === "advanced"
                   ? "bg-accent text-white"
                   : "text-gray-400 hover:text-white"
@@ -139,22 +142,22 @@ export default function NewWebhookModal({
           {/* Mode Description */}
           <div className="bg-dark-200/30 rounded-xl p-6">
             <div className="flex items-start space-x-3">
-              <AlertTriangle className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-              <div className="space-y-1">
+              <AlertTriangle className="h-4 w-4 text-accent flex-shrink-0 mt-0.5" />
+              <div className="space-y-0">
                 {mode === "basic" ? (
                   <>
-                    <p className="text-white">
+                    <p className="text-white text-sm">
                       Basic webhook supports three message types:
                     </p>
-                    <ul className="list-disc text-gray-400 ml-4 space-y-1">
-                      <li>
+                    <ul className="list-disc text-gray-400 ml-4 space-y-1 text-sm">
+                      <li className="text-sm">
                         Market Order: Places a market order based on specified
                         inputs
                       </li>
-                      <li>
+                      <li className="text-sm">
                         Update SL/TP: Updates the stop-loss or take-profit price
                       </li>
-                      <li>
+                      <li className="text-sm">
                         Close Trade: Closes open trades with optional partial
                         closing
                       </li>
@@ -173,7 +176,6 @@ export default function NewWebhookModal({
 
           {mode === "basic" && (
             <>
-              {/* Order Type Selector */}
               <div className="flex rounded-xl bg-dark-200/30 p-1.5">
                 {(
                   ["Market Order", "Modify Order", "Close Order"] as OrderType[]
@@ -181,7 +183,7 @@ export default function NewWebhookModal({
                   <button
                     key={type}
                     onClick={() => setOrderType(type)}
-                    className={`flex-1 px-6 py-3 rounded-lg text-sm font-medium transition-all ${
+                    className={`flex-1 px-6 py-2 rounded-lg text-sm font-medium transition-all ${
                       orderType === type
                         ? "bg-accent text-white"
                         : "text-gray-400 hover:text-white"
@@ -193,7 +195,7 @@ export default function NewWebhookModal({
               </div>
 
               {/* Common Fields */}
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid lg:grid-cols-2 grid-cols-1 gap-6">
                 <div>
                   <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                     <span>Webhook Name</span>
@@ -206,9 +208,9 @@ export default function NewWebhookModal({
                     value={webhookName}
                     onChange={(e) => setWebhookName(e.target.value)}
                     placeholder="My First Webhook"
-                    className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-3
+                    className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2
                              border border-dark-300/50 focus:outline-none focus:ring-1 
-                             focus:ring-accent/50"
+                             focus:ring-accent/50 text-sm"
                   />
                 </div>
 
@@ -224,9 +226,9 @@ export default function NewWebhookModal({
                     value={pair}
                     onChange={(e) => setPair(e.target.value)}
                     placeholder="BTCUSD"
-                    className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-3
+                    className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2
                              border border-dark-300/50 focus:outline-none focus:ring-1 
-                             focus:ring-accent/50"
+                             focus:ring-accent/50 text-sm"
                   />
                 </div>
               </div>
@@ -245,9 +247,9 @@ export default function NewWebhookModal({
                       <select
                         value={orderDirection}
                         onChange={(e) => setOrderDirection(e.target.value)}
-                        className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-3
+                        className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2
                                  border border-dark-300/50 focus:outline-none focus:ring-1 
-                                 focus:ring-accent/50"
+                                 focus:ring-accent/50 text-sm"
                       >
                         <option value={"buy"}>Buy</option>
                         <option value={"sell"}>Sell</option>
@@ -295,14 +297,14 @@ export default function NewWebhookModal({
                           type="number"
                           value={fixedSize}
                           onChange={(e) => setFixedSize(Number(e.target.value))}
-                          className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-3
+                          className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2
                                    border border-dark-300/50 focus:outline-none focus:ring-1 
-                                   focus:ring-accent/50"
+                                   focus:ring-accent/50 text-sm"
                         />
                       )}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid lg:grid-cols-2 grid-cols-1 gap-6">
                       <div>
                         <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                           <span>Stop Loss (pips)</span>
@@ -315,9 +317,9 @@ export default function NewWebhookModal({
                           value={stopLoss}
                           placeholder="0"
                           onChange={(e) => setStopLoss(e.target.value)}
-                          className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-3
+                          className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2
                                    border border-dark-300/50 focus:outline-none focus:ring-1 
-                                   focus:ring-accent/50"
+                                   focus:ring-accent/50 text-sm"
                         />
                       </div>
                       <div>
@@ -332,9 +334,9 @@ export default function NewWebhookModal({
                           value={takeProfit}
                           placeholder="0"
                           onChange={(e) => setTakeProfit(e.target.value)}
-                          className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-3
+                          className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2
                                    border border-dark-300/50 focus:outline-none focus:ring-1 
-                                   focus:ring-accent/50"
+                                   focus:ring-accent/50 text-sm"
                         />
                       </div>
                     </div>
@@ -386,11 +388,11 @@ export default function NewWebhookModal({
         </div>
 
         {/* Footer */}
-        <div className="p-8 border-t border-dark-300/50">
+        <div className="py-4 px-8 border-t border-dark-300/50">
           <div className="flex items-center justify-between">
             <button
               onClick={onClose}
-              className="px-6 py-3 text-gray-400 hover:text-gray-300 
+              className="lg:px-6 px-4 py-3 text-gray-400 hover:text-gray-300 
                        transition-colors duration-300"
             >
               Cancel
@@ -401,8 +403,8 @@ export default function NewWebhookModal({
                 onClose();
               }}
               disabled={!webhookName || !pair}
-              className="premium-button px-8 py-3 flex items-center space-x-2
-                       disabled:opacity-50 disabled:cursor-not-allowed"
+              className="premium-button lg:px-6 px-4 py-3 flex items-center space-x-2
+                       disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
               <span>Create Webhook</span>
               <Plus className="h-5 w-5" />

@@ -2,7 +2,7 @@ export interface MetaStatsStateProps {
   error: object | string | null;
   stats: MetaTradesParams[];
   won_lost: WonLostParams[];
-  by_week_day: ByWeekDayParams[];
+  trades_by_week: TradesByWeekParams[];
   trades_by_hour: TradesByHourParams[];
 }
 
@@ -17,7 +17,7 @@ export interface TradesByHourParams {
   wonProfit: number;
 }
 
-export interface ByWeekDayParams {
+export interface TradesByWeekParams {
   name: string;
   lostProfit: number;
   wonProfit: number;

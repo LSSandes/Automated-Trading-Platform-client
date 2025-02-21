@@ -4,7 +4,7 @@ import CloseOrderMenu from "./CloseOrderMenu";
 import EditCloseOrderModal from "./EditCloseOrderModal";
 import { userAtom } from "@/store/atoms";
 import { useAtom } from "jotai";
-import { connectCloseOrder, deleteCloseOrder } from "@/app/reducers/closeOrder";
+import { deleteCloseOrder, openCloseOrder } from "@/app/reducers/closeOrder";
 import { dispatch, useSelector } from "@/app/store";
 import CloseOrderAppModal from "./CloseOrderAppModal";
 import { CloseOrderCardProps } from "@/types/webhook";
@@ -56,7 +56,7 @@ export default function CloseOrderCard({
       }
     };
     updateTimeDiff();
-    const intervalId = setInterval(updateTimeDiff, 60000);
+    const intervalId = setInterval(updateTimeDiff, 1000);
     return () => clearInterval(intervalId);
   }, [closeOrder]);
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function CloseOrderCard({
       setTradeLoading(true);
       if (user) {
         dispatch(
-          connectCloseOrder({
+          openCloseOrder({
             email: user?.email,
             accountId: closeOrder.accountId,
             webhookName: closeOrder.webhookName,
@@ -154,7 +154,7 @@ export default function CloseOrderCard({
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="glass-panel rounded-lg p-3 border border-dark-300/30">
               <div className="text-gray-400 text-sm mb-1">Last Signal</div>
-              <div className="text-white font-medium">{timeDiff}</div>
+              <div className="text-white font-medium">{timeDiff ? timeDiff : "Never"}</div>
             </div>
 
             <div className="glass-panel rounded-lg p-3 border border-dark-300/30">

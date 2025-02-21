@@ -61,8 +61,11 @@ const SignupView: React.FC = () => {
     }
   };
   return (
-    <div className="relative flex w-full justify-center items-center min-h-screen bg-[#070707]">
+    <div className="relative flex lg:flex-row flex-col w-full justify-center items-center min-h-screen bg-[#070707] lg:gap-0 gap-4">
       <DynamicSvg />
+      <div className="relative flex w-full justify-center items-center lg:hidden">
+        <img src={logo} alt="" className="w-[80%] h-auto" />
+      </div>
       <div className="flex flex-col items-center justify-center z-20">
         <form
           onSubmit={handleSubmit}
@@ -145,14 +148,14 @@ const SignupView: React.FC = () => {
             {/* <GoogleLogin onSuccess={responseMessage} onError={errorMessage} /> */}
             <p className="cursor-pointer">
               You have an account?{" "}
-              <Link className="text-blue-500" to={"/signin"}>
+              <Link className="text-blue-500" to={"/login"}>
                 Sign in
               </Link>
             </p>
           </div>
         </form>
       </div>
-      <div className="flex w-1/2 justify-center items-center z-20">
+      <div className="lg:flex w-1/2 justify-center items-center z-20 hidden">
         <img src={logo} alt="" className="w-[80%] h-auto" />
       </div>
     </div>

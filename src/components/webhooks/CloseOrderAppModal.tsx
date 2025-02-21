@@ -82,7 +82,7 @@ export default function CloseOrderAppModal({
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="glass-panel rounded-2xl w-full max-w-2xl z-10 p-0 overflow-hidden h-[400px]">
+      <div className="glass-panel rounded-2xl w-full max-w-xl z-10 p-0 overflow-hidden h-[400px]">
         <div className="relative p-6 border-b border-dark-300/50">
           <button
             onClick={onClose}
@@ -95,7 +95,7 @@ export default function CloseOrderAppModal({
           <h3 className="text-xl font-medium text-white tracking-tight">
             Connected Apps
           </h3>
-          <p className="text-gray-400 mt-1">
+          <p className="text-gray-400 mt-1 text-sm">
             Manage integrations for {closeOrder.webhookName}
           </p>
         </div>
@@ -133,7 +133,7 @@ export default function CloseOrderAppModal({
               </div>
               <Listbox value={selected} onChange={setSelected}>
                 <div className="relative mt-2">
-                  <ListboxButton className="grid w-[80%] cursor-default grid-cols-1 rounded-md bg-white py-1.5 pl-3 pr-2 text-left text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6">
+                  <ListboxButton className="grid w-[90%] cursor-default grid-cols-1 rounded-md bg-white py-1.5 pl-3 pr-2 text-left text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6">
                     <span className="col-start-1 row-start-1 truncate pr-6">
                       {selected}
                     </span>

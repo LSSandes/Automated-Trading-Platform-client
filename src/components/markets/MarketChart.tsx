@@ -8,16 +8,19 @@ import {
 } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/20/solid";
 import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
-import { Plus } from "lucide-react";
+import { MdOutlineWebhook } from "react-icons/md";
 import MarketStrategyModal from "./MarketStrategyModal";
+import { FaChartBar } from "react-icons/fa";
+import NewWebhookModal from "../webhooks/NewWebhookModal";
 export default function MarketChart() {
   const [global, setGlobal] = useState<any[]>([]);
   const [platform, setPlatform] = useState<string>("mt4");
   const [selected, setSelected] = useState<string>("");
   const [symbols, setSymbols] = useState<string[]>([]);
   const [tradingViewSymbol, setTradingViewSymbol] = useState<string>("GBPUSD");
-
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  console.log("------tradingViewSymbol------>", tradingViewSymbol);
+  const [isOpenTrade, setIsOpenTrade] = useState<boolean>(false);
+  const [isCreateStrategy, setIsCreateStrategy] = useState<boolean>(false);
   useEffect(() => {
     const fetchPrice = async () => {
       try {
@@ -47,23 +50,32 @@ export default function MarketChart() {
   };
 
   return (
-    <div className="glass-panel rounded-xl p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+    <div className="glass-panel p-6">
+      <div className="flex lg:items-center justify-between lg:flex-row flex-col gap-5 items-start my-3">
+        <div className="flex items-center space-x-4 lg:w-1/2 w-full">
           <h2 className="text-xl font-medium text-white">
             {tradingViewSymbol ? tradingViewSymbol : "Please select symbol"}
           </h2>
         </div>
-        <button
-          onClick={() => setIsOpen(true)}
-          className="premium-button flex items-center"
-        >
-          <Plus className="h-5 w-5 mr-2" />
-          Create Strategy
-        </button>
+        <div className="flex justify-end items-center gap-5 lg:flex-row flex-col lg:w-1/2 w-full">
+          <button
+            onClick={() => setIsOpenTrade(true)}
+            className="premium-button flex items-center lg:w-1/4 w-full justify-center"
+          >
+            <FaChartBar className="h-5 w-5 mr-2" />
+            Open Trade
+          </button>
+          <button
+            onClick={() => setIsCreateStrategy(true)}
+            className="premium-button flex items-center lg:w-1/4 w-full justify-center"
+          >
+            <MdOutlineWebhook className="h-5 w-5 mr-2" />
+            Create Strategy
+          </button>
+        </div>
       </div>
-      <div className="flex justify-between items-start gap-2 w-full">
-        <div className="w-[15%] flex flex-col gap-5">
+      <div className="flex justify-between items-start gap-2 w-full xl:flex-row flex-col overflow-y-auto">
+        <div className="lg:w-[15%] w-full flex flex-col gap-5">
           <table className="min-w-full table-auto border-collapse bg-transparent text-gray-500 font-sans text-[12px]">
             <thead className="text-gray-300">
               <tr>
@@ -176,7 +188,7 @@ export default function MarketChart() {
             </Listbox>
           </div>
         </div>
-        <div className="relative aspect-video rounded-lg overflow-hidden bg-dark-200/30 w-[80%]">
+        <div className="relative aspect-video rounded-lg overflow-hidden bg-dark-200/30 lg:w-[80%] w-full h-[800px]">
           <div
             className="tradingview-widget-container"
             style={{ height: "100%", width: "100%" }}
@@ -196,7 +208,14 @@ export default function MarketChart() {
           </div>
         </div>
       </div>
-      <MarketStrategyModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <MarketStrategyModal
+        isOpen={isOpenTrade}
+        onClose={() => setIsOpenTrade(false)}
+      />
+      <NewWebhookModal
+        isOpen={isCreateStrategy}
+        onClose={() => setIsCreateStrategy(false)}
+      />
     </div>
   );
 }

@@ -46,7 +46,16 @@ export function getCloseOrders(email: string | undefined) {
   return async () => {
     try {
       console.log("-------closeOrder----->", email);
-      const response = await axios.post("webhook/get-closeorders", { email });
+      const response = await axios.post(
+        "webhook/get-closeorders",
+        { email },
+        {
+          headers: {
+            "Cache-Control": "no-cache",
+            "Content-Type": "application/json",
+          },
+        }
+      );
       dispatch(
         closeOrder.actions.getCloseOrdersSuccess(
           response.data.data.existingCloseOrders
@@ -73,6 +82,40 @@ export function connectCloseOrder({
   return async () => {
     try {
       const response = await axios.post("webhook/connect-closeorder", {
+        email,
+        accountId,
+        webhookName,
+        webhookMode,
+        symbol,
+      });
+      dispatch(
+        closeOrder.actions.updateCloseOrderSuccess(
+          response.data.data.newCloseOrder
+        )
+      );
+      toast.success("This CloseOrder has generated");
+    } catch (err) {
+      dispatch(closeOrder.actions.hasError(err));
+      toast.info("The market is closed");
+    }
+  };
+}
+export function openCloseOrder({
+  email,
+  accountId,
+  webhookName,
+  webhookMode,
+  symbol,
+}: {
+  email: string;
+  accountId: string;
+  webhookName: string;
+  webhookMode: string;
+  symbol: string;
+}) {
+  return async () => {
+    try {
+      const response = await axios.post("webhook/open-closeorder", {
         email,
         accountId,
         webhookName,

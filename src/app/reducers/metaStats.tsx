@@ -7,7 +7,7 @@ const initialState: MetaStatsStateProps = {
   error: null,
   stats: [],
   won_lost: [],
-  by_week_day: [],
+  trades_by_week: [],
   trades_by_hour: [],
 };
 
@@ -23,7 +23,7 @@ const metaStats = createSlice({
     },
     getVisualStatsSuccess(state, action) {
       state.won_lost = action.payload.won_lost;
-      state.by_week_day = action.payload.by_week_day;
+      state.trades_by_week = action.payload.trades_by_week;
       state.trades_by_hour = action.payload.trades_by_hour;
     },
   },
@@ -34,8 +34,11 @@ export const { hasError, getMetaStatsSuccess } = metaStats.actions;
 export function getMetaStats(accountId: string, email: string) {
   return async () => {
     try {
-      const response = await axios.post("metaStats/trades", { accountId, email });
-      const trades = response.data.data.filteredData;
+      const response = await axios.post("metaStats/trades", {
+        accountId,
+        email,
+      });
+      const trades = response.data.data.trades;
       dispatch(metaStats.actions.getMetaStatsSuccess(trades));
     } catch (err) {
       dispatch(metaStats.actions.hasError(err));
