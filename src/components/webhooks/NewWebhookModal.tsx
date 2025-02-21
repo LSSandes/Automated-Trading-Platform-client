@@ -60,20 +60,6 @@ export default function NewWebhookModal({
             takeProfit: Number(takeProfit).toFixed(6).toString(),
           })
         );
-        dispatch(
-          createMarketOrder({
-            email: user?.email ?? "",
-            webhookName,
-            webhookMode: mode,
-            symbol: pair,
-            orderDirection,
-            volume: usePercentageSize
-              ? (percentageSize / 100).toFixed(4).toString()
-              : fixedSize.toString(),
-            stopLoss: Number(stopLoss).toFixed(6).toString(),
-            takeProfit: Number(takeProfit).toFixed(6).toString(),
-          })
-        );
       }
     } else if (orderType == "Close Order") {
       if (user) {
