@@ -471,7 +471,33 @@ export default function AccountStatsModal({
                 </BarChart>
               </div>
 
-              <div className="flex flex-col items-center gap-5">
+              <div className="relative flex flex-col items-center gap-5">
+                <div className="absolute right-5 top-3 flex gap-3 justify-center items-center m-5">
+                  <p
+                    className={`${
+                      index == "month" && "border-b border-white"
+                    } cursor-pointer`}
+                    onClick={() => setIndex("month")}
+                  >
+                    Month
+                  </p>
+                  <p
+                    className={`${
+                      index == "week" && "border-b border-white"
+                    } cursor-pointer`}
+                    onClick={() => setIndex("week")}
+                  >
+                    Week
+                  </p>
+                  <p
+                    className={`${
+                      index == "year" && "border-b border-white"
+                    } cursor-pointer`}
+                    onClick={() => setIndex("year")}
+                  >
+                    Year
+                  </p>
+                </div>
                 <div className="text-white font-bold text-xl flex gap-5 items-center w-[80%]">
                   <LuTrendingUpDown className="h-6 w-6" /> Total Trades Analysis
                 </div>
