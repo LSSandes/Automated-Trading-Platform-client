@@ -60,14 +60,14 @@ export default function MarketChart() {
         <div className="flex justify-end items-center gap-5 lg:flex-row flex-col lg:w-1/2 w-full">
           <button
             onClick={() => setIsOpenTrade(true)}
-            className="premium-button flex items-center 2xl:w-1/4 w-full justify-center"
+            className="premium-button flex items-center 2xl:w-1/4 w-full justify-center outline-1 outline-dashed outline-offset-2 outline-blue-500"
           >
             <FaChartBar className="h-5 w-5 mr-2" />
             Open Trade
           </button>
           <button
             onClick={() => setIsCreateStrategy(true)}
-            className="premium-button flex items-center 2xl:w-1/4 w-full justify-center"
+            className="premium-button flex items-center 2xl:w-1/4 w-full justify-center outline-1 outline-dashed outline-offset-2 outline-blue-500"
           >
             <MdOutlineWebhook className="h-5 w-5 mr-2" />
             Create Strategy

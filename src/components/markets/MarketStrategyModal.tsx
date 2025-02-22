@@ -281,7 +281,7 @@ export default function MarketStrategyModal({
           )}
           <button
             onClick={handleOpenTrade}
-            className="w-full premium-button py-3 flex items-center justify-center space-x-2"
+            className="w-full premium-button py-3 flex items-center justify-center space-x-2 outline-1 outline-dashed outline-offset-2 outline-blue-500"
           >
             {openTradeLoading && (
               <Loader className="h-5 w-5 mr-2 animate-spin" />

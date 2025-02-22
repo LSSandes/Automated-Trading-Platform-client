@@ -102,7 +102,7 @@ export default function CloseOrderCard({
     <>
       <div
         className={`relative rounded-xl overflow-hidden transition-all duration-300 
-                      hover:translate-y-[-2px] hover:shadow-2xl hover:shadow-accent/5 border border-gray-500`}
+                      hover:translate-y-[-2px] hover:shadow-2xl hover:shadow-accent/5 border border-gray-500 outline-1 outline-dashed p-1 outline-offset-1 outline-dark-500`}
       >
         <div
           className={`absolute inset-0 bg-gradient-to-br from-dark-200/20 to-dark-200/5 opacity-10`}
