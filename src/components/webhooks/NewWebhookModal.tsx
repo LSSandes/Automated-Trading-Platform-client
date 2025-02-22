@@ -40,26 +40,29 @@ export default function NewWebhookModal({
   const [orderDirection, setOrderDirection] = useState("buy");
   const [usePercentageSize, setUsePercentageSize] = useState(true);
   const [percentageSize, setPercentageSize] = useState(1);
-  const [fixedSize, setFixedSize] = useState(2);
+  const [fixedSize, setFixedSize] = useState(0);
   const [stopLoss, setStopLoss] = useState("");
   const [takeProfit, setTakeProfit] = useState("");
   const handleCreateWebhook = async () => {
     if (orderType == "Market Order") {
       if (user?.email) {
-        dispatch(
-          createMarketOrder({
-            email: user.email,
-            webhookName,
-            webhookMode: mode,
-            symbol: pair,
-            orderDirection,
-            volume: usePercentageSize
-              ? (percentageSize / 100).toFixed(4).toString()
-              : fixedSize.toString(),
-            stopLoss: Number(stopLoss).toFixed(6).toString(),
-            takeProfit: Number(takeProfit).toFixed(6).toString(),
-          })
-        );
+        if (mode == "basic") {
+          dispatch(
+            createMarketOrder({
+              email: user.email,
+              webhookName,
+              webhookMode: mode,
+              symbol: pair,
+              orderDirection,
+              volume: usePercentageSize
+                ? (percentageSize / 100).toFixed(4).toString()
+                : fixedSize.toString(),
+              stopLoss: Number(stopLoss).toFixed(6).toString(),
+              takeProfit: Number(takeProfit).toFixed(6).toString(),
+            })
+          );
+        } else {
+        }
       }
     } else if (orderType == "Close Order") {
       if (user) {
@@ -116,7 +119,7 @@ export default function NewWebhookModal({
           </p>
         </div>
 
-        <div className="lg:p-8 p-3 space-y-2 max-h-[calc(100vh-300px)] overflow-y-auto">
+        <div className="lg:p-8 p-3 space-y-5 max-h-[calc(100vh-200px)] overflow-y-auto">
           {/* *******************Web Hook Mode******************* */}
           <div className="flex rounded-xl bg-dark-200/30 p-1.5">
             <button
@@ -177,7 +180,7 @@ export default function NewWebhookModal({
           </div>
 
           {mode === "basic" && (
-            <>
+            <div className="space-y-6">
               <div className="flex rounded-xl bg-dark-200/30 p-1.5">
                 {(
                   ["Market Order", "Modify Order", "Close Order"] as OrderType[]
@@ -197,8 +200,165 @@ export default function NewWebhookModal({
               </div>
 
               {/* Common Fields */}
-              <div className="grid lg:grid-cols-2 grid-cols-1 gap-6">
-                <div>
+              <div className="w-full flex justify-center items-center">
+                <div className="flex flex-col justify-center items-center w-[80%] gap-4">
+                  <div className="flex justify-between items-center w-full">
+                    <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                      <span>Webhook Name</span>
+                      <Tooltip content={tooltips.webhookName}>
+                        <HelpCircle className="h-4 w-4" />
+                      </Tooltip>
+                    </label>
+                    <input
+                      type="text"
+                      value={webhookName}
+                      onChange={(e) => setWebhookName(e.target.value)}
+                      placeholder="My First Webhook"
+                      className="w-1/3 bg-dark-50 text-white rounded-lg px-4 py-3
+                             border border-dashed border-blue-500 focus:outline-none text-sm"
+                    />
+                  </div>
+
+                  <div className="flex justify-between items-center w-full">
+                    <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                      <span>Trading Pair</span>
+                      <Tooltip content={tooltips.pair}>
+                        <HelpCircle className="h-4 w-4" />
+                      </Tooltip>
+                    </label>
+                    <input
+                      type="text"
+                      value={pair}
+                      onChange={(e) => setPair(e.target.value)}
+                      placeholder="BTCUSD"
+                      className="w-1/3 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                             border border-dashed border-blue-500 focus:outline-none text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Order Type Specific Fields */}
+              <div className="flex w-full justify-center items-center">
+                <div className="space-y-8 flex w-[80%] justify-center items-center flex-col">
+                  {orderType === "Market Order" && (
+                    <>
+                      <div className="flex justify-between items-center w-full">
+                        <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                          <span>Order Direction</span>
+                          <Tooltip content={tooltips.orderType}>
+                            <HelpCircle className="h-4 w-4" />
+                          </Tooltip>
+                        </label>
+                        <select
+                          value={orderDirection}
+                          onChange={(e) => setOrderDirection(e.target.value)}
+                          className="w-1/3 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                                 border border-dashed border-blue-500 focus:outline-none 
+                                  text-sm"
+                        >
+                          <option value={"buy"}>Buy</option>
+                          <option value={"sell"}>Sell</option>
+                        </select>
+                      </div>
+
+                      <div className="flex flex-col justify-center items-center w-full gap-2">
+                        <div className="flex items-center justify-between mb-2 w-full">
+                          <label className="flex items-center space-x-2 text-sm text-gray-400">
+                            <span>Position Size</span>
+                            <Tooltip
+                              content={tooltips.sizeType}
+                            >
+                              <HelpCircle className="h-4 w-4" />
+                            </Tooltip>
+                          </label>
+                          <button
+                            onClick={() =>
+                              setUsePercentageSize(!usePercentageSize)
+                            }
+                            className="text-sm text-accent hover:text-accent-dark"
+                          >
+                            Switch to{" "}
+                            {usePercentageSize ? "fixed" : "percentage"}
+                          </button>
+                        </div>
+                        {usePercentageSize ? (
+                          <div className="space-y-2 w-full">
+                            <input
+                              type="range"
+                              min="1"
+                              max="40"
+                              step={0.1}
+                              value={percentageSize}
+                              onChange={(e) =>
+                                setPercentageSize(Number(e.target.value))
+                              }
+                              className="w-full accent-accent"
+                            />
+                            <div className="flex justify-between text-sm text-gray-400">
+                              <span>1%</span>
+                              <span>{percentageSize.toFixed(1)}%</span>
+                              <span>40%</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <input
+                            type="number"
+                            value={fixedSize}
+                            onChange={(e) =>
+                              setFixedSize(Number(e.target.value))
+                            }
+                            className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-3
+                                   border border-dashed border-blue-500 focus:outline-none text-sm"
+                          />
+                        )}
+                      </div>
+
+                      <div className="flex flex-col justify-center items-center w-full gap-4">
+                        <div className="flex justify-between items-center w-full">
+                          <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                            <span>Stop Loss (pips)</span>
+                            <Tooltip content={tooltips.stopLoss}>
+                              <HelpCircle className="h-4 w-4" />
+                            </Tooltip>
+                          </label>
+                          <input
+                            type="number"
+                            value={stopLoss}
+                            placeholder="0"
+                            onChange={(e) => setStopLoss(e.target.value)}
+                            className="w-1/3 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                                   border border-dashed border-blue-500 focus:outline-none text-sm"
+                          />
+                        </div>
+                        <div className="flex justify-between items-center w-full">
+                          <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                            <span>Take Profit (pips)</span>
+                            <Tooltip content={tooltips.takeProfit}>
+                              <HelpCircle className="h-4 w-4" />
+                            </Tooltip>
+                          </label>
+                          <input
+                            type="number"
+                            value={takeProfit}
+                            placeholder="0"
+                            onChange={(e) => setTakeProfit(e.target.value)}
+                            className="w-1/3 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                                   border border-dashed border-blue-500 focus:outline-none text-sm"
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {mode === "advanced" && (
+            <div className="flex w-full justify-center items-center">
+              <div className="space-y-8 w-[80%]">
+                <div className="flex justify-between items-center">
                   <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                     <span>Webhook Name</span>
                     <Tooltip content={tooltips.webhookName}>
@@ -209,16 +369,16 @@ export default function NewWebhookModal({
                     type="text"
                     value={webhookName}
                     onChange={(e) => setWebhookName(e.target.value)}
-                    placeholder="My First Webhook"
-                    className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-2
-                             border border-dashed border-blue-500 focus:outline-none text-sm"
+                    placeholder="My Advanced Webhook"
+                    className="w-1/3 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                           border border-dashed border-blue-500 focus:outline-none text-sm"
                   />
                 </div>
 
-                <div>
+                <div className="flex justify-between items-center">
                   <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
-                    <span>Trading Pair</span>
-                    <Tooltip content={tooltips.pair}>
+                    <span>Trading Pairs</span>
+                    <Tooltip content="Comma-separated list of trading pairs">
                       <HelpCircle className="h-4 w-4" />
                     </Tooltip>
                   </label>
@@ -227,173 +387,29 @@ export default function NewWebhookModal({
                     value={pair}
                     onChange={(e) => setPair(e.target.value)}
                     placeholder="BTCUSD"
-                    className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-2
-                             border border-dashed border-blue-500 focus:outline-none text-sm"
+                    className="w-1/3 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                           border border-dashed border-blue-500 focus:outline-none text-sm"
                   />
                 </div>
-              </div>
-
-              {/* Order Type Specific Fields */}
-              <div className="space-y-6">
-                {orderType === "Market Order" && (
-                  <>
-                    <div>
-                      <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
-                        <span>Order Direction</span>
-                        <Tooltip content={tooltips.orderType}>
-                          <HelpCircle className="h-4 w-4" />
-                        </Tooltip>
-                      </label>
-                      <select
-                        value={orderDirection}
-                        onChange={(e) => setOrderDirection(e.target.value)}
-                        className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-2
-                                 border border-dashed border-blue-500 focus:outline-none 
-                                  text-sm"
-                      >
-                        <option value={"buy"}>Buy</option>
-                        <option value={"sell"}>Sell</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="flex items-center space-x-2 text-sm text-gray-400">
-                          <span>Position Size</span>
-                          <Tooltip content={tooltips.sizeType}>
-                            <HelpCircle className="h-4 w-4" />
-                          </Tooltip>
-                        </label>
-                        <button
-                          onClick={() =>
-                            setUsePercentageSize(!usePercentageSize)
-                          }
-                          className="text-sm text-accent hover:text-accent-dark"
-                        >
-                          Switch to {usePercentageSize ? "fixed" : "percentage"}
-                        </button>
-                      </div>
-                      {usePercentageSize ? (
-                        <div className="space-y-2">
-                          <input
-                            type="range"
-                            min="1"
-                            max="40"
-                            step={0.01}
-                            value={percentageSize}
-                            onChange={(e) =>
-                              setPercentageSize(Number(e.target.value))
-                            }
-                            className="w-full accent-accent"
-                          />
-                          <div className="flex justify-between text-sm text-gray-400">
-                            <span>1%</span>
-                            <span>{percentageSize.toFixed(2)}%</span>
-                            <span>40%</span>
-                          </div>
-                        </div>
-                      ) : (
-                        <input
-                          type="number"
-                          value={fixedSize}
-                          onChange={(e) => setFixedSize(Number(e.target.value))}
-                          className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-2
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="flex items-center space-x-2 text-sm text-gray-400">
+                      <span>Fixed Position Size</span>
+                      <Tooltip content={tooltips.fixedSize}>
+                        <HelpCircle className="h-4 w-4" />
+                      </Tooltip>
+                    </label>
+                  </div>
+                  <input
+                    type="number"
+                    value={fixedSize}
+                    step={0.0001}
+                    onChange={(e) => setFixedSize(Number(e.target.value))}
+                    onWheel={(e) => e.currentTarget.blur()}
+                    className="w-1/3 bg-dark-200/30 text-white rounded-lg px-4 py-3
                                    border border-dashed border-blue-500 focus:outline-none text-sm"
-                        />
-                      )}
-                    </div>
-
-                    <div className="grid lg:grid-cols-2 grid-cols-1 gap-6">
-                      <div>
-                        <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
-                          <span>Stop Loss (pips)</span>
-                          <Tooltip content={tooltips.stopLoss}>
-                            <HelpCircle className="h-4 w-4" />
-                          </Tooltip>
-                        </label>
-                        <input
-                          type="number"
-                          value={stopLoss}
-                          placeholder="0"
-                          onChange={(e) => setStopLoss(e.target.value)}
-                          className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-2
-                                   border border-dashed border-blue-500 focus:outline-none text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
-                          <span>Take Profit (pips)</span>
-                          <Tooltip content={tooltips.takeProfit}>
-                            <HelpCircle className="h-4 w-4" />
-                          </Tooltip>
-                        </label>
-                        <input
-                          type="number"
-                          value={takeProfit}
-                          placeholder="0"
-                          onChange={(e) => setTakeProfit(e.target.value)}
-                          className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-2
-                                   border border-dashed border-blue-500 focus:outline-none text-sm"
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-            </>
-          )}
-
-          {mode === "advanced" && (
-            <div className="space-y-6">
-              <div>
-                <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
-                  <span>Webhook Name</span>
-                  <Tooltip content={tooltips.webhookName}>
-                    <HelpCircle className="h-4 w-4" />
-                  </Tooltip>
-                </label>
-                <input
-                  type="text"
-                  value={webhookName}
-                  onChange={(e) => setWebhookName(e.target.value)}
-                  placeholder="My Advanced Webhook"
-                  className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-3
-                           border border-dashed border-blue-500 focus:outline-none text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
-                  <span>Trading Pairs</span>
-                  <Tooltip content="Comma-separated list of trading pairs">
-                    <HelpCircle className="h-4 w-4" />
-                  </Tooltip>
-                </label>
-                <input
-                  type="text"
-                  value={pair}
-                  onChange={(e) => setPair(e.target.value)}
-                  placeholder="BTCUSD"
-                  className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-3
-                           border border-dashed border-blue-500 focus:outline-none text-sm"
-                />
-              </div>
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="flex items-center space-x-2 text-sm text-gray-400">
-                    <span>Fixed Position Size</span>
-                    <Tooltip content={tooltips.fixedSize}>
-                      <HelpCircle className="h-4 w-4" />
-                    </Tooltip>
-                  </label>
+                  />
                 </div>
-                <input
-                  type="number"
-                  value={fixedSize}
-                  onChange={(e) => setFixedSize(Number(e.target.value))}
-                  className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-2
-                                   border border-dashed border-blue-500 focus:outline-none text-sm"
-                />
               </div>
             </div>
           )}
