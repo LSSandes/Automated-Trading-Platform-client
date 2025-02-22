@@ -57,7 +57,7 @@ export default function SignalsView() {
         </div>
         <button
           onClick={() => setShowNewWebhook(true)}
-          className="premium-button flex items-center"
+          className="premium-button flex items-center outline-1 outline-dashed outline-blue-500 p-2 outline-offset-2 lg:w-[20%] xl:w-[10%] w-full justify-center"
         >
           <Plus className="h-5 w-5 mr-2" />
           New Webhook
