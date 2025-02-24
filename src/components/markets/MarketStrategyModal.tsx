@@ -56,8 +56,8 @@ export default function MarketStrategyModal({
         setSymbol(findOrder?.symbol || "NAN");
         setOrderDirection(findOrder?.orderDirection || "");
         setWebhookMode(findOrder?.webhookMode || "");
-        setTakeProfit(findOrder?.takeProfit || 0);
-        setStopLoss(findOrder?.stopLoss || 0);
+        setTakeProfit(findOrder?.takeProfit_pips || 0);
+        setStopLoss(findOrder?.stopLoss_pips || 0);
         setVolume(findOrder?.volume || 0);
       }
     } else {
