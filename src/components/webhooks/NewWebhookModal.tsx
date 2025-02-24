@@ -41,40 +41,39 @@ export default function NewWebhookModal({
   const [usePercentageSize, setUsePercentageSize] = useState(true);
   const [percentageSize, setPercentageSize] = useState(1);
   const [fixedSize, setFixedSize] = useState(0);
-  const [stopLoss, setStopLoss] = useState("");
-  const [takeProfit, setTakeProfit] = useState("");
+  const [stopLoss_pips, setStopLoss] = useState("200");
+  const [takeProfit_pips, setTakeProfit] = useState("200");
   const handleCreateWebhook = async () => {
-    if (orderType == "Market Order") {
-      if (user?.email) {
-        if (mode == "basic") {
-          dispatch(
-            createMarketOrder({
-              email: user.email,
-              webhookName,
-              webhookMode: mode,
-              symbol: pair,
+    if (!user?.email) return;
+    const commonData = {
+      email: user.email,
+      webhookName,
+      webhookMode: mode,
+      symbol: pair,
+    };
+    if (orderType === "Market Order") {
+      const orderData =
+        mode === "basic"
+          ? {
+              ...commonData,
               orderDirection,
               volume: usePercentageSize
                 ? (percentageSize / 100).toFixed(4).toString()
                 : fixedSize.toString(),
-              stopLoss: Number(stopLoss).toFixed(6).toString(),
-              takeProfit: Number(takeProfit).toFixed(6).toString(),
-            })
-          );
-        } else {
-        }
-      }
-    } else if (orderType == "Close Order") {
-      if (user) {
-        dispatch(
-          addCloseOrder({
-            email: user?.email,
-            webhookName,
-            webhookMode: mode,
-            symbol: pair,
-          })
-        );
-      }
+              stopLoss_pips: String(Number(stopLoss_pips)),
+              takeProfit_pips: String(Number(takeProfit_pips)),
+            }
+          : {
+              ...commonData,
+              orderDirection: "",
+              volume: fixedSize.toString(),
+              stopLoss_pips: "0",
+              takeProfit_pips: "0",
+            };
+  
+      dispatch(createMarketOrder(orderData));
+    } else if (orderType === "Close Order") {
+      dispatch(addCloseOrder(commonData));
     }
   };
 
@@ -266,9 +265,7 @@ export default function NewWebhookModal({
                         <div className="flex items-center justify-between mb-2 w-full">
                           <label className="flex items-center space-x-2 text-sm text-gray-400">
                             <span>Position Size</span>
-                            <Tooltip
-                              content={tooltips.sizeType}
-                            >
+                            <Tooltip content={tooltips.sizeType}>
                               <HelpCircle className="h-4 w-4" />
                             </Tooltip>
                           </label>
@@ -324,8 +321,9 @@ export default function NewWebhookModal({
                           </label>
                           <input
                             type="number"
-                            value={stopLoss}
+                            value={stopLoss_pips}
                             placeholder="0"
+                            step={1}
                             onChange={(e) => setStopLoss(e.target.value)}
                             className="w-1/3 bg-dark-200/30 text-white rounded-lg px-4 py-3
                                    border border-dashed border-blue-500 focus:outline-none text-sm"
@@ -340,8 +338,9 @@ export default function NewWebhookModal({
                           </label>
                           <input
                             type="number"
-                            value={takeProfit}
+                            value={takeProfit_pips}
                             placeholder="0"
+                            step={1}
                             onChange={(e) => setTakeProfit(e.target.value)}
                             className="w-1/3 bg-dark-200/30 text-white rounded-lg px-4 py-3
                                    border border-dashed border-blue-500 focus:outline-none text-sm"

@@ -15,7 +15,10 @@ import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
 import { useSelector, dispatch } from "@/app/store";
 import { getAccounts } from "@/app/reducers/metaAccount";
-import { connectMarketOrder, disconnectMarketOrder } from "@/app/reducers/webhook";
+import {
+  connectMarketOrder,
+  disconnectMarketOrder,
+} from "@/app/reducers/webhook";
 import { toast } from "react-toastify";
 
 interface LoadingType {
@@ -59,8 +62,10 @@ export default function WebhookAppsModal({
         connectMarketOrder({
           accountId,
           webhookName: webhook.webhookName,
+          webhookMode: webhook.webhookMode,
           symbol: webhook.symbol,
-          orderDirection: webhook.orderDirection,
+          orderDirection:
+            webhook.webhookMode === "basic" ? webhook.orderDirection : "",
         })
       ).then(() => {
         setLoadingConnect({ appName, loader: false });
@@ -80,8 +85,10 @@ export default function WebhookAppsModal({
           disconnectMarketOrder({
             accountId,
             webhookName: webhook.webhookName,
+            webhookMode: webhook.webhookMode,
             symbol: webhook.symbol,
-            orderDirection: webhook.orderDirection,
+            orderDirection:
+              webhook.webhookMode == "basic" ? webhook.orderDirection : "",
           })
         ).then(() => {
           setLoadingDisconnect({ appName, loader: false });

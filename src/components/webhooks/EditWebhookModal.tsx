@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { X, Check, HelpCircle } from "lucide-react";
+import { CiEdit } from "react-icons/ci";
 import Tooltip from "../ui/Tooltip";
 import { EditWebhookModalProps } from "@/types/webhook";
 import { useAtom } from "jotai";
@@ -20,14 +21,15 @@ export default function EditWebhookModal({
   const [orderType, setOrderType] = useState<OrderType>("Market Order");
   // Basic Mode Fields
   const [webhookName, setWebhookName] = useState(webhook.webhookName);
-  const [messageName, setMessageName] = useState("");
   const [symbol, setSymbol] = useState(webhook.symbol || "");
   const [orderDirection, setOrderDirection] = useState(webhook.orderDirection);
-  const [usePercentageSize, setUsePercentageSize] = useState(true);
+  const [usePercentageSize, setUsePercentageSize] = useState(
+    webhook.webhookMode == "basic" ? true : false
+  );
   const [percentageSize, setPercentageSize] = useState(webhook.volume * 100);
-  const [fixedSize, setFixedSize] = useState(2);
-  const [stopLoss, setStopLoss] = useState(webhook.stopLoss);
-  const [takeProfit, setTakeProfit] = useState(webhook.takeProfit);
+  const [fixedSize, setFixedSize] = useState(webhook.volume);
+  const [stopLoss, setStopLoss] = useState(webhook.stopLoss_pips);
+  const [takeProfit, setTakeProfit] = useState(webhook.takeProfit_pips);
 
   // Close Order Fields
   const [partialClose, setPartialClose] = useState(false);
@@ -37,7 +39,6 @@ export default function EditWebhookModal({
   // Modify Order Fields
   const [modifyPrice, setModifyPrice] = useState("");
   const [modifyType, setModifyType] = useState("Stop Loss");
-
 
   useEffect(() => {
     if (webhook) {
@@ -53,24 +54,27 @@ export default function EditWebhookModal({
     if (webhook.connectionStatus) {
       toast.info("Please diconnect from account");
     } else {
-      dispatch(
-        editMarketOrder({
-          email: user?.email || "",
-          webhookName: webhook.webhookName,
-          symbol: webhook.symbol,
-          orderDirection: webhook.orderDirection,
-          webhookName_new: webhookName,
-          symbol_new: symbol,
-          orderDirection_new: orderDirection,
-          volume_new: usePercentageSize
-            ? (percentageSize / 100).toFixed(4).toString()
-            : fixedSize.toString(),
-          stopLoss_new: stopLoss.toFixed(6).toString(),
-          takeProfit_new: takeProfit.toFixed(6).toString(),
-        })
-      ).then(() => {
-        onClose();
-      });
+      if (user?.email) {
+        dispatch(
+          editMarketOrder({
+            email: user?.email,
+            webhookName: webhook.webhookName,
+            webhookMode: webhook.webhookMode,
+            symbol: webhook.symbol,
+            orderDirection: webhook.orderDirection,
+            webhookName_new: webhookName,
+            symbol_new: symbol,
+            orderDirection_new: orderDirection || "",
+            volume_new: usePercentageSize
+              ? (percentageSize / 100).toFixed(4).toString()
+              : fixedSize.toString(),
+            stopLoss_new: (stopLoss ?? 0).toFixed(6).toString(),
+            takeProfit_new: (takeProfit ?? 0).toFixed(6).toString(),
+          })
+        ).then(() => {
+          onClose();
+        });
+      }
     }
   };
 
@@ -78,8 +82,8 @@ export default function EditWebhookModal({
     switch (orderType) {
       case "Market Order":
         return (
-          <div>
-            <div>
+          <div className="w-[90%] flex flex-col justify-center items-center gap-4">
+            <div className="w-full flex justify-between items-center">
               <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                 <span>Order type</span>
                 <Tooltip content={tooltips.orderType}>
@@ -89,17 +93,16 @@ export default function EditWebhookModal({
               <select
                 value={orderDirection}
                 onChange={(e) => setOrderDirection(e.target.value)}
-                className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
-                         border border-dark-300/50 focus:outline-none focus:ring-1 
-                         focus:ring-accent/50"
+                className="w-1/2 bg-dark-200/50 text-white rounded-lg px-4 py-2.5
+                         outline-1 outline-dashed outline-blue-500"
               >
                 <option value={"buy"}>Buy</option>
                 <option value={"sell"}>Sell</option>
               </select>
             </div>
 
-            <div>
-              <div className="flex items-center justify-between mb-2">
+            <div className="flex flex-col justify-center items-center w-full gap-4">
+              <div className="flex items-center justify-between mb-2 w-full">
                 <label className="flex items-center space-x-2 text-sm text-gray-400">
                   <span>Size type</span>
                   <Tooltip content={tooltips.sizeType}>
@@ -116,7 +119,7 @@ export default function EditWebhookModal({
                 </button>
               </div>
               {usePercentageSize ? (
-                <div className="space-y-2">
+                <div className="space-y-2 w-full">
                   <input
                     type="range"
                     min="0"
@@ -136,13 +139,12 @@ export default function EditWebhookModal({
                   value={fixedSize}
                   onChange={(e) => setFixedSize(Number(e.target.value))}
                   className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
-                           border border-dark-300/50 focus:outline-none focus:ring-1 
-                           focus:ring-accent/50"
+                           outline-1 outline-dashed outline-blue-500"
                 />
               )}
             </div>
 
-            <div>
+            <div className="w-full flex justify-between items-center">
               <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                 <span>Stop loss</span>
                 <Tooltip content={tooltips.stopLoss}>
@@ -153,13 +155,12 @@ export default function EditWebhookModal({
                 type="number"
                 value={stopLoss}
                 onChange={(e) => setStopLoss(Number(e.target.value))}
-                className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
-                         border border-dark-300/50 focus:outline-none focus:ring-1 
-                         focus:ring-accent/50"
+                className="w-1/2 bg-dark-200/50 text-white rounded-lg px-4 py-2.5
+                         outline-1 outline-dashed outline-blue-500"
               />
             </div>
 
-            <div>
+            <div className="w-full flex justify-between items-center">
               <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                 <span>Take profit</span>
                 <Tooltip content={tooltips.takeProfit}>
@@ -170,9 +171,8 @@ export default function EditWebhookModal({
                 type="number"
                 value={takeProfit}
                 onChange={(e) => setTakeProfit(Number(e.target.value))}
-                className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
-                         border border-dark-300/50 focus:outline-none focus:ring-1 
-                         focus:ring-accent/50"
+                className="w-1/2 bg-dark-200/50 text-white rounded-lg px-4 py-2.5
+                         outline-1 outline-dashed outline-blue-500"
               />
             </div>
           </div>
@@ -181,7 +181,7 @@ export default function EditWebhookModal({
       case "Modify Order":
         return (
           <>
-            <div>
+            <div className="w-[90%] flex justify-between items-center">
               <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                 <span>Modify type</span>
                 <Tooltip content="Choose whether to modify Stop Loss or Take Profit">
@@ -191,7 +191,7 @@ export default function EditWebhookModal({
               <select
                 value={modifyType}
                 onChange={(e) => setModifyType(e.target.value)}
-                className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
+                className="w-1/2 bg-dark-200/50 text-white rounded-lg px-4 py-2.5
                          border border-dark-300/50 focus:outline-none focus:ring-1 
                          focus:ring-accent/50"
               >
@@ -200,7 +200,7 @@ export default function EditWebhookModal({
               </select>
             </div>
 
-            <div>
+            <div className="w-[90%] flex justify-between items-center ">
               <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                 <span>New price</span>
                 <Tooltip content={tooltips.modifyPrice}>
@@ -211,7 +211,7 @@ export default function EditWebhookModal({
                 type="number"
                 value={modifyPrice}
                 onChange={(e) => setModifyPrice(e.target.value)}
-                className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
+                className="w-1/2 bg-dark-200/50 text-white rounded-lg px-4 py-2.5
                          border border-dark-300/50 focus:outline-none focus:ring-1 
                          focus:ring-accent/50"
               />
@@ -316,7 +316,7 @@ export default function EditWebhookModal({
       />
 
       <div className="glass-panel rounded-2xl lg:max-w-xl w-full z-10 p-0 overflow-hidden">
-        <div className="relative p-6 border-b border-dark-300/50">
+        <div className="relative p-6 border-b border-dark-300/50 flex justify-start items-center gap-2">
           <button
             onClick={onClose}
             className="absolute right-4 top-4 p-2 text-gray-400 hover:text-white 
@@ -324,41 +324,18 @@ export default function EditWebhookModal({
           >
             <X className="h-5 w-5" />
           </button>
-
-          <h3 className="text-xl font-medium text-white tracking-tight">
-            Edit webhook
-          </h3>
+          <CiEdit className="w-5 h-5" />
+          Edit{" "}
+          {webhook.webhookMode.charAt(0).toUpperCase() +
+            webhook.webhookMode.slice(1).toLowerCase()}{" "}
+          Webhook
         </div>
 
-        <div className="p-6 space-y-6 lg:max-h-full max-h-[500px] overflow-y-auto">
-          {/* Mode Selector */}
-          <div className="flex rounded-lg bg-dark-200/30 p-1">
-            <button
-              onClick={() => setMode("basic")}
-              className={`flex-1 px-4 py-2 text-sm font-medium transition-all ${
-                mode === "basic"
-                  ? "border-b border-blue-500 text-white"
-                  : "text-gray-400 hover:text-white"
-              }`}
-            >
-              Basic
-            </button>
-            <button
-              onClick={() => setMode("advanced")}
-              className={`flex-1 px-4 py-2 text-sm font-medium transition-all ${
-                mode === "advanced"
-                  ? "border-b border-blue-500 text-white"
-                  : "text-gray-400 hover:text-white"
-              }`}
-            >
-              Advanced
-            </button>
-          </div>
-
+        <div className="p-6 space-y-6 lg:max-h-full max-h-[500px] overflow-y-auto flex flex-col justify-center items-center">
           {mode === "basic" && (
-            <div className="">
+            <div className="flex flex-col gap-5 justify-center items-center w-full">
               {/* Order Type Selector */}
-              <div className="flex rounded-lg bg-dark-200/30 p-1">
+              <div className="flex rounded-lg bg-dark-200/30 p-1 w-full">
                 {(["Market Order", "Modify Order"] as OrderType[]).map(
                   (type) => (
                     <button
@@ -366,7 +343,7 @@ export default function EditWebhookModal({
                       onClick={() => setOrderType(type)}
                       className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all ${
                         orderType === type
-                          ? "bg-accent text-white"
+                          ? "bg-accent outline-1 outline-dashed outline-blue-500 outline-offset-2 text-white"
                           : "text-gray-400 hover:text-white"
                       }`}
                     >
@@ -377,70 +354,51 @@ export default function EditWebhookModal({
               </div>
 
               {/* Common Fields */}
-              <div className="space-y-4">
-                <div>
-                  <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
-                    <span>Webhook name</span>
-                    <Tooltip content={tooltips.webhookName}>
-                      <HelpCircle className="h-4 w-4" />
-                    </Tooltip>
-                  </label>
-                  <input
-                    type="text"
-                    value={webhookName}
-                    onChange={(e) => setWebhookName(e.target.value)}
-                    placeholder="First webhook"
-                    className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
-                             border border-dark-300/50 focus:outline-none focus:ring-1 
-                             focus:ring-accent/50"
-                  />
-                </div>
+              <div className="w-full flex justify-center items-center">
+                <div className="space-y-4 flex flex-col gap-5 justify-center items-center w-full">
+                  <div className="flex justify-between items-center w-[90%]">
+                    <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                      <span>Webhook name</span>
+                      <Tooltip content={tooltips.webhookName}>
+                        <HelpCircle className="h-4 w-4" />
+                      </Tooltip>
+                    </label>
+                    <input
+                      type="text"
+                      value={webhookName}
+                      onChange={(e) => setWebhookName(e.target.value)}
+                      placeholder="First webhook"
+                      className="w-1/2 bg-dark-200/50 text-white rounded-lg px-4 py-2.5
+                             outline-1 outline-blue-500 outline-dashed"
+                    />
+                  </div>
+                  <div className="flex justify-between items-center w-[90%]">
+                    <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                      <span>Pair</span>
+                      <Tooltip content={tooltips.pair}>
+                        <HelpCircle className="h-4 w-4" />
+                      </Tooltip>
+                    </label>
+                    <input
+                      type="text"
+                      value={symbol}
+                      onChange={(e) => setSymbol(e.target.value)}
+                      placeholder="BTCUSD"
+                      className="w-1/2 bg-dark-200/50 text-white rounded-lg px-4 py-2.5
+                             outline-1 outline-blue-500 outline-dashed"
+                    />
+                  </div>
 
-                <div>
-                  <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
-                    <span>Message name</span>
-                    <Tooltip content={tooltips.messageName}>
-                      <HelpCircle className="h-4 w-4" />
-                    </Tooltip>
-                  </label>
-                  <input
-                    type="text"
-                    value={messageName}
-                    onChange={(e) => setMessageName(e.target.value)}
-                    placeholder="Buy-BTCUSD"
-                    className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
-                             border border-dark-300/50 focus:outline-none focus:ring-1 
-                             focus:ring-accent/50"
-                  />
+                  {/* Order Type Specific Fields */}
+                  {renderOrderTypeFields()}
                 </div>
-
-                <div>
-                  <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
-                    <span>Pair</span>
-                    <Tooltip content={tooltips.pair}>
-                      <HelpCircle className="h-4 w-4" />
-                    </Tooltip>
-                  </label>
-                  <input
-                    type="text"
-                    value={symbol}
-                    onChange={(e) => setSymbol(e.target.value)}
-                    placeholder="BTCUSD"
-                    className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
-                             border border-dark-300/50 focus:outline-none focus:ring-1 
-                             focus:ring-accent/50"
-                  />
-                </div>
-
-                {/* Order Type Specific Fields */}
-                {renderOrderTypeFields()}
               </div>
             </div>
           )}
 
           {mode === "advanced" && (
-            <div className="space-y-4">
-              <div>
+            <div className="space-y-4 w-full flex flex-col justify-center items-center">
+              <div className="w-[90%] flex justify-between items-center">
                 <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                   <span>Name</span>
                   <Tooltip content={tooltips.webhookName}>
@@ -452,13 +410,12 @@ export default function EditWebhookModal({
                   value={webhookName}
                   onChange={(e) => setWebhookName(e.target.value)}
                   placeholder="First webhook"
-                  className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
-                           border border-dark-300/50 focus:outline-none focus:ring-1 
-                           focus:ring-accent/50"
+                  className="w-1/2 bg-dark-200/50 text-white rounded-lg px-4 py-2.5
+                          outline-1 outline-dashed outline-blue-500"
                 />
               </div>
 
-              <div>
+              <div className="w-[90%] flex justify-between items-center">
                 <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                   <span>Pair</span>
                   <Tooltip content={tooltips.pair}>
@@ -470,13 +427,12 @@ export default function EditWebhookModal({
                   value={symbol}
                   onChange={(e) => setSymbol(e.target.value)}
                   placeholder="BTCUSD"
-                  className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
-                           border border-dark-300/50 focus:outline-none focus:ring-1 
-                           focus:ring-accent/50"
+                  className="w-1/2 bg-dark-200/50 text-white rounded-lg px-4 py-2.5
+                          outline-1 outline-dashed outline-blue-500 "
                 />
               </div>
 
-              <div>
+              <div className="w-[90%] flex justify-between items-center">
                 <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                   <span>Fixed size</span>
                   <Tooltip content={tooltips.fixedSize}>
@@ -487,17 +443,15 @@ export default function EditWebhookModal({
                   type="number"
                   value={fixedSize}
                   onChange={(e) => setFixedSize(Number(e.target.value))}
-                  className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
-                           border border-dark-300/50 focus:outline-none focus:ring-1 
-                           focus:ring-accent/50"
+                  className="w-1/2 bg-dark-200/50 text-white rounded-lg px-4 py-2.5
+                           outline-1 outline-dashed outline-blue-500"
                 />
               </div>
             </div>
           )}
-
           <button
             onClick={handleSave}
-            className="w-full premium-button py-3 flex items-center justify-center space-x-2"
+            className="w-1/2 premium-button py-3 flex items-center justify-center space-x-2 outline-1 outline-blue-500 outline-dashed outline-offset-2"
           >
             <span>Save Changes</span>
             <Check className="h-4 w-4" />

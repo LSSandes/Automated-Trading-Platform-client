@@ -22,10 +22,12 @@ export default function AccountList() {
   const [user] = useAtom(userAtom);
   const [accountName] = useAtom(accountNameAtom);
   const setAccountNameAtom = useSetAtom(accountNameAtom);
+  const webhooks = useSelector((state) => state.webhook.webhooks);
   const accountsState = useSelector((state) => state.metaAccount.accounts);
   const accountsInfoState = useSelector(
     (state) => state.metaAccountInfo.accountsInfo
   );
+  console.log("------webhooks   ok----->", webhooks);
   // const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [deleteModalLoading, setDeleteModalLoading] = useState<boolean>(false);
   const [updateModalLoading, setUpdateModalLoading] = useState<boolean>(false);
@@ -81,13 +83,6 @@ export default function AccountList() {
       setUpdateModalOpen(false);
     });
   };
-  console.log(
-    "-------update modal id--------->",
-    accountId,
-    accountName,
-    accountPassword,
-    accountServer
-  );
   // if (isLoading) {
   //   return (
   //     <div className="flex justify-center items-center h-64">

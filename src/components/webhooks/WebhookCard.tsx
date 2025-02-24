@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Clock, Copy, MoreVertical, DollarSign, CopyCheck } from "lucide-react";
+import {
+  Clock,
+  Copy,
+  MoreVertical,
+  /*DollarSign,*/ CopyCheck,
+} from "lucide-react";
 import WebhookMenu from "./WebhookMenu";
 import { WebhookCardProps } from "@/types/webhook";
 import EditWebhookModal from "./EditWebhookModal";
@@ -12,7 +17,7 @@ import { dispatch, useSelector } from "@/app/store";
 import { deleteMarketOrder, openMarketOrder } from "@/app/reducers/webhook";
 import { FaChartBar } from "react-icons/fa";
 import { toast } from "react-toastify";
-import axios from "../../utils/api";
+// import axios from "../../utils/api";
 import OpenTradeModal from "./OpenTradeModal";
 
 export default function WebhookCard({
@@ -35,7 +40,7 @@ export default function WebhookCard({
   const [accountName, setAccountName] = useState<string>(findAccount ?? "");
   const [openTradeModal, setOpenTradeModal] = useState<boolean>(false);
   const [openTradeLoading, setOpenTradeLoading] = useState<boolean>(false);
-  const [price, setPrice] = useState<number>(0);
+  // const [price, setPrice] = useState<number>(0);
   const [copied, setCopied] = useState(false);
   const [timeDiff, setTimeDiff] = useState("");
   useEffect(() => {
@@ -45,27 +50,22 @@ export default function WebhookCard({
     if (findAccount) {
       setAccountName(findAccount.accountName);
     }
-  }, [accounts, webhook]);
-  useEffect(() => {
-    const fetchPrice = async () => {
-      try {
-        const response = await axios.get("webhook/get-price", {
-          headers: {
-            "Cache-Control": "no-cache",
-            "Content-Type": "application/json",
-          },
-        });
-        if (response.data) {
-          setPrice(response.data.data[`${webhook.symbol}`]);
-        }
-      } catch (error) {
-        console.error("Error fetching price:", error);
-      }
-    };
-    fetchPrice();
-    const intervalId = setInterval(fetchPrice, 5000);
-    return () => clearInterval(intervalId);
-  }, []);
+  }, [accounts, webhook.accountId]);
+  // useEffect(() => {
+  //   const fetchPrice = async () => {
+  //     try {
+  //       const response = await axios.get("webhook/get-price");
+  //       if (response.data) {
+  //         setPrice(response.data.data[`${webhook.symbol}`]);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching price:", error);
+  //     }
+  //   };
+  //   fetchPrice();
+  //   const intervalId = setInterval(fetchPrice, 5000);
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   useEffect(() => {
     const updateTimeDiff = () => {
@@ -136,7 +136,9 @@ export default function WebhookCard({
           deleteMarketOrder({
             email: user.email,
             webhookName: webhook.webhookName,
-            orderDirection: webhook.orderDirection,
+            webhookMode: webhook.webhookMode,
+            orderDirection:
+              webhook.webhookMode === "basic" ? webhook.orderDirection : "",
             symbol: webhook.symbol,
           })
         );
@@ -146,18 +148,20 @@ export default function WebhookCard({
   const handleOpenTrade = () => {
     if (webhook.connectionStatus == true) {
       setOpenTradeLoading(true);
-      dispatch(
-        openMarketOrder({
-          accountId: webhook.accountId,
-          webhookName: webhook.webhookName,
-          symbol: webhook.symbol,
-          orderDirection: webhook.orderDirection,
-          webhookMode: webhook.webhookMode,
-        })
-      ).then(() => {
-        setOpenTradeLoading(false);
-        setOpenTradeModal(false);
-      });
+      if (webhook.webhookMode == "basic") {
+        dispatch(
+          openMarketOrder({
+            accountId: webhook.accountId,
+            webhookName: webhook.webhookName,
+            symbol: webhook.symbol,
+            orderDirection: webhook.orderDirection,
+            webhookMode: webhook.webhookMode,
+          })
+        ).then(() => {
+          setOpenTradeLoading(false);
+          setOpenTradeModal(false);
+        });
+      }
     } else {
       toast.info("The account needs to be connected.");
     }
@@ -240,29 +244,40 @@ export default function WebhookCard({
               </button>
             </div>
           </div>
-          <div className="flex lg:flex-row flex-col gap-4 mb-6">
+
+          <div className="flex xl:flex-row flex-col gap-4 mb-6">
             <div className="glass-panel rounded-lg p-3 border border-dark-300/30 lg:w-1/2 w-full">
               <div className="text-gray-400 text-sm mb-1">Last Signal</div>
               <div className="text-white font-medium">
                 {timeDiff || "Never"}
               </div>
             </div>
-            <div className="glass-panel rounded-lg p-3 border border-dark-300/30 lg:w-1/2 w-full">
-              <div className="grid grid-cols-2 gap-2">
-                <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
-                  Lots: {webhook.volume}
-                </div>
-                <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
-                  SL: {webhook.stopLoss}
-                </div>
-                <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
-                  TP: {webhook.takeProfit}
-                </div>
-                <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
-                  {webhook.orderDirection.toUpperCase()} order
+            {webhook.webhookMode == "basic" && (
+              <div className="glass-panel rounded-lg p-3 border border-dark-300/30 lg:w-1/2 w-full">
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
+                    Lots: {webhook.volume}
+                  </div>
+                  <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
+                    SL: {webhook.stopLoss_pips}
+                  </div>
+                  <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
+                    TP: {webhook.takeProfit_pips}
+                  </div>
+                  <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
+                    {webhook.orderDirection.toUpperCase()} order
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+            {webhook.webhookMode == "advanced" && (
+              <div className="glass-panel rounded-lg p-3 border border-dark-300/30 lg:w-1/2 w-full flex  justify-center items-center">
+                <div className="text-gray-400 text-lg mb-1 flex justify-around items-center w-full">
+                  <span>Lots:</span>
+                  <span>{webhook.volume}</span>
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex flex-wrap gap-1.5 mb-6">
             <span
@@ -272,8 +287,8 @@ export default function WebhookCard({
               {webhook.symbol}
             </span>
           </div>
-          <div className="flex lg:flex-row flex-col items-center justify-between gap-4">
-            <div className="flex items-center lg:justify-center justify-between space-x-6 lg:w-1/2 w-full">
+          <div className="flex 2xl:flex-row flex-col items-center justify-between gap-4">
+            <div className="flex items-center lg:justify-start justify-between space-x-6 lg:w-1/2 w-full">
               <div className="flex justify-center items-center gap-4">
                 <div className="flex flex-col items-center space-y-1">
                   <span className="text-xs text-gray-400">Active</span>
@@ -307,7 +322,7 @@ export default function WebhookCard({
                   </button>
                 </div>
               </div>
-
+              {/* 
               {price != 0 && (
                 <div className="flex flex-col items-start space-y-1">
                   <span className="text-xs text-gray-400">Price</span>
@@ -319,18 +334,20 @@ export default function WebhookCard({
                     <span>{price?.toFixed(6) || 0}</span>
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
 
-            <button
-              onClick={() => setOpenTradeModal(true)}
-              className="px-3 py-1.5 text-[16px] bg-dark-200/50 text-gray-300 rounded-lg
+            {webhook.webhookMode == "basic" && (
+              <button
+                onClick={() => setOpenTradeModal(true)}
+                className="px-3 py-1.5 text-[16px] bg-dark-200/50 text-gray-300 rounded-lg
                        border border-dark-300/30 hover:bg-dark-200/80 transition-colors
-                       flex items-center space-x-1 lg:w-1/3 w-full justify-center"
-            >
-              <FaChartBar className="h-4 w-4" />
-              <span>Open Trade</span>
-            </button>
+                       flex items-center space-x-1 2xl:w-1/3 w-full justify-center"
+              >
+                <FaChartBar className="h-4 w-4" />
+                <span>Open Trade</span>
+              </button>
+            )}
           </div>
         </div>
         {showMenu && (

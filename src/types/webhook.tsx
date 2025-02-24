@@ -10,8 +10,8 @@ export interface WebhookConfig {
   webhookMode: string;
   tradeExecutionTime?: string;
   volume: number;
-  stopLoss: number;
-  takeProfit: number;
+  stopLoss_pips: number;
+  takeProfit_pips: number;
   successRate?: number;
   totalTrades?: number;
   hashedWebhook: string;

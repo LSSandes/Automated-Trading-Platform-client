@@ -84,6 +84,7 @@ export default function Navbar() {
                       : userInfoGlobal.picture
                   }`}
                   alt=""
+                  referrerPolicy="no-referrer"
                   className="w-10 h-10 rounded-full border border-accent/50"
                 />
               ) : (

@@ -102,13 +102,13 @@ export default function CloseOrderCard({
     <>
       <div
         className={`relative rounded-xl overflow-hidden transition-all duration-300 
-                      hover:translate-y-[-2px] hover:shadow-2xl hover:shadow-accent/5 border border-gray-500 outline-1 outline-dashed p-1 outline-offset-1 outline-dark-500`}
+                      hover:translate-y-[-2px] hover:shadow-2xl hover:shadow-accent/5 outline-1 outline-dashed p-1 outline-offset-1 outline-dark-500`}
       >
         <div
           className={`absolute inset-0 bg-gradient-to-br from-dark-200/20 to-dark-200/5 opacity-10`}
         />
         {/* Content */}
-        <div className="relative glass-panel rounded-xl p-6 border border-dark-300/30">
+        <div className="relative glass-panel rounded-xl p-6">
           {/* Header */}
           <div className="flex justify-between items-start mb-6">
             <div className="flex items-center space-x-3">
@@ -143,24 +143,27 @@ export default function CloseOrderCard({
               </button>
             </div>
           </div>
-          <div className="flex flex-wrap gap-1.5 mb-6">
-            <span
-              className="px-2 py-1 text-xs rounded-lg bg-dark-200/50 text-gray-300
-                         border border-dark-300/30 backdrop-blur-sm"
-            >
-              {closeOrder.symbol}
-            </span>
-          </div>
+
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="glass-panel rounded-lg p-3 border border-dark-300/30">
               <div className="text-gray-400 text-sm mb-1">Last Signal</div>
-              <div className="text-white font-medium">{timeDiff ? timeDiff : "Never"}</div>
+              <div className="text-white font-medium">
+                {timeDiff ? timeDiff : "Never"}
+              </div>
             </div>
 
             <div className="glass-panel rounded-lg p-3 border border-dark-300/30">
               <div className="text-gray-400 text-sm mb-1">Success Rate</div>
               <div className="text-emerald-400 font-medium">{"N/A"}</div>
             </div>
+          </div>
+          <div className="flex flex-wrap gap-1.5 mb-6">
+            <span
+              className="px-2 py-1 text-md rounded-lg bg-dark-200/50 text-gray-300
+                         border border-dark-300/30 backdrop-blur-sm"
+            >
+              {closeOrder.symbol}
+            </span>
           </div>
           <div className="flex justify-between items-center">
             <div className="flex justify-start items-center gap-6">

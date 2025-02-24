@@ -70,8 +70,8 @@ export function createMarketOrder({
   symbol,
   orderDirection,
   volume,
-  stopLoss,
-  takeProfit,
+  stopLoss_pips,
+  takeProfit_pips,
 }: {
   email: string;
   webhookName: string;
@@ -79,8 +79,8 @@ export function createMarketOrder({
   symbol: string;
   orderDirection: string;
   volume: string;
-  stopLoss: string;
-  takeProfit: string;
+  stopLoss_pips: string;
+  takeProfit_pips: string;
 }) {
   return async () => {
     try {
@@ -91,8 +91,8 @@ export function createMarketOrder({
         symbol,
         orderDirection,
         volume,
-        stopLoss,
-        takeProfit,
+        stopLoss_pips,
+        takeProfit_pips,
       });
       dispatch(
         webhook.actions.addWebhookSuccess(response.data.data.newWebhook)
@@ -109,11 +109,13 @@ export function createMarketOrder({
 export function deleteMarketOrder({
   email,
   webhookName,
+  webhookMode,
   orderDirection,
   symbol,
 }: {
   email: string;
   webhookName: string;
+  webhookMode: string;
   orderDirection: string;
   symbol: string;
 }) {
@@ -122,6 +124,7 @@ export function deleteMarketOrder({
       "------redux------>",
       email,
       webhookName,
+      webhookMode,
       orderDirection,
       symbol
     );
@@ -129,6 +132,7 @@ export function deleteMarketOrder({
       const response = await axios.post("webhook/delete-marketorder", {
         email,
         webhookName,
+        webhookMode,
         orderDirection,
         symbol,
       });
@@ -138,7 +142,7 @@ export function deleteMarketOrder({
       toast.success("The webhook has been deleted");
     } catch (err) {
       dispatch(webhook.actions.hasError(err));
-      toast.success("Internal Server Error");
+      toast.warn("Internal Server Error");
     }
   };
 }
@@ -146,11 +150,13 @@ export function deleteMarketOrder({
 export function connectMarketOrder({
   accountId,
   webhookName,
+  webhookMode,
   symbol,
   orderDirection,
 }: {
   accountId: string;
   webhookName: string;
+  webhookMode: string;
   symbol: string;
   orderDirection: string;
 }) {
@@ -159,6 +165,7 @@ export function connectMarketOrder({
       const response = await axios.post("webhook/connect-marketorder", {
         accountId,
         webhookName,
+        webhookMode,
         symbol,
         orderDirection,
       });
@@ -177,26 +184,22 @@ export function connectMarketOrder({
 export function disconnectMarketOrder({
   accountId,
   webhookName,
+  webhookMode,
   symbol,
   orderDirection,
 }: {
   accountId: string;
   webhookName: string;
+  webhookMode: string;
   symbol: string;
   orderDirection: string;
 }) {
   return async () => {
-    console.log(
-      "------diconnectWebhook----->",
-      accountId,
-      webhookName,
-      symbol,
-      orderDirection
-    );
     try {
       const response = await axios.post("webhook/disconnect-marketorder", {
         accountId,
         webhookName,
+        webhookMode,
         symbol,
         orderDirection,
       });
@@ -215,6 +218,7 @@ export function disconnectMarketOrder({
 export function editMarketOrder({
   email,
   webhookName,
+  webhookMode,
   symbol,
   orderDirection,
   webhookName_new,
@@ -226,6 +230,7 @@ export function editMarketOrder({
 }: {
   email: string;
   webhookName: string;
+  webhookMode: string;
   symbol: string;
   orderDirection: string;
   webhookName_new: string;
@@ -236,11 +241,11 @@ export function editMarketOrder({
   takeProfit_new: string;
 }) {
   return async () => {
-    console.log("--->", email);
     try {
       const response = await axios.post("webhook/edit-marketorder", {
         email,
         webhookName,
+        webhookMode,
         symbol,
         orderDirection,
         webhookName_new,
@@ -257,7 +262,11 @@ export function editMarketOrder({
       toast.success("Webhook is updated successfully.");
     } catch (err) {
       dispatch(webhook.actions.hasError(err));
-      toast.warn("Internal Server Error");
+      if (err instanceof Error) {
+        toast.warn(err.message);
+      } else {
+        toast.warn("An unknown error occurred.");
+      }
     }
   };
 }
@@ -299,7 +308,7 @@ export function openMarketOrder({
       toast.success("Trade has opened.");
     } catch (err) {
       dispatch(webhook.actions.hasError(err));
-      toast.info("The market is closed");
+      toast.info("Market is closed");
     }
   };
 }

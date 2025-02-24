@@ -23,7 +23,7 @@ const OpenTradeModal: React.FC<OpenTradeModalProps> = ({
   setOpen,
   handleOk,
   webhook,
-  loading
+  loading,
 }) => {
   const [isCollapsed] = useAtom(collapsedAtom);
   const [collapsed, setCollapsed] = useState<boolean>(false);
@@ -44,7 +44,7 @@ const OpenTradeModal: React.FC<OpenTradeModalProps> = ({
             transition
             className={`relative ${
               !collapsed ? "-right-32" : "right-0"
-            } transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-sm sm:p-6 data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95`}
+            } transform overflow-hidden rounded-lg bg-dark-50 px-4 pb-4 pt-5 text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-sm sm:p-6 data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95`}
           >
             <div>
               <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-green-100">
@@ -56,7 +56,7 @@ const OpenTradeModal: React.FC<OpenTradeModalProps> = ({
               <div className="mt-3 text-center sm:mt-5">
                 <DialogTitle
                   as="h3"
-                  className="text-base font-semibold text-gray-900"
+                  className="text-base font-semibold text-white"
                 >
                   Position Info Confirmation
                 </DialogTitle>
@@ -65,15 +65,28 @@ const OpenTradeModal: React.FC<OpenTradeModalProps> = ({
                     Do you really open this position now?
                   </p>
                 </div>
-                <div className="grid grid-cols-2 gap-4 place-items-start mt-5">
-                  <h2 className="text-gray-700 text-sm">
-                    Name: {webhook.webhookName}
-                  </h2>
-                  <h2 className="text-gray-700 text-sm">Mode: {webhook.webhookMode}</h2>
-                  <h2 className="text-gray-700 text-sm"> Order Direction: {webhook.orderDirection}</h2>
-                  <h2 className="text-gray-700 text-sm">TP: {webhook.takeProfit}</h2>
-                  <h2 className="text-gray-700 text-sm">SL: {webhook.stopLoss}</h2>
-                  <h2 className="text-gray-700 text-sm">Volume: {webhook.volume}</h2>
+                <div>
+                  <div className="grid grid-cols-2 gap-4 place-items-start mt-5">
+                    <h2 className="text-gray-300 text-sm">
+                      Name: {webhook.webhookName}
+                    </h2>
+                    <h2 className="text-gray-300 text-sm">
+                      Mode: {webhook.webhookMode}
+                    </h2>
+                    <h2 className="text-gray-300 text-sm">
+                      {" "}
+                      Order Direction: {webhook.orderDirection}
+                    </h2>
+                    <h2 className="text-gray-300 text-sm">
+                      TP: {webhook.takeProfit_pips}
+                    </h2>
+                    <h2 className="text-gray-300 text-sm">
+                      SL: {webhook.stopLoss_pips}
+                    </h2>
+                    <h2 className="text-gray-300 text-sm">
+                      Volume: {webhook.volume}
+                    </h2>
+                  </div>
                 </div>
               </div>
             </div>

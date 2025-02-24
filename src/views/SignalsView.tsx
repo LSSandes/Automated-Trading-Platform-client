@@ -21,7 +21,7 @@ export default function SignalsView() {
       dispatch(getWebhooks(user?.email));
       dispatch(getCloseOrders(user?.email));
     }
-  }, []);
+  }, [user?.email]);
   const handleChangeColor = (id: string) => {
     console.log("Change color for webhook:", id);
   };
@@ -64,21 +64,22 @@ export default function SignalsView() {
         </button>
       </div>
 
-      {webhooksState.find((webhook) => webhook.webhookMode === "advanced") && (
-        <h2 className="text-3xl text-white mb-4 font-bold">
-          Advanced webhooks
-        </h2>
-      )}
       {/* Webhooks Sections */}
-      {webhooksState.find((webhook) => webhook.webhookMode === "basic") && (
-        <h2 className="text-3xl text-white mb-4 font-bold">Basic webhooks</h2>
-      )}
       {webhooksState.length > 0 && (
         <div className="space-y-6">
-          <h2 className="text-xl font-xl text-white flex justify-start items-center gap-2">
-            <GiShoppingCart className="w-5 h-5" /> Market Orders
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {webhooksState.find(
+            (webhook) => webhook.webhookMode === "advanced"
+          ) && (
+            <>
+              <h2 className="text-3xl text-white mb-4 font-bold">
+                Advanced webhooks
+              </h2>
+              <h2 className="text-xl font-xl text-white flex justify-start items-center gap-2">
+                <GiShoppingCart className="w-5 h-5" /> Market Orders
+              </h2>
+            </>
+          )}
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
             {webhooksState
               .filter((webhook) => webhook.webhookMode === "advanced")
               .map((webhook) => (
@@ -91,7 +92,17 @@ export default function SignalsView() {
                 />
               ))}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {webhooksState.find((webhook) => webhook.webhookMode === "basic") && (
+            <>
+              <h2 className="text-3xl text-white mb-4 font-bold">
+                Basic webhooks
+              </h2>
+              <h2 className="text-xl font-xl text-white flex justify-start items-center gap-2">
+                <GiShoppingCart className="w-5 h-5" /> Market Orders
+              </h2>
+            </>
+          )}
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
             {webhooksState
               .filter((webhook) => webhook.webhookMode === "basic")
               .map((webhook) => (
