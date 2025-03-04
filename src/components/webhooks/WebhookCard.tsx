@@ -19,6 +19,7 @@ import { FaChartBar } from "react-icons/fa";
 import { toast } from "react-toastify";
 // import axios from "../../utils/api";
 import OpenTradeModal from "./OpenTradeModal";
+import { UserParams } from "@/types/tradeLocker";
 
 export default function WebhookCard({
   webhook,
@@ -121,7 +122,6 @@ export default function WebhookCard({
   };
 
   const handleSaveRiskSettings = (settings: any) => {
-    // Implement risk settings save logic
     console.log("Saving risk settings:", settings);
     setShowRiskModal(false);
   };
@@ -148,19 +148,31 @@ export default function WebhookCard({
   const handleOpenTrade = () => {
     if (webhook.connectionStatus == true) {
       setOpenTradeLoading(true);
+      const accessToken = localStorage.getItem("accessToken");
+      const tradelockerUser: UserParams | null = localStorage.getItem("user")
+        ? JSON.parse(localStorage.getItem("user") as string)
+        : null;
       if (webhook.webhookMode == "basic") {
-        dispatch(
-          openMarketOrder({
-            accountId: webhook.accountId,
-            webhookName: webhook.webhookName,
-            symbol: webhook.symbol,
-            orderDirection: webhook.orderDirection,
-            webhookMode: webhook.webhookMode,
-          })
-        ).then(() => {
-          setOpenTradeLoading(false);
-          setOpenTradeModal(false);
-        });
+        user &&
+          dispatch(
+            openMarketOrder({
+              email: user?.email,
+              accountId: webhook.accountId,
+              webhookName: webhook.webhookName,
+              symbol: webhook.symbol,
+              orderDirection: webhook.orderDirection,
+              webhookMode: webhook.webhookMode,
+              accessToken:
+                webhook.appName == "MetaTrader" ? "" : accessToken ?? "",
+              accountType:
+                webhook.appName == "MetaTrader"
+                  ? ""
+                  : tradelockerUser?.accountType ?? "",
+            })
+          ).then(() => {
+            setOpenTradeLoading(false);
+            setOpenTradeModal(false);
+          });
       }
     } else {
       toast.info("The account needs to be connected.");
@@ -175,7 +187,7 @@ export default function WebhookCard({
         <div
           className={`absolute inset-0 bg-gradient-to-br from-dark-200/20 to-dark-200/5 opacity-10`}
         />
-        <div className="relative glass-panel rounded-xl p-6 border border-dark-300/30">
+        <div className="relative glass-panel rounded-xl py-3 px-4 border border-dark-300/30">
           <div className="flex justify-between items-start mb-6 border-b border-dark-300 p-1">
             <div className="flex items-center space-x-3">
               <div
@@ -199,8 +211,11 @@ export default function WebhookCard({
                         : "text-purple-400"
                     }`}
                   >
-                    {accountName}
+                    {webhook.appName == "MetaTrader"
+                      ? accountName
+                      : webhook.accountId}
                   </span>
+                  <span className="text-sm">{webhook.appName}</span>
                   <span className="text-gray-400">•</span>
                   <div className="flex items-center text-sm">
                     {webhook.connectionStatus === true ? (

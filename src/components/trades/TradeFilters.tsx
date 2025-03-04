@@ -1,28 +1,60 @@
-import { useEffect, useState } from "react";
-import { Search, Filter, Calendar } from "lucide-react";
+// import { Search, Filter, Calendar } from "lucide-react";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { useAtom } from "jotai";
-import { userAtom } from "@/store/atoms";
+import { selectedAccountAtom, selectedAccountTypeAtom } from "@/store/atoms";
+// import { userAtom } from "@/store/atoms";
 import { tradesFilterAtom, filterOptions } from "../../store/tradesFilterStore";
-import { useSelector, dispatch } from "@/app/store";
-import { getAccounts } from "@/app/reducers/metaAccount";
+import { MdOutlineAccountTree } from "react-icons/md";
+import { useSelector } from "@/app/store";
+import { useEffect } from "react";
 export default function TradeFilters() {
-  const [user] = useAtom(userAtom);
   const [filters, setFilters] = useAtom(tradesFilterAtom);
+  const [selectedAccount, setSelectedAccount] = useAtom(selectedAccountAtom);
+  const [selectedAccountType, setSelectedAccountType] = useAtom(
+    selectedAccountTypeAtom
+  );
+
+  const metaAccounts = useSelector((state) => state.metaAccount.accounts);
+  const tradelockerAccounts = useSelector(
+    (state) => state.tradelocker.accounts
+  );
+
   const handleFilterChange = (key: keyof typeof filters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
+
+  const handleAccountTypeChange = (accountType: string) => {
+    setSelectedAccountType(accountType);
+  };
   useEffect(() => {
-    if (user) {
-      dispatch(getAccounts(user?.email));
+    if (selectedAccountType === "MetaTrader" && metaAccounts.length > 0) {
+      setSelectedAccount(metaAccounts[0].accountId);
+    } else if (
+      selectedAccountType === "TradeLocker" &&
+      tradelockerAccounts.length > 0
+    ) {
+      setSelectedAccount(tradelockerAccounts[0].id);
     }
-  }, []);
-  const [selectedAccount, setSelectedAccount] =
-    useState<string>("All Accounts");
-  const metaAccounts = useSelector((state) => state.metaAccount.accounts);
-  console.log("selectedAccount---->", selectedAccount);
+  }, [selectedAccountType, metaAccounts, tradelockerAccounts]);
+
   return (
     <div className="flex flex-wrap items-center gap-4">
+      {/* The Account Type */}
+      <div className="relative min-w-[160px]">
+        <MdOutlineAccountTree className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <select
+          value={selectedAccountType}
+          onChange={(e) => handleAccountTypeChange(e.target.value)}
+          className="h-10 w-full pl-10 pr-10 bg-dark-200/50 text-gray-300 rounded-lg
+                   border border-dark-300/30 focus:outline-none focus:ring-1 focus:ring-accent/50"
+        >
+          {filterOptions.accountType.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
       {/* The Account Filter */}
       <div className="relative min-w-[160px]">
         <MdOutlineAccountBalanceWallet className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -32,15 +64,21 @@ export default function TradeFilters() {
           className="h-10 w-full pl-10 pr-10 bg-dark-200/50 text-gray-300 rounded-lg
                    border border-dark-300/30 focus:outline-none focus:ring-1 focus:ring-accent/50"
         >
-          {metaAccounts.map((account) => (
-            <option key={account.accountId} value={account.accountId}>
-              {account.accountName}
-            </option>
-          ))}
+          {selectedAccountType == "MetaTrader"
+            ? metaAccounts.map((account) => (
+                <option key={account.accountId} value={account.accountId}>
+                  {account.accountName}
+                </option>
+              ))
+            : tradelockerAccounts.map((account, index) => (
+                <option key={index} value={account.id}>
+                  {account.accNum}-{account.id}
+                </option>
+              ))}
         </select>
       </div>
       {/* Time Filter */}
-      <div className="relative min-w-[160px]">
+      {/* <div className="relative min-w-[160px]">
         <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
         <select
           value={filters.timeframe}
@@ -54,10 +92,10 @@ export default function TradeFilters() {
             </option>
           ))}
         </select>
-      </div>
+      </div> */}
 
       {/* Trade Type Filter */}
-      <div className="relative min-w-[160px]">
+      {/* <div className="relative min-w-[160px]">
         <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
         <select
           value={filters.tradeType}
@@ -71,10 +109,10 @@ export default function TradeFilters() {
             </option>
           ))}
         </select>
-      </div>
+      </div> */}
 
       {/* Symbol Filter */}
-      <div className="relative min-w-[140px]">
+      {/* <div className="relative min-w-[140px]">
         <select
           value={filters.pair}
           onChange={(e) => handleFilterChange("pair", e.target.value)}
@@ -87,10 +125,10 @@ export default function TradeFilters() {
             </option>
           ))}
         </select>
-      </div>
+      </div> */}
 
       {/* Outcome Filter */}
-      <div className="relative min-w-[140px]">
+      {/* <div className="relative min-w-[140px]">
         <select
           value={filters.outcome}
           onChange={(e) => handleFilterChange("outcome", e.target.value)}
@@ -103,10 +141,11 @@ export default function TradeFilters() {
             </option>
           ))}
         </select>
-      </div>
+      </div> */}
 
+      <div className="relative"></div>
       {/* Search */}
-      <div className="relative flex-1 min-w-[200px]">
+      {/* <div className="relative flex-1 min-w-[200px]">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
         <input
           type="text"
@@ -117,7 +156,7 @@ export default function TradeFilters() {
                    border border-dark-300/30 focus:outline-none focus:ring-1 
                    focus:ring-accent/50 transition-all duration-300"
         />
-      </div>
+      </div> */}
     </div>
   );
 }

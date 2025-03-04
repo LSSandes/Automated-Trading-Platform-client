@@ -1,31 +1,19 @@
 import { WebhookApp } from "@/types/webhook";
 
-export  const apps: WebhookApp[] = [
-    {
-      id: "mt5",
-      appName: "MetaTrader",
-      description: "Execute trades directly on MT5 platform",
-      icon: "/mt5-logo.svg",
-    },
-    {
-      id: "binance",
-      appName: "Binance",
-      description: "Trade crypto on Binance spot and futures",
-      icon: "/binance-logo.svg",
-    },
-    {
-      id: "bitget",
-      appName: "Bitget",
-      description: "Connect to Bitget exchange API",
-      icon: "/bitget-logo.svg",
-    },
-    {
-      id: "tradingview",
-      appName: "TradingView",
-      description: "Import alerts from TradingView",
-      icon: "/tradingview-logo.svg",
-    },
-  ];
+export const apps: WebhookApp[] = [
+  {
+    id: "mt5",
+    appName: "MetaTrader",
+    description: "Execute trades directly on MT4/MT5 platform",
+    icon: "/mt5-logo.svg",
+  },
+  {
+    id: "tradelocker",
+    appName: "TradeLocker",
+    description: "Execute trades directly on TradeLocker",
+    icon: "/tradelocker-logo.svg",
+  },
+];
 
 export const tooltips = {
   webhookName: "A unique name to identify your webhook",

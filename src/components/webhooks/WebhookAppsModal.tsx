@@ -3,18 +3,12 @@ import { X, ExternalLink, Check, AlertCircle } from "lucide-react";
 import { WebhookAppsModalProps } from "@/types/webhook";
 import { apps } from "@/constant/webhook";
 import { Loader } from "lucide-react";
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOption,
-  ListboxOptions,
-} from "@headlessui/react";
-import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
-import { CheckIcon } from "@heroicons/react/20/solid";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
 import { useSelector, dispatch } from "@/app/store";
 import { getAccounts } from "@/app/reducers/metaAccount";
+import { getAccounts as getTradeLockerAccounts } from "@/app/reducers/tradelocker";
+import { UserParams } from "@/types/tradeLocker";
 import {
   connectMarketOrder,
   disconnectMarketOrder,
@@ -31,10 +25,20 @@ export default function WebhookAppsModal({
   webhook,
   accountName,
 }: WebhookAppsModalProps) {
-  const [user] = useAtom(userAtom);
+  const user = useAtom(userAtom)[0];
   const metaAccounts = useSelector((state) => state.metaAccount.accounts);
-  const [accountId, setAccountId] = useState<string>("");
-  const [selected, setSelected] = useState(accountName);
+  const tradelockerAccounts = useSelector(
+    (state) => state.tradelocker.accounts
+  );
+  const [accountId, setAccountId] = useState<string>("default"); //MetaTrader....
+  const [selectedMetaTrader, setSelectedMetaTrader] =
+    useState<string>(accountName);
+
+  const [selectedTradeLocker, setSelectedTradeLocker] = useState<string>(
+    webhook.accountId
+  );
+  const [selectedAccNum, setSelectedAccNum] = useState<string>(""); //TradeLocker....
+
   const [loadingConnect, setLoadingConnect] = useState<LoadingType>({
     appName: "",
     loader: false,
@@ -43,23 +47,75 @@ export default function WebhookAppsModal({
     appName: "",
     loader: false,
   });
-  useEffect(() => {
-    dispatch(getAccounts(user?.email ?? ""));
-  }, []);
-  useEffect(() => {
-    const findAccount = metaAccounts.find(
-      (account) => account.accountName == selected
-    );
-    if (findAccount) {
-      setAccountId(findAccount?.accountId);
-    }
-  }, [selected]);
 
+  useEffect(() => {
+    if (user?.email) dispatch(getAccounts(user.email));
+    const accessToken = localStorage.getItem("accessToken");
+    const userTradeLocker: UserParams | null = JSON.parse(
+      localStorage.getItem("user") || "null"
+    );
+    if (accessToken && userTradeLocker) {
+      dispatch(
+        getTradeLockerAccounts({
+          accessToken,
+          accountType: userTradeLocker.accountType,
+        })
+      );
+    }
+  }, [dispatch, user]);
+  useEffect(() => {
+    const selectedAccount = metaAccounts.find(
+      (account) => account.accountName === selectedMetaTrader
+    );
+    if (selectedAccount) setAccountId(selectedAccount.accountId);
+  }, [selectedMetaTrader, metaAccounts]);
+
+  useEffect(() => {
+    const selectedAccNum = tradelockerAccounts.find(
+      (account) => account.id == selectedTradeLocker
+    );
+    if (selectedAccNum) setSelectedAccNum(selectedAccNum.accNum);
+  }, [selectedTradeLocker, tradelockerAccounts]);
+  console.log("tradelocker----->", selectedTradeLocker, selectedAccNum);
   const handleConnect = (appName: string) => {
-    if (appName == "MetaTrader") {
-      setLoadingConnect({ appName, loader: true });
+    setLoadingConnect({ appName, loader: true });
+    if (webhook.connectionStatus == true) {
+      toast.info(`Please disconnect ${webhook.appName} account`);
+    }
+    appName == "MetaTrader" &&
+      selectedMetaTrader == "default" &&
+      toast.info("Please select the account");
+    appName == "TradeLocker" &&
+      selectedTradeLocker == "default" &&
+      toast.info("Please select the account");
+    if (user) {
       dispatch(
         connectMarketOrder({
+          email: user.email,
+          accountId: appName == "MetaTrader" ? accountId : selectedTradeLocker,
+          webhookName: webhook.webhookName,
+          webhookMode: webhook.webhookMode,
+          symbol: webhook.symbol,
+          orderDirection:
+            webhook.webhookMode === "basic" ? webhook.orderDirection : "",
+          appName,
+          accNum: appName == "MetaTrader" ? "" : selectedAccNum,
+        })
+      ).then(() => {
+        setLoadingConnect({ appName, loader: false });
+        onClose();
+      });
+    }
+  };
+  const handleDisconnect = (appName: string) => {
+    if (!accountId) {
+      toast.info(`Please select account: ${accountName}`);
+      return;
+    }
+    if (user) {
+      dispatch(
+        disconnectMarketOrder({
+          email: user?.email,
           accountId,
           webhookName: webhook.webhookName,
           webhookMode: webhook.webhookMode,
@@ -68,36 +124,9 @@ export default function WebhookAppsModal({
             webhook.webhookMode === "basic" ? webhook.orderDirection : "",
         })
       ).then(() => {
-        setLoadingConnect({ appName, loader: false });
+        setLoadingDisconnect({ appName, loader: false });
         onClose();
       });
-    } else if (appName == "Binance") {
-    } else if (appName == "Bitget") {
-    } else {
-    }
-  };
-  const handleDisconnect = (appName: string) => {
-    if (accountId == "") {
-      toast.info(`Please select account: ${accountName}`);
-    } else {
-      if (appName == "MetaTrader") {
-        dispatch(
-          disconnectMarketOrder({
-            accountId,
-            webhookName: webhook.webhookName,
-            webhookMode: webhook.webhookMode,
-            symbol: webhook.symbol,
-            orderDirection:
-              webhook.webhookMode == "basic" ? webhook.orderDirection : "",
-          })
-        ).then(() => {
-          setLoadingDisconnect({ appName, loader: false });
-          onClose();
-        });
-      } else if (appName == "Binance") {
-      } else if (appName == "Bitget") {
-      } else {
-      }
     }
   };
 
@@ -138,11 +167,13 @@ export default function WebhookAppsModal({
                 }`}
               >
                 <div className="flex items-start space-x-4">
-                  <div className="p-2 bg-dark-200/50 rounded-lg">
+                  <div className="p-2 bg-dark-200/50 rounded-lg border border-gray-500 border-dashed">
                     <img
                       src={app.icon}
                       alt={app.appName}
-                      className="h-8 w-8 filter invert opacity-60"
+                      className={`h-8 w-8 ${
+                        app.appName == "MetaTrader" && "invert"
+                      } opacity-60`}
                     />
                   </div>
                   <div className="flex-1">
@@ -150,7 +181,8 @@ export default function WebhookAppsModal({
                       <h4 className="text-lg font-medium text-white">
                         {app.appName}
                       </h4>
-                      {webhook.connectionStatus === true ? (
+                      {webhook.connectionStatus === true &&
+                      webhook.appName === app.appName ? (
                         <div className="flex items-center text-emerald-400 text-sm">
                           <Check className="h-4 w-4 mr-1" />
                           Connected
@@ -162,49 +194,37 @@ export default function WebhookAppsModal({
                         </div>
                       )}
                     </div>
-                    <div>
-                      <p className="text-gray-400 text-sm mt-1">
-                        {app.description}
-                      </p>
-                    </div>
                     {app.appName == "MetaTrader" && (
-                      <Listbox value={selected} onChange={setSelected}>
-                        <div className="relative mt-2">
-                          <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-white py-1.5 pl-3 pr-2 text-left text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6">
-                            <span className="col-start-1 row-start-1 truncate pr-6">
-                              {selected}
-                            </span>
-                            <ChevronUpDownIcon
-                              aria-hidden="true"
-                              className="col-start-1 row-start-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
-                            />
-                          </ListboxButton>
-
-                          <ListboxOptions
-                            transition
-                            className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none data-[closed]:data-[leave]:opacity-0 data-[leave]:transition data-[leave]:duration-100 data-[leave]:ease-in sm:text-sm"
-                          >
-                            {metaAccounts.map((account) => (
-                              <ListboxOption
-                                key={account.accountId}
-                                value={account.accountName}
-                                className="group relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900 data-[focus]:bg-blue-500 data-[focus]:text-white data-[focus]:outline-none"
-                              >
-                                <span className="block truncate font-normal group-data-[selected]:font-semibold">
-                                  {account.accountName}
-                                </span>
-
-                                <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-blue-500 group-[&:not([data-selected])]:hidden group-data-[focus]:text-white">
-                                  <CheckIcon
-                                    aria-hidden="true"
-                                    className="size-5"
-                                  />
-                                </span>
-                              </ListboxOption>
-                            ))}
-                          </ListboxOptions>
-                        </div>
-                      </Listbox>
+                      <select
+                        value={selectedMetaTrader}
+                        onChange={(e) => setSelectedMetaTrader(e.target.value)}
+                        className="w-full bg-dark-200/30 text-white rounded-lg px-3 py-2
+                             border border-dashed border-blue-500 focus:outline-none 
+                              text-sm m-1"
+                      >
+                        <option value="default">default</option>
+                        {metaAccounts.map((account, index) => (
+                          <option key={index} value={account.accountName}>
+                            {account.accountName}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                    {app.appName == "TradeLocker" && (
+                      <select
+                        value={selectedTradeLocker}
+                        onChange={(e) => setSelectedTradeLocker(e.target.value)}
+                        className="w-full bg-dark-200/30 text-white rounded-lg px-3 py-2
+                             border border-dashed border-blue-500 focus:outline-none 
+                              text-sm m-1"
+                      >
+                        <option value="default">default</option>
+                        {tradelockerAccounts.map((account, index) => (
+                          <option key={index} value={account.id}>
+                            {account.accNum}-{account.id}
+                          </option>
+                        ))}
+                      </select>
                     )}
                   </div>
                 </div>

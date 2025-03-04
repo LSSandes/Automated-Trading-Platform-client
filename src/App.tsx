@@ -2,12 +2,13 @@ import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingView from "./views/LandingView";
 import DashboardView from "./views/DashboardView";
-// import TradesView from "./views/TradesView";
+import TradesView from "./views/TradesView";
 import SignalsView from "./views/SignalsView";
 // import AnalyticsView from "./views/AnalyticsView";
 import MarketsView from "./views/MarketsView";
 // import AlertsView from "./views/AlertsView";
 import MetaTraderView from "./views/MetaTraderView";
+import TradeLockerView from "./views/TradeLockerView";
 // import LeaderboardView from "./views/LeaderboardView";
 // import TelegramView from "./views/TelegramView";
 // import AdminView from "./views/AdminView";
@@ -96,12 +97,14 @@ function App() {
                   }
                 />
                 <Route path="" element={<LandingView />} />
-                {/* <Route path="trades" element={<TradesView />} /> */}
+                <Route path="trades" element={<TradesView />} />
                 <Route path="signals" element={<SignalsView />} />
                 {/* <Route path="analytics" element={<AnalyticsView />} /> */}
                 <Route path="markets" element={<MarketsView />} />
                 {/* <Route path="alerts" element={<AlertsView />} /> */}
                 <Route path="settings" element={<ProfileSettingView />} />
+                {/* <Route path="leaderboard" element={<LeaderboardView />} /> */}
+                {/* <Route path="admin" element={<AdminView />} /> */}
                 <Route
                   path="metatrader"
                   element={
@@ -111,9 +114,8 @@ function App() {
                     />
                   }
                 />
-                {/* <Route path="leaderboard" element={<LeaderboardView />} /> */}
+                <Route path="tradelocker" element={<TradeLockerView />} />
                 {/* <Route path="telegram" element={<TelegramView />} /> */}
-                {/* <Route path="admin" element={<AdminView />} /> */}
                 {/* <Route path="*" element={<LandingView />} /> */}
               </Route>
             </Routes>

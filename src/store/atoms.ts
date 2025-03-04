@@ -1,5 +1,12 @@
-import { atom } from 'jotai';
-import type { User, Trade, Alert, WebhookConfig, TelegramConfig, Profile } from '../types';
+import { atom } from "jotai";
+import type {
+  User,
+  Trade,
+  Alert,
+  WebhookConfig,
+  TelegramConfig,
+  Profile,
+} from "../types";
 
 // Auth
 export const userAtom = atom<User | null>(null);
@@ -13,19 +20,19 @@ export const tradingStatsAtom = atom({
   totalTrades: 0,
   profitFactor: 0,
   averageWin: 0,
-  averageLoss: 0
+  averageLoss: 0,
 });
 
 // Alerts & Notifications
 export const alertsAtom = atom<Alert[]>([]);
-export const unreadAlertsAtom = atom((get) => 
-  get(alertsAtom).filter(alert => !alert.read).length
+export const unreadAlertsAtom = atom(
+  (get) => get(alertsAtom).filter((alert) => !alert.read).length
 );
 
 // Webhooks
 export const webhooksAtom = atom<WebhookConfig[]>([]);
 export const activeWebhooksAtom = atom((get) =>
-  get(webhooksAtom).filter(webhook => webhook.isActive)
+  get(webhooksAtom).filter((webhook) => webhook.isActive)
 );
 
 // Telegram Configuration
@@ -36,17 +43,17 @@ export const telegramConfigAtom = atom<TelegramConfig>({
     signals: true,
     alerts: true,
     performance: false,
-    risk: true
-  }
+    risk: true,
+  },
 });
 
 // UI State
 export const sidebarCollapsedAtom = atom(false);
-export const activeViewAtom = atom('dashboard');
-export const themeAtom = atom<'light' | 'dark'>('dark');
+export const activeViewAtom = atom("dashboard");
+export const themeAtom = atom<"light" | "dark">("dark");
 
 //SideMenu
-export const collapsedAtom = atom<boolean>(false)
+export const collapsedAtom = atom<boolean>(false);
 
 //Profile
 
@@ -55,3 +62,8 @@ export const profileAtom = atom<Profile | null>(null);
 //Account
 
 export const accountNameAtom = atom<string>("");
+
+//trade filter
+
+export const selectedAccountAtom = atom<string>("");
+export const selectedAccountTypeAtom = atom<string>("MetaTrader");

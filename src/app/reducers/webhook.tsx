@@ -148,26 +148,35 @@ export function deleteMarketOrder({
 }
 
 export function connectMarketOrder({
+  email,
   accountId,
   webhookName,
   webhookMode,
   symbol,
   orderDirection,
+  appName,
+  accNum,
 }: {
+  email: string;
   accountId: string;
   webhookName: string;
   webhookMode: string;
   symbol: string;
   orderDirection: string;
+  appName: string;
+  accNum: string;
 }) {
   return async () => {
     try {
       const response = await axios.post("webhook/connect-marketorder", {
+        email,
         accountId,
         webhookName,
         webhookMode,
         symbol,
         orderDirection,
+        appName,
+        accNum,
       });
       dispatch(
         webhook.actions.udpateWebhookSuccess(response.data.data.updatedWebhook)
@@ -182,12 +191,14 @@ export function connectMarketOrder({
 }
 
 export function disconnectMarketOrder({
+  email,
   accountId,
   webhookName,
   webhookMode,
   symbol,
   orderDirection,
 }: {
+  email: string;
   accountId: string;
   webhookName: string;
   webhookMode: string;
@@ -197,6 +208,7 @@ export function disconnectMarketOrder({
   return async () => {
     try {
       const response = await axios.post("webhook/disconnect-marketorder", {
+        email,
         accountId,
         webhookName,
         webhookMode,
@@ -272,34 +284,35 @@ export function editMarketOrder({
 }
 
 export function openMarketOrder({
+  email,
   accountId,
   webhookName,
   symbol,
   orderDirection,
   webhookMode,
+  accessToken,
+  accountType,
 }: {
+  email: string;
   accountId: string;
   webhookName: string;
   symbol: string;
   orderDirection: string;
   webhookMode: string;
+  accessToken: string;
+  accountType: string;
 }) {
   return async () => {
     try {
-      console.log(
-        "openTrademarketOrder-------->",
-        accountId,
-        webhookName,
-        symbol,
-        orderDirection,
-        webhookMode
-      );
       const response = await axios.post("webhook/open-marketorder", {
+        email,
         accountId,
         webhookName,
         symbol,
         orderDirection,
         webhookMode,
+        accessToken,
+        accountType,
       });
       dispatch(
         webhook.actions.udpateWebhookSuccess(response.data.data.updatedWebhook)

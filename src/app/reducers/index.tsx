@@ -9,6 +9,9 @@ import metaStats from "./metaStats";
 import metaTotalStats from "./metaTotalStats";
 import metaViualTrades from "./metaVisualTrades";
 import closeOrder from "./closeOrder";
+import tradelocker from "./tradelocker";
+import tradelockerInfo from "./tradelockerInfo";
+import trade from "./trade";
 
 // ==============================|| COMBINE REDUCERS ||============================== //
 
@@ -20,6 +23,9 @@ const reducers = combineReducers({
   metaTotalStats,
   metaViualTrades,
   closeOrder,
+  tradelocker,
+  tradelockerInfo,
+  trade,
 });
 
 export default reducers;

@@ -18,6 +18,7 @@ export const tradesFilterAtom = atom<TradeFilters>({
 
 // Predefined filter options
 export const filterOptions = {
+  accountType: ['MetaTrader', 'TradeLocker'],
   timeframes: ['Last Week', 'Last Month', 'Last 3 Months', 'Last Year', 'All Time'],
   tradeTypes: ['All Types', 'Manual Trades', 'Copy Trades', 'Webhook Trades'],
   pairs: ['All Pairs', 'EURUSD', 'GBPUSD', 'USDJPY', 'BTCUSD', 'ETHUSD'],

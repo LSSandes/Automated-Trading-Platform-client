@@ -3,10 +3,9 @@ import { useEffect, useState } from "react";
 // import LoadingSpinner from "../common/LoadingSpinner";
 import { Bot, ArrowRight, Shield, DollarSign, Zap } from "lucide-react";
 import { useAtom, useSetAtom } from "jotai";
-import { userAtom, accountNameAtom } from "../../store/atoms";
+import { accountNameAtom } from "../../store/atoms";
 import { dispatch, useSelector } from "@/app/store";
 import {
-  getAccounts,
   deleteAccount,
   updateAccount,
 } from "@/app/reducers/metaAccount";
@@ -19,7 +18,6 @@ import UpdateModal from "../modal/UpdateModal";
 import AccountStatsModal from "./AccountStatsModal";
 
 export default function AccountList() {
-  const [user] = useAtom(userAtom);
   const [accountName] = useAtom(accountNameAtom);
   const setAccountNameAtom = useSetAtom(accountNameAtom);
   const webhooks = useSelector((state) => state.webhook.webhooks);
@@ -41,11 +39,6 @@ export default function AccountList() {
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
   const [updateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
   const [showStats, setShowStats] = useState<boolean>(false);
-  useEffect(() => {
-    if (user?.email) {
-      dispatch(getAccounts(user.email));
-    }
-  }, [user?.email]);
   useEffect(() => {
     accountsState.forEach((account) => {
       dispatch(getAccountsInfo(account.accountId));

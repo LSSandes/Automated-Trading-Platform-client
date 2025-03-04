@@ -6,30 +6,13 @@ import { collapsedAtom } from "@/store/atoms";
 import { SideMenuProps } from "@/types/sidemenu";
 import {
   BarChart2,
-  // Bot,
   ChevronLeft,
-  // Cpu,
   Globe,
-  // Settings,
   Webhook,
-  // Sliders,
-  // Wallet,
-  // AlertTriangle,
-  // TrendingUp,
   ChevronRight,
-  // Home,
+  LineChart,
   ChevronDown,
   Box,
-  // MessageCircle,
-  // Coins,
-  // Trophy,
-  // Users,
-  // DollarSign,
-  // Shield,
-  // Lock,
-  // CheckCircle2,
-  Zap,
-  // Clock,
 } from "lucide-react";
 // import { useMetaAccounts } from "../hooks/useMetaAccount";
 
@@ -82,7 +65,7 @@ const SideMenu = ({
     //   label: "Alerts",
     //   badge: "3",
     // },
-    // { id: "trades", icon: <LineChart className="h-5 w-5" />, label: "Trades" },
+    { id: "trades", icon: <LineChart className="h-5 w-5" />, label: "Trades" },
     {
       id: "signals",
       icon: <Webhook className="h-5 w-5" />,
@@ -107,20 +90,17 @@ const SideMenu = ({
         />
       ),
       label: "MetaTrader",
-      status: (
-        <div className="space-y-1">
-          <div className="flex items-center text-emerald-400 text-xs">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1"></div>
-            Connected
-          </div>
-          <div className="flex items-center space-x-2 text-xs">
-            <div className="flex items-center text-accent">
-              <Zap className="h-3 w-3 mr-1" />
-              <span>0.04s execution</span>
-            </div>
-          </div>
-        </div>
+    },
+    {
+      id: "tradelocker",
+      icon: (
+        <img
+          src="/tradelocker-logo.svg"
+          alt="tradelocker"
+          className="h-5 w-5  opacity-60 "
+        />
       ),
+      label: "TradeLocker",
     },
     // {
     //   id: "binance",
@@ -275,7 +255,7 @@ const SideMenu = ({
           ))}
         </nav>
 
-        <div className="my-6">
+        <div className="my-6 border-t border-dark-400">
           <button
             onClick={() => !isCollapsed && setIsAppsExpanded(!isAppsExpanded)}
             className={`w-full flex items-center ${
@@ -296,34 +276,33 @@ const SideMenu = ({
           </button>
 
           {(isAppsExpanded || isCollapsed) && (
-            <div className="space-y-1 mt-1">
-              {apps.map((app) => (
-                <button
-                  key={app.id}
-                  onClick={() => {
-                    onViewChange(app.id);
-                    handleNavigate(app.id);
-                  }}
-                  className={`w-full flex items-center ${
-                    isCollapsed ? "justify-center" : "justify-between"
-                  } p-3 text-gray-400 hover:text-white hover:bg-dark-200/30 
+            <div className="w-full justify-end items-center flex">
+              <div className="space-y-1 mt-1 w-[90%] flex flex-col justify-center items-center">
+                {apps.map((app) => (
+                  <button
+                    key={app.id}
+                    onClick={() => {
+                      onViewChange(app.id);
+                      handleNavigate(app.id);
+                    }}
+                    className={`w-full flex items-center ${
+                      isCollapsed ? "justify-center" : "justify-between"
+                    } p-3 text-gray-400 hover:text-white hover:bg-dark-200/30 
                     rounded-lg transition-all duration-300 ${
                       activeView === app.id ? "bg-dark-200/30 text-white" : ""
                     }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    {app.icon}
-                    {!isCollapsed && (
-                      <div className="flex flex-col items-start">
-                        <span>{app.label}</span>
-                        {app.status && (
-                          <div className="mt-0.5">{app.status}</div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </button>
-              ))}
+                  >
+                    <div className="flex items-center space-x-3">
+                      {app.icon}
+                      {!isCollapsed && (
+                        <div className="flex flex-col items-start">
+                          <span>{app.label}</span>
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>

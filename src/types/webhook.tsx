@@ -14,6 +14,7 @@ export interface WebhookConfig {
   takeProfit_pips: number;
   successRate?: number;
   totalTrades?: number;
+  appName?: string;
   hashedWebhook: string;
   price?: number;
 }
@@ -97,6 +98,7 @@ export interface CloseOrderConfig {
   symbol: string;
   connectionStatus: boolean;
   tradeStartTime: string;
+  hashedWebhook: string;
   isActive: boolean;
   isPublic: boolean;
 }

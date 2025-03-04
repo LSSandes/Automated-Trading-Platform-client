@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Clock, MoreVertical } from "lucide-react";
+import { Clock, MoreVertical, Copy, CopyCheck } from "lucide-react";
 import CloseOrderMenu from "./CloseOrderMenu";
 import EditCloseOrderModal from "./EditCloseOrderModal";
 import { userAtom } from "@/store/atoms";
@@ -24,6 +24,14 @@ export default function CloseOrderCard({
   const [accountName, setAccountName] = useState<string>("");
   const [tradeLoading, setTradeLoading] = useState<boolean>(false);
   const [timeDiff, setTimeDiff] = useState("");
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(
+      `https://api.automatedtrader.com/webhook/${closeOrder.hashedWebhook}`
+    );
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
   const handleDelete = () => {
     if (user) {
       dispatch(
@@ -108,7 +116,7 @@ export default function CloseOrderCard({
           className={`absolute inset-0 bg-gradient-to-br from-dark-200/20 to-dark-200/5 opacity-10`}
         />
         {/* Content */}
-        <div className="relative glass-panel rounded-xl p-6">
+        <div className="relative glass-panel rounded-xl py-3 px-4">
           {/* Header */}
           <div className="flex justify-between items-start mb-6">
             <div className="flex items-center space-x-3">
@@ -134,6 +142,27 @@ export default function CloseOrderCard({
             </div>
 
             <div className="flex items-center space-x-1">
+              {copied && (
+                <div
+                  className={`absolute -top-2 -left-8 rounded-lg transition-all -rotate-45 ${
+                    copied ? "animate-pulse" : ""
+                  }`}
+                >
+                  Copied!
+                </div>
+              )}
+              <button
+                onClick={handleCopy}
+                className="p-2 text-gray-400 hover:text-white hover:bg-dark-200/50 
+                         rounded-lg transition-all"
+                title="Copy webhook URL"
+              >
+                {copied ? (
+                  <CopyCheck className="h-5 w-5" />
+                ) : (
+                  <Copy className="h-5 w-5" />
+                )}
+              </button>
               <button
                 onClick={() => setShowMenu(!showMenu)}
                 className="p-2 text-gray-400 hover:text-white hover:bg-dark-200/50 

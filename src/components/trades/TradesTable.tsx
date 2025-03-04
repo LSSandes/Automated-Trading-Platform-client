@@ -1,48 +1,292 @@
-// import { useAtom } from 'jotai';
-// import { tradesFilterAtom } from '../../store/tradesFilterStore';
+import { Search } from "lucide-react";
+import { useSelector } from "@/app/store";
+import { useEffect, useState } from "react";
+import { dispatch } from "@/app/store";
+import { getTradelockerOrdersHistory } from "@/app/reducers/trade";
+import { getMetaStats } from "@/app/reducers/metaStats";
+import { UserParams } from "@/types/tradeLocker";
+import { ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { userAtom } from "@/store/atoms";
+import { useAtom } from "jotai";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+export default function TradesTable({
+  account,
+  accountType,
+}: {
+  account: string;
+  accountType: string;
+}) {
+  const [user] = useAtom(userAtom);
+  const tradelockerAccounts = useSelector(
+    (state) => state.tradelocker.accounts
+  );
+  const [accNum, setAccNum] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const accessToken = localStorage.getItem("accessToken");
+  const tradelockerUser: UserParams | null = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user") as string)
+    : null;
+  const tradelockerOrdersHistory = useSelector(
+    (state) => state.trade.tradelockerOrdersHistory
+  );
+  const metaStats = useSelector((state) => state.metaStats.stats);
+  useEffect(() => {
+    if (accountType == "TradeLocker") {
+      const tradelockerAccount = tradelockerAccounts.find(
+        (item) => item.id === account
+      );
+      tradelockerAccount && setAccNum(tradelockerAccount.accNum);
+    }
+  }, [accountType, account]);
+  const handleSearch = async () => {
+    setLoading(true);
+    if (accountType == "TradeLocker") {
+      tradelockerUser &&
+        accessToken &&
+        dispatch(
+          getTradelockerOrdersHistory({
+            accessToken,
+            accountId: account,
+            accNum,
+            accountType: tradelockerUser?.accountType,
+          })
+        ).then(() => setLoading(false));
+    } else {
+      user &&
+        dispatch(getMetaStats(account, user?.email)).then(() =>
+          setLoading(false)
+        );
+    }
+  };
+  const formatDate = (timestamp: number): string => {
+    const date = new Date(timestamp);
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZoneName: "short",
+    };
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  };
 
-export default function TradesTable() {
-  // const [filters] = useAtom(tradesFilterAtom);
-
-  // const filterTrades = (trades: any[]) => {
-  //   return trades.filter(trade => {
-  //     // Filter by trade type
-  //     if (filters.tradeType !== 'All Types' && trade.type !== filters.tradeType) {
-  //       return false;
-  //     }
-
-  //     // Filter by pair
-  //     if (filters.pair !== 'All Pairs' && trade.symbol !== filters.pair) {
-  //       return false;
-  //     }
-
-  //     // Filter by outcome
-  //     if (filters.outcome !== 'All Outcomes') {
-  //       const isProfit = trade.profit > 0;
-  //       if (filters.outcome === 'Profit' && !isProfit) return false;
-  //       if (filters.outcome === 'Loss' && isProfit) return false;
-  //       if (filters.outcome === 'Break Even' && trade.profit !== 0) return false;
-  //     }
-
-  //     // Filter by search query
-  //     if (filters.search) {
-  //       const searchLower = filters.search.toLowerCase();
-  //       return (
-  //         trade.symbol.toLowerCase().includes(searchLower) ||
-  //         trade.type.toLowerCase().includes(searchLower) ||
-  //         trade.tradeBy.toLowerCase().includes(searchLower)
-  //       );
-  //     }
-
-  //     return true;
-  //   });
-  // };
-
-  // Rest of your TradesTable component implementation...
   return (
-    <div className="glass-panel rounded-xl p-6">
-      <h3 className="text-lg font-medium text-white mb-4">Trades History</h3>
-      {/* Implement your trades table UI here using the filtered trades */}
+    <div className="w-full glass-panel rounded-xl p-6 flex flex-col justify-center items-center gap-5">
+      <div className="flex justify-between items-center w-full border-b border-dark-300 py-2">
+        <h3 className="text-lg font-medium text-white mb-4">
+          {accountType} Trades History
+        </h3>
+        <button
+          className="premium-button flex items-center outline-1 outline-dashed outline-blue-500 outline-offset-2 rounded-lg"
+          onClick={handleSearch}
+        >
+          <Search className="h-5 w-5 mr-2 " />
+          Search
+        </button>
+      </div>
+      <div className=" overflow-auto max-h-[500px] w-full flex">
+        {accountType == "TradeLocker" ? (
+          <div className="w-full">
+            <table className="w-full">
+              <thead>
+                <tr className="text-center">
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Symbol
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Type
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Position ID
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Side
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Price
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Lots
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Status
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    StopLoss
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    TakeProfit
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Validity
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Created Date
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Last Updated
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-dark-300/30">
+                {!loading &&
+                  tradelockerOrdersHistory?.map((order, index) => (
+                    <tr key={index} className="text-sm text-center">
+                      <td className="py-4 text-white font-medium">
+                        {order.symbol}
+                      </td>
+                      <td className={`py-4`}>
+                        <span
+                          className={` ${
+                            order.type == "market"
+                              ? "text-green-500"
+                              : order.type == "stop"
+                              ? "text-red-400"
+                              : "text-yellow-500"
+                          }`}
+                        >
+                          {order.type.toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="py-4 text-gray-300">{order.positionId}</td>
+                      <td className="py-4">
+                        <div
+                          className={`flex items-center ${
+                            order.side === "buy"
+                              ? "text-emerald-400"
+                              : "text-red-400"
+                          }`}
+                        >
+                          {order.side === "buy" ? (
+                            <ArrowUpRight className="h-4 w-4 mr-1" />
+                          ) : (
+                            <ArrowDownRight className="h-4 w-4 mr-1" />
+                          )}
+                          {order.side == "buy" ? "BUY" : "SELL"}
+                        </div>
+                      </td>
+                      <td className="py-4 text-gray-300">{order.price}</td>
+                      <td className="py-4 text-gray-300">{order.qty}</td>
+                      <td className={`py-4 text-gray-300 text-center`}>
+                        <span
+                          className={`${
+                            order.status == "Filled"
+                              ? "text-green-500"
+                              : "text-red-400"
+                          }`}
+                        >
+                          {order.status.toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="py-4 text-gray-300">{order.stopLoss}</td>
+                      <td className="py-4 text-gray-300">{order.takeProfit}</td>
+                      <td className="py-4 text-gray-300">{order.validity}</td>
+                      <td className="py-4 text-gray-300">
+                        {formatDate(Number(order.createdDate))}
+                      </td>
+                      <td className="py-4 text-gray-300">
+                        {formatDate(Number(order.lastModified))}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+            {loading && (
+              <Skeleton
+                count={6}
+                style={{ width: "100%", lineHeight: 1, rowGap: 20 }}
+                baseColor="#202020"
+                highlightColor="#444"
+              />
+            )}
+          </div>
+        ) : (
+          <div className="w-full">
+            <table className="w-full">
+              <thead>
+                <tr className="text-center">
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Symbol
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Type
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Lots
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Open Price
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Close Price
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Profit
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Open Time
+                  </th>
+                  <th className="pb-4 text-sm font-medium text-gray-400">
+                    Close Time
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-dark-300/30">
+                {!loading &&
+                  metaStats?.map((stats, index) => (
+                    <tr key={index} className="text-center">
+                      <td className="py-4 text-white font-medium">
+                        {stats.symbol}
+                      </td>
+                      <td className="py-4">
+                        <div
+                          className={`flex items-center justify-center ${
+                            stats.type === "DEAL_TYPE_BUY"
+                              ? "text-emerald-400"
+                              : "text-red-400"
+                          }`}
+                        >
+                          {stats.type === "DEAL_TYPE_BUY" ? (
+                            <ArrowUpRight className="h-4 w-4 mr-1" />
+                          ) : (
+                            <ArrowDownRight className="h-4 w-4 mr-1" />
+                          )}
+                          {stats.type == "DEAL_TYPE_BUY" ? "BUY" : "SELL"}
+                        </div>
+                      </td>
+                      <td className="py-4 text-gray-300">{stats.volume}</td>
+                      <td className="py-4 text-gray-300">{stats.openPrice}</td>
+                      <td className="py-4 text-gray-300">{stats.closePrice}</td>
+                      <td
+                        className={`py-4 font-medium ${
+                          stats.profit >= 0
+                            ? "text-emerald-400"
+                            : "text-red-400"
+                        }`}
+                      >
+                        {stats.profit >= 0 ? "+" : ""}
+                        {stats.profit.toFixed(2)} USD
+                      </td>
+                      <td className="py-4 text-gray-300">{stats.openTime}</td>
+                      <td className="py-4 text-gray-300">{stats.closeTime}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+            {loading && (
+              <Skeleton
+                count={6}
+                style={{ width: "100%", lineHeight: 1, rowGap: 20 }}
+                baseColor="#202020"
+                highlightColor="#444"
+              />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

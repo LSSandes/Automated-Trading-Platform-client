@@ -10,7 +10,8 @@ import {
 } from "lucide-react";
 import { AccountCardProps } from "@/types/metaAccount";
 import { RotatingLines } from "react-loader-spinner";
-
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 const AccountCard = ({
   account,
   accountInfo,
@@ -25,11 +26,11 @@ const AccountCard = ({
   const profitPercentage = accountInfo
     ? (profit / accountInfo.balance) * 100
     : 0;
-  
+
   return (
-    <div className="glass-panel rounded-xl p-4 border border-dark-300/30">
+    <div className="glass-panel rounded-xl p-4 border border-dark-300/30 w-full xl:w-[80%] outline-dashed outline-1 outline-offset-2 outline-dark-500">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6 border-b border-dark-300 p-2">
+      <div className="flex items-center justify-between mb-6 border-b border-dark-300 pb-2">
         <div className="flex items-center space-x-3">
           <div className="p-2 bg-accent/10 rounded-lg">
             <Wallet className="h-5 w-5 text-accent" />
@@ -94,38 +95,53 @@ const AccountCard = ({
       <div className="grid lg:grid-cols-2 grid-cols-1 gap-4">
         <div className="glass-panel rounded-lg p-4 flex justify-start items-center gap-5">
           <div className="text-sm text-gray-400 mb-1">Balance</div>
-          <div className="text-lg font-medium text-white flex justify-center items-center gap-3">
+          <div className="text-sm font-medium text-white flex justify-center items-center gap-3">
             {accountInfo ? (
               "$" + accountInfo.balance.toLocaleString()
             ) : (
-              <Loader className="h-5 w-5 mr-2 animate-spin" />
+              <Skeleton
+                count={1}
+                style={{ width: 80, lineHeight: 1 }}
+                baseColor="#202020"
+                highlightColor="#444"
+              />
             )}
           </div>
         </div>
 
         <div className="glass-panel rounded-lg p-4 flex justify-start items-center gap-5">
           <div className="text-sm text-gray-400 mb-1">Equity</div>
-          <div className="text-lg font-medium text-white flex justify-center items-center gap-3">
+          <div className="text-sm font-medium text-white flex justify-center items-center gap-3">
             {accountInfo ? (
               "$" + accountInfo.equity.toLocaleString()
             ) : (
-              <Loader className="h-5 w-5 mr-2 animate-spin" />
+              <Skeleton
+                count={1}
+                style={{ width: 80, lineHeight: 1 }}
+                baseColor="#202020"
+                highlightColor="#444"
+              />
             )}
           </div>
         </div>
 
         <div className="glass-panel rounded-lg p-4 flex justify-start items-center gap-5">
           <div className="text-sm text-gray-400 mb-1">Free Margin</div>
-          <div className="text-lg font-medium text-white flex justify-center items-center gap-3">
+          <div className="text-sm font-medium text-white flex justify-center items-center gap-3">
             {accountInfo ? (
               "$" + accountInfo.freeMargin.toLocaleString()
             ) : (
-              <Loader className="h-5 w-5 mr-2 animate-spin" />
+              <Skeleton
+                count={1}
+                style={{ width: 80, lineHeight: 1 }}
+                baseColor="#202020"
+                highlightColor="#444"
+              />
             )}
           </div>
         </div>
 
-        <div className="glass-panel rounded-lg p-4">
+        <div className="glass-panel rounded-lg p-4 flex justify-start items-center gap-5">
           <div className="text-sm text-gray-400 mb-1">Profit/Loss</div>
           <div
             className={`flex items-center text-lg font-medium ${
@@ -137,7 +153,7 @@ const AccountCard = ({
             ) : (
               <TrendingDown className="h-4 w-4 mr-1" />
             )}
-            <span>
+            <span className="text-sm">
               {profit >= 0 ? "+" : ""}
               {profit.toFixed(2)} ({profitPercentage.toFixed(2)}%)
             </span>
@@ -146,8 +162,8 @@ const AccountCard = ({
       </div>
 
       {/* Additional Info */}
-      <div className="flex justify-between mt-4 pt-4 border-t border-dark-300/30 items-center lg:flex-row flex-col gap-4">
-        <div className="lg:w-1/2 w-full">
+      <div className="flex justify-between mt-4 pt-2 border-t border-dark-300/30 items-center lg:flex-row flex-col gap-4">
+        <div className="lg:w-[60%] w-full">
           <div className="flex justify-between text-sm">
             <span className="text-gray-400">Server</span>
 
@@ -176,7 +192,7 @@ const AccountCard = ({
             onClick={onShowStats}
             className="px-3 py-1.5 text-[16px] bg-dark-200/50 text-gray-300 rounded-lg
                        border border-dark-300 hover:bg-dark-200/80 transition-colors
-                       flex items-center space-x-1 lg:w-1/3 w-full justify-center"
+                       flex items-center space-x-1 lg:w-[40%] w-full justify-center"
           >
             <Activity className="h-6 w-6 mr-1" />
             <span>View Stats</span>

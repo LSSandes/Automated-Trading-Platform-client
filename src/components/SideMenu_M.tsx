@@ -1,11 +1,4 @@
-import {
-  BarChart2,
-  Webhook,
-  Globe,
-  ChevronDown,
-  Box,
-  Zap,
-} from "lucide-react";
+import { BarChart2, Webhook, Globe, ChevronDown, Box, LineChart } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 const SideMenu_M = ({
@@ -46,7 +39,7 @@ const SideMenu_M = ({
     //   label: "Alerts",
     //   badge: "3",
     // },
-    // { id: "trades", icon: <LineChart className="h-5 w-5" />, label: "Trades" },
+    { id: "trades", icon: <LineChart className="h-5 w-5" />, label: "Trades" },
     {
       id: "signals",
       icon: <Webhook className="h-5 w-5" />,
@@ -71,20 +64,17 @@ const SideMenu_M = ({
         />
       ),
       label: "MetaTrader",
-      status: (
-        <div className="space-y-1">
-          <div className="flex items-center text-emerald-400 text-xs">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1"></div>
-            Connected
-          </div>
-          <div className="flex items-center space-x-2 text-xs">
-            <div className="flex items-center text-accent">
-              <Zap className="h-3 w-3 mr-1" />
-              <span>0.04s execution</span>
-            </div>
-          </div>
-        </div>
+    },
+    {
+      id: "tradelocker",
+      icon: (
+        <img
+          src="/tradelocker-logo.svg"
+          alt="tradelocker"
+          className="h-5 w-5  opacity-60 "
+        />
       ),
+      label: "TradeLocker",
     },
   ];
   const handleNavigate = (item: string) => {
