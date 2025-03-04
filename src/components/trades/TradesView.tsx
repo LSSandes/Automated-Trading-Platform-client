@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import TradeStats from './TradeStats';
 import TradesCalendar from './TradesCalendar';
-import TradesTable from './TradesTable';
+// import TradesTable from './TradesTable';
 
 export default function TradesView() {
   const [selectedWebhook, setSelectedWebhook] = useState('All');
@@ -62,7 +62,7 @@ export default function TradesView() {
       <TradesCalendar />
 
       {/* Trades Table */}
-      <TradesTable />
+      {/* <TradesTable /> */}
     </div>
   );
 }

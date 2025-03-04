@@ -17,6 +17,7 @@ import { MarketOrderStrategyProps } from "@/types/webhook";
 import { Loader } from "lucide-react";
 import { toast } from "react-toastify";
 import { FaChartBar } from "react-icons/fa";
+import { UserParams } from "@/types/tradeLocker";
 
 export default function MarketStrategyModal({
   isOpen,
@@ -37,6 +38,11 @@ export default function MarketStrategyModal({
   const [takeProfit, setTakeProfit] = useState<number>(0);
   const [stopLoss, setStopLoss] = useState<number>(0);
   const [volume, setVolume] = useState<number>(0);
+  const [appName, setAppName] = useState<string>("");
+  const accessToken = localStorage.getItem("accessToken");
+  const tradelockerUser: UserParams | null = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user") as string)
+    : null;
   useEffect(() => {
     dispatch(getWebhooks(user?.email));
     dispatch(getCloseOrders(user?.email));
@@ -59,6 +65,7 @@ export default function MarketStrategyModal({
         setTakeProfit(findOrder?.takeProfit_pips || 0);
         setStopLoss(findOrder?.stopLoss_pips || 0);
         setVolume(findOrder?.volume || 0);
+        setAppName(findOrder?.appName || "");
       }
     } else {
       const findOrder = closeOrders.find(
@@ -71,14 +78,6 @@ export default function MarketStrategyModal({
       }
     }
   }, [webhook, orderType, marketOrders, closeOrders]);
-  console.log(
-    "------>",
-    accountId,
-    webhook,
-    webhookMode,
-    symbol,
-    orderDirection
-  );
   useEffect(() => {
     if (orderType == "market") {
       setOrders(marketOrders);
@@ -95,18 +94,26 @@ export default function MarketStrategyModal({
         setOpenTradeLoading(false);
         onClose();
       } else {
-        dispatch(
-          openMarketOrder({
-            accountId,
-            webhookName: webhook,
-            symbol,
-            orderDirection,
-            webhookMode,
-          })
-        ).then(() => {
-          setOpenTradeLoading(false);
-          onClose();
-        });
+        user &&
+          dispatch(
+            openMarketOrder({
+              email: user?.email,
+              accountId,
+              webhookName: webhook,
+              symbol,
+              orderDirection,
+              webhookMode,
+              accessToken:
+                appName == "MetaTrader" ? "" : accessToken ?? "",
+              accountType:
+                appName == "MetaTrader"
+                  ? ""
+                  : tradelockerUser?.accountType ?? "",
+            })
+          ).then(() => {
+            setOpenTradeLoading(false);
+            onClose();
+          });
       }
     } else {
       if (accountId == "") {
