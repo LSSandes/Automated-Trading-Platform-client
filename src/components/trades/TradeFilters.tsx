@@ -3,12 +3,12 @@ import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { useAtom } from "jotai";
 import { selectedAccountAtom, selectedAccountTypeAtom } from "@/store/atoms";
 // import { userAtom } from "@/store/atoms";
-import { tradesFilterAtom, filterOptions } from "../../store/tradesFilterStore";
+import { /*tradesFilterAtom,*/ filterOptions } from "../../store/tradesFilterStore";
 import { MdOutlineAccountTree } from "react-icons/md";
 import { useSelector } from "@/app/store";
 import { useEffect } from "react";
 export default function TradeFilters() {
-  const [filters, setFilters] = useAtom(tradesFilterAtom);
+  // const [filters, setFilters] = useAtom(tradesFilterAtom);
   const [selectedAccount, setSelectedAccount] = useAtom(selectedAccountAtom);
   const [selectedAccountType, setSelectedAccountType] = useAtom(
     selectedAccountTypeAtom
@@ -19,9 +19,9 @@ export default function TradeFilters() {
     (state) => state.tradelocker.accounts
   );
 
-  const handleFilterChange = (key: keyof typeof filters, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
+  // const handleFilterChange = (key: keyof typeof filters, value: string) => {
+  //   setFilters((prev) => ({ ...prev, [key]: value }));
+  // };
 
   const handleAccountTypeChange = (accountType: string) => {
     setSelectedAccountType(accountType);
