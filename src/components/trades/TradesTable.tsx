@@ -63,12 +63,12 @@ export default function TradesTable({
     const date = new Date(timestamp);
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
-      month: "long",
+      month: "numeric",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-      timeZoneName: "short",
+      // timeZoneName: "short",
     };
     return new Intl.DateTimeFormat("en-US", options).format(date);
   };
