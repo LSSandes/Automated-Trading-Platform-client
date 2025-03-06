@@ -13,6 +13,7 @@ import {
   LineChart,
   ChevronDown,
   Box,
+  Bell,
 } from "lucide-react";
 // import { useMetaAccounts } from "../hooks/useMetaAccount";
 
@@ -59,12 +60,12 @@ const SideMenu = ({
       icon: <BarChart2 className="h-5 w-5" />,
       label: "Dashboard",
     },
-    // {
-    //   id: "alerts",
-    //   icon: <Bell className="h-5 w-5" />,
-    //   label: "Alerts",
-    //   badge: "3",
-    // },
+    {
+      id: "alerts",
+      icon: <Bell className="h-5 w-5" />,
+      label: "Alerts",
+      badge: "3",
+    },
     { id: "trades", icon: <LineChart className="h-5 w-5" />, label: "Trades" },
     {
       id: "signals",

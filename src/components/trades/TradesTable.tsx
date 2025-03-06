@@ -1,4 +1,3 @@
-import { Search } from "lucide-react";
 import { useSelector } from "@/app/store";
 import { useEffect, useState } from "react";
 import { dispatch } from "@/app/store";
@@ -39,7 +38,7 @@ export default function TradesTable({
       tradelockerAccount && setAccNum(tradelockerAccount.accNum);
     }
   }, [accountType, account]);
-  const handleSearch = async () => {
+  useEffect(() => {
     setLoading(true);
     if (accountType == "TradeLocker") {
       tradelockerUser &&
@@ -51,14 +50,18 @@ export default function TradesTable({
             accNum,
             accountType: tradelockerUser?.accountType,
           })
-        ).then(() => setLoading(false));
+        ).then(() => {
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000); 
+        });
     } else {
       user &&
         dispatch(getMetaStats(account, user?.email)).then(() =>
           setLoading(false)
         );
     }
-  };
+  }, [accountType, account, accNum]);
   const formatDate = (timestamp: number): string => {
     const date = new Date(timestamp);
     const options: Intl.DateTimeFormatOptions = {
@@ -79,13 +82,6 @@ export default function TradesTable({
         <h3 className="text-lg font-medium text-white mb-4">
           {accountType} Trades History
         </h3>
-        <button
-          className="premium-button flex items-center outline-1 outline-dashed outline-blue-500 outline-offset-2 rounded-lg"
-          onClick={handleSearch}
-        >
-          <Search className="h-5 w-5 mr-2 " />
-          Search
-        </button>
       </div>
       <div className=" overflow-auto max-h-[500px] w-full flex">
         {accountType == "TradeLocker" ? (

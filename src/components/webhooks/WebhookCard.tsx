@@ -1,10 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  Clock,
-  Copy,
-  MoreVertical,
-  /*DollarSign,*/ CopyCheck,
-} from "lucide-react";
+import { Clock, Copy, MoreVertical, CopyCheck } from "lucide-react";
 import WebhookMenu from "./WebhookMenu";
 import { WebhookCardProps } from "@/types/webhook";
 import EditWebhookModal from "./EditWebhookModal";
@@ -17,7 +12,6 @@ import { dispatch, useSelector } from "@/app/store";
 import { deleteMarketOrder, openMarketOrder } from "@/app/reducers/webhook";
 import { FaChartBar } from "react-icons/fa";
 import { toast } from "react-toastify";
-// import axios from "../../utils/api";
 import OpenTradeModal from "./OpenTradeModal";
 import { UserParams } from "@/types/tradeLocker";
 
@@ -41,7 +35,6 @@ export default function WebhookCard({
   const [accountName, setAccountName] = useState<string>(findAccount ?? "");
   const [openTradeModal, setOpenTradeModal] = useState<boolean>(false);
   const [openTradeLoading, setOpenTradeLoading] = useState<boolean>(false);
-  // const [price, setPrice] = useState<number>(0);
   const [copied, setCopied] = useState(false);
   const [timeDiff, setTimeDiff] = useState("");
   useEffect(() => {
@@ -52,21 +45,6 @@ export default function WebhookCard({
       setAccountName(findAccount.accountName);
     }
   }, [accounts, webhook.accountId]);
-  // useEffect(() => {
-  //   const fetchPrice = async () => {
-  //     try {
-  //       const response = await axios.get("webhook/get-price");
-  //       if (response.data) {
-  //         setPrice(response.data.data[`${webhook.symbol}`]);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching price:", error);
-  //     }
-  //   };
-  //   fetchPrice();
-  //   const intervalId = setInterval(fetchPrice, 5000);
-  //   return () => clearInterval(intervalId);
-  // }, []);
 
   useEffect(() => {
     const updateTimeDiff = () => {
@@ -107,7 +85,7 @@ export default function WebhookCard({
   //  ***************************Handle the URL**********************************//
   const handleCopy = () => {
     navigator.clipboard.writeText(
-      `https://api.automatedtrader.com/webhook/${webhook.hashedWebhook}`
+      `https://bullfrog-engaged-factually.ngrok-free.app/api/webhook/${webhook.hashedWebhook}`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -182,12 +160,12 @@ export default function WebhookCard({
     <>
       <div
         className={`relative rounded-xl overflow-hidden transition-all duration-300 
-                      hover:translate-y-[-2px] hover:shadow-2xl hover:shadow-accent/5 outline-1 outline-dashed p-1 outline-offset-1 outline-dark-500`}
+                      hover:translate-y-[-2px] hover:shadow-2xl min-w-[400px] hover:shadow-accent/5 outline-1 outline-dashed p-1 outline-offset-1 outline-dark-500`}
       >
         <div
           className={`absolute inset-0 bg-gradient-to-br from-dark-200/20 to-dark-200/5 opacity-10`}
         />
-        <div className="relative glass-panel rounded-xl py-3 px-4 border border-dark-300/30">
+        <div className="relative glass-panel rounded-xl py-3 px-4 border border-dark-300/30 ">
           <div className="flex justify-between items-start mb-6 border-b border-dark-300 p-1">
             <div className="flex items-center space-x-3">
               <div
@@ -261,14 +239,14 @@ export default function WebhookCard({
           </div>
 
           <div className="flex xl:flex-row flex-col gap-4 mb-6">
-            <div className="glass-panel rounded-lg p-3 border border-dark-300/30 lg:w-1/2 w-full">
+            <div className="glass-panel rounded-lg p-3 border border-dark-300/30 xl:w-1/2 w-full">
               <div className="text-gray-400 text-sm mb-1">Last Signal</div>
               <div className="text-white font-medium">
                 {timeDiff || "Never"}
               </div>
             </div>
             {webhook.webhookMode == "basic" && (
-              <div className="glass-panel rounded-lg p-3 border border-dark-300/30 lg:w-1/2 w-full">
+              <div className="glass-panel rounded-lg p-3 border border-dark-300/30 xl:w-1/2 w-full">
                 <div className="grid grid-cols-2 gap-2">
                   <div className="text-gray-400 text-sm mb-1 flex justify-start items-center">
                     Lots: {webhook.volume}

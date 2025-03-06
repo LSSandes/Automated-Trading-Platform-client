@@ -69,9 +69,9 @@ export default function TradeLockerAccountList({
           return (
             <div
               key={index}
-              className="flex flex-col gap-2  outline-1 outline-dashed outline-dark-500 outline-offset-2 glass-panel p-2 rounded-lg"
+              className="flex flex-col gap-2  outline-1 outline-dashed outline-dark-500 outline-offset-2 glass-panel p-4 rounded-lg"
             >
-              <div className="flex justify-start items-center rounded-lg p-3 gap-3">
+              <div className="flex justify-start items-center py-1 px-4 gap-3 border-b border-dark-300">
                 <Wallet className="h-8 w-8 text-accent" />
                 <div className="flex flex-col justify-start items-start">
                   <span>{account.name}</span>

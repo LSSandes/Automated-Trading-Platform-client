@@ -12,13 +12,20 @@ import { MdOutlineWebhook } from "react-icons/md";
 import MarketStrategyModal from "./MarketStrategyModal";
 import { FaChartBar } from "react-icons/fa";
 import NewWebhookModal from "../webhooks/NewWebhookModal";
+interface GlobalParams {
+  ask: number;
+  bid: number;
+  prevAsk: number;
+  prevBid: number;
+  symbol: string;
+}
 export default function MarketChart() {
-  const [global, setGlobal] = useState<any[]>([]);
+  const [global, setGlobal] = useState<GlobalParams[]>([]);
   const [platform, setPlatform] = useState<string>("mt4");
   const [selected, setSelected] = useState<string>("");
   const [symbols, setSymbols] = useState<string[]>([]);
   const [tradingViewSymbol, setTradingViewSymbol] = useState<string>("GBPUSD");
-  console.log("------tradingViewSymbol------>", tradingViewSymbol);
+  console.log("------global------>", global);
   const [isOpenTrade, setIsOpenTrade] = useState<boolean>(false);
   const [isCreateStrategy, setIsCreateStrategy] = useState<boolean>(false);
   useEffect(() => {
@@ -91,7 +98,7 @@ export default function MarketChart() {
               </tr>
             </thead>
             <tbody>
-              {global.map((item, index) => {
+              {global && global?.map((item, index) => {
                 const bidColor =
                   item.bid < item.prevBid
                     ? "text-red-500"

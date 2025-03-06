@@ -43,13 +43,15 @@ export default function NewWebhookModal({
   const [fixedSize, setFixedSize] = useState(0);
   const [stopLoss_pips, setStopLoss] = useState("200");
   const [takeProfit_pips, setTakeProfit] = useState("200");
+  const [partialClose, setPartialClose] = useState<number>(0);
+  const [allTrades, setAllTrades] = useState<boolean>(false);
   const handleCreateWebhook = async () => {
     if (!user?.email) return;
     const commonData = {
       email: user.email,
       webhookName,
       webhookMode: mode,
-      symbol: pair,
+      symbol: pair.toUpperCase(),
     };
     if (orderType === "Market Order") {
       const orderData =
@@ -70,7 +72,7 @@ export default function NewWebhookModal({
               stopLoss_pips: "0",
               takeProfit_pips: "0",
             };
-  
+
       dispatch(createMarketOrder(orderData));
     } else if (orderType === "Close Order") {
       dispatch(addCloseOrder(commonData));
@@ -346,6 +348,47 @@ export default function NewWebhookModal({
                                    border border-dashed border-blue-500 focus:outline-none text-sm"
                           />
                         </div>
+                      </div>
+                    </>
+                  )}
+                  {orderType == "Close Order" && (
+                    <>
+                      <div className="flex justify-end items-center w-full">
+                        <div className="flex justify-center items-center gap-2">
+                          <button
+                            onClick={() => setAllTrades(!allTrades)}
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                              allTrades ? "bg-accent" : "bg-dark-300"
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                                allTrades ? "translate-x-6" : "translate-x-1"
+                              }`}
+                            />
+                          </button>
+                            <span className="text-xs text-gray-400">
+                              All Trades
+                            </span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center w-full">
+                        <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                          <span>Partial Close</span>
+                          <Tooltip content={tooltips.partialClose}>
+                            <HelpCircle className="h-4 w-4" />
+                          </Tooltip>
+                        </label>
+                        <input
+                          type="number"
+                          value={partialClose}
+                          step={1}
+                          onChange={(e) =>
+                            setPartialClose(Number(e.target.value))
+                          }
+                          className="w-1/3 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                             border border-dashed border-blue-500 focus:outline-none text-sm"
+                        />
                       </div>
                     </>
                   )}

@@ -6,7 +6,7 @@ import TradesView from "./views/TradesView";
 import SignalsView from "./views/SignalsView";
 // import AnalyticsView from "./views/AnalyticsView";
 import MarketsView from "./views/MarketsView";
-// import AlertsView from "./views/AlertsView";
+import AlertsView from "./views/AlertsView";
 import MetaTraderView from "./views/MetaTraderView";
 import TradeLockerView from "./views/TradeLockerView";
 // import LeaderboardView from "./views/LeaderboardView";
@@ -101,7 +101,7 @@ function App() {
                 <Route path="signals" element={<SignalsView />} />
                 {/* <Route path="analytics" element={<AnalyticsView />} /> */}
                 <Route path="markets" element={<MarketsView />} />
-                {/* <Route path="alerts" element={<AlertsView />} /> */}
+                <Route path="alerts" element={<AlertsView />} />
                 <Route path="settings" element={<ProfileSettingView />} />
                 {/* <Route path="leaderboard" element={<LeaderboardView />} /> */}
                 {/* <Route path="admin" element={<AdminView />} /> */}

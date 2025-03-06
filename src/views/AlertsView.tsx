@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Bell, Filter, Search } from "lucide-react";
-// import AlertsList from "../components/AlertsList";
 
 export default function AlertsView() {
   const [filterType, setFilterType] = useState("all");

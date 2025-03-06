@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Plus /*Brain*/ } from "lucide-react";
+import { GrOverview } from "react-icons/gr";
 // import TradeStats from '../components/trades/TradeStats';
 // import TradesCalendar from '../components/trades/TradesCalendar';
 import TradesTable from "../components/trades/TradesTable";
@@ -65,7 +66,7 @@ export default function TradesView() {
       <div className="border-b border-dark-300/30">
         <div className="flex space-x-8">
           {[
-            { id: "overview", label: "Overview", icon: null },
+            { id: "overview", label: "Overview", icon: <GrOverview className="w-5 h-5"/> },
             // { id: 'advanced', label: 'Advanced Analytics', icon: null },
             // { id: 'ai', label: 'AI Insights', icon: <Brain className="h-4 w-4" /> },
             // { id: 'journal', label: 'Trading Journal', icon: null }
@@ -73,17 +74,14 @@ export default function TradesView() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
-              className={`pb-4 relative flex items-center space-x-2 ${
+              className={`pb-2 relative flex items-center justify-center space-x-2 ${
                 activeTab === tab.id
-                  ? "text-white"
+                  ? "text-white border-b-2 border-solid border-blue-500"
                   : "text-gray-400 hover:text-white"
               }`}
             >
-              {tab.icon && tab.icon}
+              {tab.icon}
               <span>{tab.label}</span>
-              {activeTab === tab.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent"></div>
-              )}
             </button>
           ))}
         </div>

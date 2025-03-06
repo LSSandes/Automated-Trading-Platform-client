@@ -1,4 +1,4 @@
-import { BarChart2, Webhook, Globe, ChevronDown, Box, LineChart } from "lucide-react";
+import { BarChart2, Webhook, Globe, ChevronDown, Box, LineChart, Bell } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 const SideMenu_M = ({
@@ -33,12 +33,12 @@ const SideMenu_M = ({
       icon: <BarChart2 className="h-5 w-5" />,
       label: "Dashboard",
     },
-    // {
-    //   id: "alerts",
-    //   icon: <Bell className="h-5 w-5" />,
-    //   label: "Alerts",
-    //   badge: "3",
-    // },
+    {
+      id: "alerts",
+      icon: <Bell className="h-5 w-5" />,
+      label: "Alerts",
+      badge: "3",
+    },
     { id: "trades", icon: <LineChart className="h-5 w-5" />, label: "Trades" },
     {
       id: "signals",
