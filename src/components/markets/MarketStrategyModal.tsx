@@ -9,7 +9,6 @@ import {
 } from "react";
 import { X, Check } from "lucide-react";
 import { dispatch, useSelector } from "@/app/store";
-import { connectCloseOrder, getCloseOrders } from "@/app/reducers/closeOrder";
 import { getWebhooks, openMarketOrder } from "@/app/reducers/webhook";
 import { userAtom } from "@/store/atoms";
 import { useAtom } from "jotai";
@@ -25,9 +24,7 @@ export default function MarketStrategyModal({
 }: MarketOrderStrategyProps) {
   const [user] = useAtom(userAtom);
   const [mode, setMode] = useState<string>("basic");
-  const [orderType, setOrderType] = useState("market");
   const marketOrders = useSelector((state) => state.webhook.webhooks);
-  const closeOrders = useSelector((state) => state.closeOrder.closeOrders);
   const [webhook, setWebhook] = useState<string>("");
   const [orders, setOrders] = useState<any>(marketOrders);
   const [openTradeLoading, setOpenTradeLoading] = useState<boolean>(false);
@@ -45,96 +42,53 @@ export default function MarketStrategyModal({
     : null;
   useEffect(() => {
     dispatch(getWebhooks(user?.email));
-    dispatch(getCloseOrders(user?.email));
   }, []);
 
   console.log("----------------marketOrders---------->", marketOrders);
 
   useEffect(() => {
     console.log("webhook", webhook);
-    if (orderType === "market") {
-      const findOrder = marketOrders.find(
-        (item) => item.webhookName === webhook
-      );
+    const findOrder = marketOrders.find((item) => item.webhookName === webhook);
 
-      if (findOrder) {
-        setAccountId(findOrder?.accountId || "");
-        setSymbol(findOrder?.symbol || "NAN");
-        setOrderDirection(findOrder?.orderDirection || "");
-        setWebhookMode(findOrder?.webhookMode || "");
-        setTakeProfit(findOrder?.takeProfit_pips || 0);
-        setStopLoss(findOrder?.stopLoss_pips || 0);
-        setVolume(findOrder?.volume || 0);
-        setAppName(findOrder?.appName || "");
-      }
-    } else {
-      const findOrder = closeOrders.find(
-        (item) => item.webhookName === webhook
-      );
-      if (findOrder) {
-        setAccountId(findOrder?.accountId || "");
-        setWebhookMode(findOrder?.webhookMode || "");
-        setSymbol(findOrder?.symbol || "");
-      }
+    if (findOrder) {
+      setAccountId(findOrder?.accountId || "");
+      setSymbol(findOrder?.symbol || "NAN");
+      setOrderDirection(findOrder?.orderDirection || "");
+      setWebhookMode(findOrder?.webhookMode || "");
+      setTakeProfit(findOrder?.takeProfit_pips || 0);
+      setStopLoss(findOrder?.stopLoss_pips || 0);
+      setVolume(findOrder?.volume || 0);
+      setAppName(findOrder?.appName || "");
     }
-  }, [webhook, orderType, marketOrders, closeOrders]);
+  }, [webhook, marketOrders]);
   useEffect(() => {
-    if (orderType == "market") {
-      setOrders(marketOrders);
-    } else {
-      setOrders(closeOrders);
-    }
-  }, [orderType, marketOrders, closeOrders]);
+    setOrders(marketOrders);
+  }, [marketOrders]);
 
   const handleOpenTrade = () => {
     setOpenTradeLoading(true);
-    if (orderType == "market") {
-      if (accountId == "") {
-        toast.info("The Account has to be connected");
-        setOpenTradeLoading(false);
-        onClose();
-      } else {
-        user &&
-          dispatch(
-            openMarketOrder({
-              email: user?.email,
-              accountId,
-              webhookName: webhook,
-              symbol,
-              orderDirection,
-              webhookMode,
-              accessToken:
-                appName == "MetaTrader" ? "" : accessToken ?? "",
-              accountType:
-                appName == "MetaTrader"
-                  ? ""
-                  : tradelockerUser?.accountType ?? "",
-            })
-          ).then(() => {
-            setOpenTradeLoading(false);
-            onClose();
-          });
-      }
+    if (accountId == "") {
+      toast.info("The Account has to be connected");
+      setOpenTradeLoading(false);
+      onClose();
     } else {
-      if (accountId == "") {
-        toast.info("The Account has to be connected");
-        setOpenTradeLoading(false);
-        onClose();
-      } else {
-        user &&
-          dispatch(
-            connectCloseOrder({
-              email: user?.email,
-              accountId,
-              webhookName: webhook,
-              webhookMode,
-              symbol,
-            })
-          ).then(() => {
-            setOpenTradeLoading(false);
-            onClose();
-          });
-      }
+      user &&
+        dispatch(
+          openMarketOrder({
+            email: user?.email,
+            accountId,
+            webhookName: webhook,
+            symbol,
+            orderDirection,
+            webhookMode,
+            accessToken: appName == "MetaTrader" ? "" : accessToken ?? "",
+            accountType:
+              appName == "MetaTrader" ? "" : tradelockerUser?.accountType ?? "",
+          })
+        ).then(() => {
+          setOpenTradeLoading(false);
+          onClose();
+        });
     }
   };
   if (!isOpen) return null;
@@ -187,21 +141,6 @@ export default function MarketStrategyModal({
           </div>
           {mode === "basic" && (
             <>
-              <div>
-                <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
-                  <span>Order type</span>
-                </label>
-                <select
-                  value={orderType}
-                  onChange={(e) => setOrderType(e.target.value)}
-                  className="w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
-                         border border-dark-300/50 focus:outline-none focus:ring-1 
-                         focus:ring-accent/50"
-                >
-                  <option value="market">Market</option>
-                  <option value="close">Close</option>
-                </select>
-              </div>
               <div className="space-y-4">
                 <div>
                   <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
@@ -248,7 +187,7 @@ export default function MarketStrategyModal({
                   </select>
                 </div>
               </div>
-              {orderType == "market" && (
+              {(
                 <div className="bg-dark-200 p-1 rounded-lg  gap-5 grid grid-cols-2">
                   <div className="flex justify-center items-center gap-5">
                     <label className="flex justify-center items-center space-x-2 text-sm text-gray-400 mb-2">

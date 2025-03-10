@@ -92,7 +92,7 @@ const AccountCard = ({
         </div>
       </div>
       {/* Stats Grid */}
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-4">
+      <div className="grid 2xl:grid-cols-2 grid-cols-1 gap-4">
         <div className="glass-panel rounded-lg p-4 flex justify-start items-center gap-5">
           <div className="text-sm text-gray-400 mb-1">Balance</div>
           <div className="text-sm font-medium text-white flex justify-center items-center gap-3">

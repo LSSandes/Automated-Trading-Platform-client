@@ -29,4 +29,7 @@ export const tooltips = {
   closeType: "Method of closing the trade",
   fixedSize: "Trading volume in lots",
   percentageSize: "Position size as a percentage of account balance",
+  modifyType: "Parameter you are trying to move as modify order",
+  trailingStoploss:
+    "A trailing stop-loss moves with the price to protect your profits.",
 };

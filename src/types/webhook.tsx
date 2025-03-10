@@ -12,6 +12,12 @@ export interface WebhookConfig {
   volume: number;
   stopLoss_pips: number;
   takeProfit_pips: number;
+  trailingStopLoss: number;
+  modifyType: string;
+  moveStopLoss_pips: number;
+  moveTakeProfit_pips: number;
+  partialClose: number;
+  allTrades: boolean;
   successRate?: number;
   totalTrades?: number;
   appName?: string;

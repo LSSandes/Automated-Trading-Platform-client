@@ -67,3 +67,10 @@ export const accountNameAtom = atom<string>("");
 
 export const selectedAccountAtom = atom<string>("");
 export const selectedAccountTypeAtom = atom<string>("MetaTrader");
+
+//open trade action type (market order, close order, modify order)
+
+export const actionTypeAtom = atom<string>("market");
+export const allTradesAtom = atom<boolean>(false);
+
+export const trailingStopLossAtom = atom<boolean>(false);

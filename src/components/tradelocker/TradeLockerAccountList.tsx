@@ -11,7 +11,7 @@ export default function TradeLockerAccountList({
   onLogout,
 }: TradeLockerAccountListProps) {
   const accounts = useSelector((state) => state.tradelocker.accounts);
-  const accountInfo = useSelector((state) => state.tradelockerInfo.accountInfo);
+  const accountInfo = useSelector((state) => state.tradelockerInfo?.accountInfo);
   const accessToken = localStorage.getItem("accessToken");
   const tradelockerUser: UserParams | null = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user") as string)

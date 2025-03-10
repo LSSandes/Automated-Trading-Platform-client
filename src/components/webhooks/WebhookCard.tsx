@@ -7,7 +7,12 @@ import SetPriceModal from "./SetPriceModal";
 import RiskManagementModal from "./RiskManagementModal";
 import WebhookAppsModal from "./WebhookAppsModal";
 import { useAtom } from "jotai";
-import { userAtom } from "@/store/atoms";
+import {
+  userAtom,
+  actionTypeAtom,
+  allTradesAtom,
+  trailingStopLossAtom,
+} from "@/store/atoms";
 import { dispatch, useSelector } from "@/app/store";
 import { deleteMarketOrder, openMarketOrder } from "@/app/reducers/webhook";
 import { FaChartBar } from "react-icons/fa";
@@ -23,6 +28,9 @@ export default function WebhookCard({
   onSetPrice,
 }: WebhookCardProps) {
   const [user] = useAtom(userAtom);
+  const [trailingStopLoss] = useAtom(trailingStopLossAtom);
+  const [actionType] = useAtom(actionTypeAtom);
+  const [allTrades] = useAtom(allTradesAtom);
   const accounts = useSelector((state) => state.metaAccount.accounts);
   const [showMenu, setShowMenu] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -123,6 +131,7 @@ export default function WebhookCard({
       }
     }
   };
+  console.log("actionType---ok--->", actionType);
   const handleOpenTrade = () => {
     if (webhook.connectionStatus == true) {
       setOpenTradeLoading(true);
@@ -146,6 +155,9 @@ export default function WebhookCard({
                 webhook.appName == "MetaTrader"
                   ? ""
                   : tradelockerUser?.accountType ?? "",
+              actionType,
+              allTrades,
+              trailingStopLoss,
             })
           ).then(() => {
             setOpenTradeLoading(false);
@@ -156,6 +168,7 @@ export default function WebhookCard({
       toast.info("The account needs to be connected.");
     }
   };
+  console.log("trailingStopLoss Option---->", trailingStopLoss);
   return (
     <>
       <div

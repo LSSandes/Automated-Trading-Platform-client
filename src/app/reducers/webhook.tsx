@@ -72,6 +72,12 @@ export function createMarketOrder({
   volume,
   stopLoss_pips,
   takeProfit_pips,
+  trailingStopLoss,
+  modifyType,
+  moveStopLoss_pips,
+  moveTakeProfit_pips,
+  partialClose,
+  allTrades,
 }: {
   email: string;
   webhookName: string;
@@ -81,6 +87,12 @@ export function createMarketOrder({
   volume: string;
   stopLoss_pips: string;
   takeProfit_pips: string;
+  trailingStopLoss: string;
+  modifyType: string;
+  moveStopLoss_pips: string;
+  moveTakeProfit_pips: string;
+  partialClose: string;
+  allTrades: boolean;
 }) {
   return async () => {
     try {
@@ -93,6 +105,12 @@ export function createMarketOrder({
         volume,
         stopLoss_pips,
         takeProfit_pips,
+        trailingStopLoss,
+        modifyType,
+        moveStopLoss_pips,
+        moveTakeProfit_pips,
+        partialClose,
+        allTrades,
       });
       dispatch(
         webhook.actions.addWebhookSuccess(response.data.data.newWebhook)
@@ -120,14 +138,6 @@ export function deleteMarketOrder({
   symbol: string;
 }) {
   return async () => {
-    console.log(
-      "------redux------>",
-      email,
-      webhookName,
-      webhookMode,
-      orderDirection,
-      symbol
-    );
     try {
       const response = await axios.post("webhook/delete-marketorder", {
         email,
@@ -140,9 +150,8 @@ export function deleteMarketOrder({
         webhook.actions.deleteWebhookSuccess(response.data.data.deletedWebhook)
       );
       toast.success("The webhook has been deleted");
-    } catch (err) {
-      dispatch(webhook.actions.hasError(err));
-      toast.warn("Internal Server Error");
+    } catch (err: any) {
+      toast.warn(err.response.data.message);
     }
   };
 }
@@ -183,9 +192,9 @@ export function connectMarketOrder({
       );
       dispatch(webhook.actions.hasError(null));
       toast.success("Successfully connected to the account");
-    } catch (err) {
+    } catch (err: any) {
       dispatch(webhook.actions.hasError(err));
-      toast.warn("The market is closed");
+      toast.warn(err.response.data.message);
     }
   };
 }
@@ -220,9 +229,9 @@ export function disconnectMarketOrder({
       );
       dispatch(webhook.actions.hasError(null));
       toast.success("Disconnected from the account.");
-    } catch (err) {
+    } catch (err: any) {
       dispatch(webhook.actions.hasError(err));
-      toast.warn("Connection Error");
+      toast.warn(err.response.data.message);
     }
   };
 }
@@ -239,6 +248,12 @@ export function editMarketOrder({
   volume_new,
   stopLoss_new,
   takeProfit_new,
+  trailingStopLoss_new,
+  modifyType_new,
+  moveStopLoss_pips_new,
+  moveTakeProfit_pips_new,
+  partialClose_new,
+  allTrades_new,
 }: {
   email: string;
   webhookName: string;
@@ -251,6 +266,12 @@ export function editMarketOrder({
   volume_new: string;
   stopLoss_new: string;
   takeProfit_new: string;
+  trailingStopLoss_new: string;
+  modifyType_new: string;
+  moveStopLoss_pips_new: string;
+  moveTakeProfit_pips_new: string;
+  partialClose_new: string;
+  allTrades_new: boolean;
 }) {
   return async () => {
     try {
@@ -266,19 +287,20 @@ export function editMarketOrder({
         volume_new,
         stopLoss_new,
         takeProfit_new,
+        trailingStopLoss_new,
+        modifyType_new,
+        moveStopLoss_pips_new,
+        moveTakeProfit_pips_new,
+        partialClose_new,
+        allTrades_new,
       });
       dispatch(
         webhook.actions.udpateWebhookSuccess(response.data.data.updatedWebhook)
       );
       dispatch(webhook.actions.hasError(null));
       toast.success("Webhook is updated successfully.");
-    } catch (err) {
-      dispatch(webhook.actions.hasError(err));
-      if (err instanceof Error) {
-        toast.warn(err.message);
-      } else {
-        toast.warn("An unknown error occurred.");
-      }
+    } catch (err: any) {
+      toast.warn(err.response.data.message);
     }
   };
 }
@@ -292,6 +314,9 @@ export function openMarketOrder({
   webhookMode,
   accessToken,
   accountType,
+  actionType,
+  allTrades,
+  trailingStopLoss,
 }: {
   email: string;
   accountId: string;
@@ -301,6 +326,9 @@ export function openMarketOrder({
   webhookMode: string;
   accessToken: string;
   accountType: string;
+  actionType: string;
+  allTrades: boolean;
+  trailingStopLoss: boolean;
 }) {
   return async () => {
     try {
@@ -313,15 +341,25 @@ export function openMarketOrder({
         webhookMode,
         accessToken,
         accountType,
+        actionType,
+        allTrades,
+        trailingStopLoss,
       });
-      dispatch(
-        webhook.actions.udpateWebhookSuccess(response.data.data.updatedWebhook)
-      );
-      dispatch(webhook.actions.hasError(null));
-      toast.success("Trade has opened.");
-    } catch (err) {
+      if (actionType == "market") {
+        dispatch(
+          webhook.actions.udpateWebhookSuccess(
+            response.data.data.updatedWebhook
+          )
+        );
+        toast.success(response.data.message);
+      } else if (actionType == "modify") {
+        toast.success(response.data.message);
+      } else {
+        toast.success(response.data.message);
+      }
+    } catch (err: any) {
       dispatch(webhook.actions.hasError(err));
-      toast.info("Market is closed");
+      toast.warn(err.response.data.message);
     }
   };
 }

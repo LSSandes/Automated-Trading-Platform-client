@@ -8,7 +8,6 @@ import webhook from "./webhook";
 import metaStats from "./metaStats";
 import metaTotalStats from "./metaTotalStats";
 import metaViualTrades from "./metaVisualTrades";
-import closeOrder from "./closeOrder";
 import tradelocker from "./tradelocker";
 import tradelockerInfo from "./tradelockerInfo";
 import trade from "./trade";
@@ -22,7 +21,6 @@ const reducers = combineReducers({
   metaStats,
   metaTotalStats,
   metaViualTrades,
-  closeOrder,
   tradelocker,
   tradelockerInfo,
   trade,

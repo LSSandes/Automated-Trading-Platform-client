@@ -6,20 +6,15 @@ import { userAtom } from "@/store/atoms";
 import { useAtom } from "jotai";
 import { useSelector, dispatch } from "@/app/store";
 import { getWebhooks } from "@/app/reducers/webhook";
-import { getCloseOrders } from "@/app/reducers/closeOrder";
-import CloseOrderCard from "@/components/webhooks/CloseOrderCard";
-import { BsClipboardCheck } from "react-icons/bs";
 import { GiShoppingCart } from "react-icons/gi";
 
 export default function SignalsView() {
   const [user] = useAtom(userAtom);
   const [showNewWebhook, setShowNewWebhook] = useState(false);
   const webhooksState = useSelector((state) => state.webhook.webhooks);
-  const closeOrdersState = useSelector((state) => state.closeOrder.closeOrders);
   useEffect(() => {
     if (user?.email) {
       dispatch(getWebhooks(user?.email));
-      dispatch(getCloseOrders(user?.email));
     }
   }, [user?.email]);
   const handleChangeColor = (id: string) => {
@@ -34,13 +29,13 @@ export default function SignalsView() {
     console.log("--------handleTogglePublic------->", id);
   };
 
-  const handleTogglePublicCloseOrder = (id: number) => {
-    console.log("-------handleTogglePublic--------->", id);
-  };
+  // const handleTogglePublicCloseOrder = (id: number) => {
+  //   console.log("-------handleTogglePublic--------->", id);
+  // };
 
-  const handleToggleActiveCloseOrder = (id: number) => {
-    console.log("--------handleToggleActive--------->", id);
-  };
+  // const handleToggleActiveCloseOrder = (id: number) => {
+  //   console.log("--------handleToggleActive--------->", id);
+  // };
   return (
     <div className="space-y-6">
       <div className="flex justify-between lg:items-center items-start lg:flex-row flex-col gap-4">
@@ -71,15 +66,13 @@ export default function SignalsView() {
             (webhook) => webhook.webhookMode === "advanced"
           ) && (
             <>
-              <h2 className="text-3xl text-white mb-4 font-bold">
-                Advanced webhooks
-              </h2>
-              <h2 className="text-xl font-xl text-white flex justify-start items-center gap-2">
-                <GiShoppingCart className="w-5 h-5" /> Market Orders
-              </h2>
+              <div className="text-2xl mb-4 flex justify-start items-center gap-2">
+                <GiShoppingCart className="w-6 h-6"/>
+                <span className="text-white font-medium">Advanced webhooks</span>
+              </div>
             </>
           )}
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
             {webhooksState
               .filter((webhook) => webhook.webhookMode === "advanced")
               .map((webhook) => (
@@ -94,15 +87,13 @@ export default function SignalsView() {
           </div>
           {webhooksState.find((webhook) => webhook.webhookMode === "basic") && (
             <>
-              <h2 className="text-3xl text-white mb-4 font-bold">
-                Basic webhooks
-              </h2>
-              <h2 className="text-xl font-xl text-white flex justify-start items-center gap-2">
-                <GiShoppingCart className="w-5 h-5" /> Market Orders
-              </h2>
+              <div className="text-2xl mb-4 flex justify-start items-center gap-2">
+                <GiShoppingCart className="w-6 h-6"/>
+                <span className="text-white font-medium">Basic webhooks</span>
+              </div>
             </>
           )}
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
             {webhooksState
               .filter((webhook) => webhook.webhookMode === "basic")
               .map((webhook) => (
@@ -114,26 +105,6 @@ export default function SignalsView() {
                   onTogglePublic={handleTogglePublicMarketOrder}
                 />
               ))}
-          </div>
-        </div>
-      )}
-      {closeOrdersState.length > 0 && (
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-lg font-medium text-white mb-4 flex justify-start items-center gap-2">
-              <BsClipboardCheck className="w-5 h-5" />
-              Close Orders
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {closeOrdersState.map((order, index) => (
-              <CloseOrderCard
-                key={index}
-                closeOrder={order}
-                onToggleActive={handleToggleActiveCloseOrder}
-                onTogglePublic={handleTogglePublicCloseOrder}
-              />
-            ))}
           </div>
         </div>
       )}
