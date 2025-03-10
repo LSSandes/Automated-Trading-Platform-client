@@ -7,16 +7,16 @@ import {
   ReactNode,
   ReactPortal,
 } from "react";
-import { X, Check } from "lucide-react";
+import { X /*Check*/ } from "lucide-react";
 import { dispatch, useSelector } from "@/app/store";
-import { getWebhooks, openMarketOrder } from "@/app/reducers/webhook";
+import { getWebhooks /*openMarketOrder*/ } from "@/app/reducers/webhook";
 import { userAtom } from "@/store/atoms";
 import { useAtom } from "jotai";
 import { MarketOrderStrategyProps } from "@/types/webhook";
-import { Loader } from "lucide-react";
-import { toast } from "react-toastify";
+// import { Loader } from "lucide-react";
+// import { toast } from "react-toastify";
 import { FaChartBar } from "react-icons/fa";
-import { UserParams } from "@/types/tradeLocker";
+// import { UserParams } from "@/types/tradeLocker";
 
 export default function MarketStrategyModal({
   isOpen,
@@ -27,19 +27,19 @@ export default function MarketStrategyModal({
   const marketOrders = useSelector((state) => state.webhook.webhooks);
   const [webhook, setWebhook] = useState<string>("");
   const [orders, setOrders] = useState<any>(marketOrders);
-  const [openTradeLoading, setOpenTradeLoading] = useState<boolean>(false);
-  const [accountId, setAccountId] = useState<string>("");
+  // const [openTradeLoading, setOpenTradeLoading] = useState<boolean>(false);
+  // const [accountId, setAccountId] = useState<string>("");
   const [symbol, setSymbol] = useState<string>("NAN");
-  const [orderDirection, setOrderDirection] = useState<string>("");
-  const [webhookMode, setWebhookMode] = useState<string>("");
+  // const [orderDirection, setOrderDirection] = useState<string>("");
+  // const [webhookMode, setWebhookMode] = useState<string>("");
   const [takeProfit, setTakeProfit] = useState<number>(0);
   const [stopLoss, setStopLoss] = useState<number>(0);
   const [volume, setVolume] = useState<number>(0);
-  const [appName, setAppName] = useState<string>("");
-  const accessToken = localStorage.getItem("accessToken");
-  const tradelockerUser: UserParams | null = localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user") as string)
-    : null;
+  // const [appName, setAppName] = useState<string>("");
+  // const accessToken = localStorage.getItem("accessToken");
+  // const tradelockerUser: UserParams | null = localStorage.getItem("user")
+  // ? JSON.parse(localStorage.getItem("user") as string)
+  // : null;
   useEffect(() => {
     dispatch(getWebhooks(user?.email));
   }, []);
@@ -51,46 +51,46 @@ export default function MarketStrategyModal({
     const findOrder = marketOrders.find((item) => item.webhookName === webhook);
 
     if (findOrder) {
-      setAccountId(findOrder?.accountId || "");
+      // setAccountId(findOrder?.accountId || "");
       setSymbol(findOrder?.symbol || "NAN");
-      setOrderDirection(findOrder?.orderDirection || "");
-      setWebhookMode(findOrder?.webhookMode || "");
+      // setOrderDirection(findOrder?.orderDirection || "");
+      // setWebhookMode(findOrder?.webhookMode || "");
       setTakeProfit(findOrder?.takeProfit_pips || 0);
       setStopLoss(findOrder?.stopLoss_pips || 0);
       setVolume(findOrder?.volume || 0);
-      setAppName(findOrder?.appName || "");
+      // setAppName(findOrder?.appName || "");
     }
   }, [webhook, marketOrders]);
   useEffect(() => {
     setOrders(marketOrders);
   }, [marketOrders]);
 
-  const handleOpenTrade = () => {
-    setOpenTradeLoading(true);
-    if (accountId == "") {
-      toast.info("The Account has to be connected");
-      setOpenTradeLoading(false);
-      onClose();
-    } else {
-      user &&
-        dispatch(
-          openMarketOrder({
-            email: user?.email,
-            accountId,
-            webhookName: webhook,
-            symbol,
-            orderDirection,
-            webhookMode,
-            accessToken: appName == "MetaTrader" ? "" : accessToken ?? "",
-            accountType:
-              appName == "MetaTrader" ? "" : tradelockerUser?.accountType ?? "",
-          })
-        ).then(() => {
-          setOpenTradeLoading(false);
-          onClose();
-        });
-    }
-  };
+  // const handleOpenTrade = () => {
+  //   setOpenTradeLoading(true);
+  //   if (accountId == "") {
+  //     toast.info("The Account has to be connected");
+  //     setOpenTradeLoading(false);
+  //     onClose();
+  //   } else {
+  //     user &&
+  //       dispatch(
+  //         openMarketOrder({
+  //           email: user?.email,
+  //           accountId,
+  //           webhookName: webhook,
+  //           symbol,
+  //           orderDirection,
+  //           webhookMode,
+  //           accessToken: appName == "MetaTrader" ? "" : accessToken ?? "",
+  //           accountType:
+  //             appName == "MetaTrader" ? "" : tradelockerUser?.accountType ?? "",
+  //         })
+  //       ).then(() => {
+  //         setOpenTradeLoading(false);
+  //         onClose();
+  //       });
+  //   }
+  // };
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center px-4">
@@ -187,7 +187,7 @@ export default function MarketStrategyModal({
                   </select>
                 </div>
               </div>
-              {(
+              {
                 <div className="bg-dark-200 p-1 rounded-lg  gap-5 grid grid-cols-2">
                   <div className="flex justify-center items-center gap-5">
                     <label className="flex justify-center items-center space-x-2 text-sm text-gray-400 mb-2">
@@ -222,10 +222,10 @@ export default function MarketStrategyModal({
                     </div>
                   </div>
                 </div>
-              )}
+              }
             </>
           )}
-          <button
+          {/* <button
             onClick={handleOpenTrade}
             className="w-full premium-button py-3 flex items-center justify-center space-x-2 outline-1 outline-dashed outline-offset-2 outline-blue-500"
           >
@@ -234,7 +234,7 @@ export default function MarketStrategyModal({
             )}
             <span>Open Trade</span>
             <Check className="h-4 w-4" />
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
