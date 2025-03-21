@@ -224,12 +224,12 @@ export default function TradesCalendar({
                   </div>
                   {stats.bestTrade && (
                     <div className="text-emerald-400 mt-1">
-                      Best: ${stats.bestTrade.toFixed(2)}
+                      Best: {stats.bestTrade.toFixed(2)} USD
                     </div>
                   )}
                   {stats.worstTrade && (
                     <div className="text-red-400">
-                      Worst: ${stats.worstTrade.toFixed(2)}
+                      Worst: {stats.worstTrade.toFixed(2)} USD
                     </div>
                   )}
                   <div
