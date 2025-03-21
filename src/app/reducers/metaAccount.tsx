@@ -48,45 +48,29 @@ export function getAccounts(email: string) {
         metaAccount.actions.getAccountsSuccess(response.data.data.accounts)
       );
       dispatch(metaAccount.actions.hasError(""));
-    } catch (err) {
-      dispatch(metaAccount.actions.hasError(err));
+    } catch (err: any) {
+      dispatch(metaAccount.actions.hasError(err.response.data.message));
     }
   };
 }
 
 export function addAccount({
   email,
-  // broker,
-  // name,
   login,
   password,
   server,
   platform,
 }: {
   email: string;
-  // broker: string;
-  // name: string;
   login: string;
   password: string;
   server: string;
   platform: string;
 }) {
-  console.log(
-    "redux--add--account-->",
-    email,
-    // broker,
-    // name,
-    login,
-    password,
-    server,
-    platform
-  );
   return async () => {
     try {
       const response = await axios.post("meta/create-account", {
         email,
-        // broker,
-        // name,
         login,
         password,
         server,
@@ -97,9 +81,9 @@ export function addAccount({
       );
       dispatch(metaAccount.actions.hasError(null));
       toast.success("New Account has added");
-    } catch (err) {
-      dispatch(metaAccount.actions.hasError(err));
-      toast.info("Internal server error");
+    } catch (err: any) {
+      dispatch(metaAccount.actions.hasError(err.response.data.message));
+      toast.warn(err.response.data.message);
     }
   };
 }
@@ -115,9 +99,9 @@ export function deleteAccount(accountId: string) {
       );
       dispatch(metaAccount.actions.hasError(null));
       toast.success("Account has deleted");
-    } catch (err) {
-      dispatch(metaAccount.actions.hasError(err));
-      toast.warn("Internal Server Error");
+    } catch (err: any) {
+      dispatch(metaAccount.actions.hasError(err.response.data.message));
+      toast.warn(err.response.data.message);
     }
   };
 }

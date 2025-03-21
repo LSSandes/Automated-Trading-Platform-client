@@ -69,9 +69,12 @@ export function createMarketOrder({
   webhookMode,
   symbol,
   orderDirection,
+  orderType,
   volume,
   stopLoss_pips,
   takeProfit_pips,
+  openPrice_pips,
+  stopLimit_pips,
   trailingStopLoss,
   modifyType,
   moveStopLoss_pips,
@@ -84,9 +87,12 @@ export function createMarketOrder({
   webhookMode: string;
   symbol: string;
   orderDirection: string;
+  orderType: string;
   volume: string;
   stopLoss_pips: string;
   takeProfit_pips: string;
+  openPrice_pips: string;
+  stopLimit_pips: string;
   trailingStopLoss: string;
   modifyType: string;
   moveStopLoss_pips: string;
@@ -102,9 +108,12 @@ export function createMarketOrder({
         webhookMode,
         symbol,
         orderDirection,
+        orderType,
         volume,
         stopLoss_pips,
         takeProfit_pips,
+        openPrice_pips,
+        stopLimit_pips,
         trailingStopLoss,
         modifyType,
         moveStopLoss_pips,
@@ -245,9 +254,12 @@ export function editMarketOrder({
   webhookName_new,
   symbol_new,
   orderDirection_new,
+  orderType_new,
   volume_new,
   stopLoss_new,
   takeProfit_new,
+  openPrice_new,
+  stopLimit_new,
   trailingStopLoss_new,
   modifyType_new,
   moveStopLoss_pips_new,
@@ -263,9 +275,12 @@ export function editMarketOrder({
   webhookName_new: string;
   symbol_new: string;
   orderDirection_new: string;
+  orderType_new: string;
   volume_new: string;
   stopLoss_new: string;
   takeProfit_new: string;
+  openPrice_new: string;
+  stopLimit_new: string;
   trailingStopLoss_new: string;
   modifyType_new: string;
   moveStopLoss_pips_new: string;
@@ -284,9 +299,12 @@ export function editMarketOrder({
         webhookName_new,
         symbol_new,
         orderDirection_new,
+        orderType_new,
         volume_new,
         stopLoss_new,
         takeProfit_new,
+        openPrice_new,
+        stopLimit_new,
         trailingStopLoss_new,
         modifyType_new,
         moveStopLoss_pips_new,
@@ -305,12 +323,13 @@ export function editMarketOrder({
   };
 }
 
-export function openMarketOrder({
+export function openBasicTrade({
   email,
   accountId,
   webhookName,
   symbol,
   orderDirection,
+  orderType,
   webhookMode,
   accessToken,
   accountType,
@@ -323,6 +342,7 @@ export function openMarketOrder({
   webhookName: string;
   symbol: string;
   orderDirection: string;
+  orderType: string;
   webhookMode: string;
   accessToken: string;
   accountType: string;
@@ -332,12 +352,13 @@ export function openMarketOrder({
 }) {
   return async () => {
     try {
-      const response = await axios.post("webhook/open-marketorder", {
+      const response = await axios.post("webhook/open-basictrade", {
         email,
         accountId,
         webhookName,
         symbol,
         orderDirection,
+        orderType,
         webhookMode,
         accessToken,
         accountType,
@@ -345,7 +366,7 @@ export function openMarketOrder({
         allTrades,
         trailingStopLoss,
       });
-      if (actionType == "market") {
+      if (actionType == "create") {
         dispatch(
           webhook.actions.udpateWebhookSuccess(
             response.data.data.updatedWebhook
@@ -364,4 +385,39 @@ export function openMarketOrder({
   };
 }
 
+export function openAdvancedTrade({
+  email,
+  accountId,
+  webhookName,
+  webhookMode,
+  symbol,
+  messageData,
+  allTrades,
+}: {
+  email: string;
+  accountId: string;
+  webhookName: string;
+  webhookMode: string;
+  symbol: string;
+  messageData: string;
+  allTrades: boolean;
+}) {
+  return async () => {
+    try {
+      const response = await axios.post("webhook/open-advancedtrade", {
+        email,
+        accountId,
+        webhookName,
+        webhookMode,
+        symbol,
+        messageData,
+        allTrades,
+      });
+      toast.success(response.data.message);
+    } catch (err: any) {
+      dispatch(webhook.actions.hasError(err.response.data.message));
+      toast.warn(err.response.data.message);
+    }
+  };
+}
 export default webhook.reducer;

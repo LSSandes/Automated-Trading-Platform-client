@@ -53,10 +53,11 @@ export default function TradesTable({
         ).then(() => {
           setTimeout(() => {
             setLoading(false);
-          }, 1000); 
+          }, 1000);
         });
     } else {
       user &&
+        account &&
         dispatch(getMetaStats(account, user?.email)).then(() =>
           setLoading(false)
         );
@@ -231,45 +232,42 @@ export default function TradesTable({
                 </tr>
               </thead>
               <tbody className="divide-y divide-dark-300/30">
-                {!loading &&
-                  metaStats?.map((stats, index) => (
-                    <tr key={index} className="text-center">
-                      <td className="py-4 text-white font-medium">
-                        {stats.symbol}
-                      </td>
-                      <td className="py-4">
-                        <div
-                          className={`flex items-center justify-center ${
-                            stats.type === "DEAL_TYPE_BUY"
-                              ? "text-emerald-400"
-                              : "text-red-400"
-                          }`}
-                        >
-                          {stats.type === "DEAL_TYPE_BUY" ? (
-                            <ArrowUpRight className="h-4 w-4 mr-1" />
-                          ) : (
-                            <ArrowDownRight className="h-4 w-4 mr-1" />
-                          )}
-                          {stats.type == "DEAL_TYPE_BUY" ? "BUY" : "SELL"}
-                        </div>
-                      </td>
-                      <td className="py-4 text-gray-300">{stats.volume}</td>
-                      <td className="py-4 text-gray-300">{stats.openPrice}</td>
-                      <td className="py-4 text-gray-300">{stats.closePrice}</td>
-                      <td
-                        className={`py-4 font-medium ${
-                          stats.profit >= 0
+                {metaStats?.map((stats, index) => (
+                  <tr key={index} className="text-center">
+                    <td className="py-4 text-white font-medium">
+                      {stats.symbol}
+                    </td>
+                    <td className="py-4">
+                      <div
+                        className={`flex items-center justify-center ${
+                          stats.type === "DEAL_TYPE_BUY"
                             ? "text-emerald-400"
                             : "text-red-400"
                         }`}
                       >
-                        {stats.profit >= 0 ? "+" : ""}
-                        {stats.profit.toFixed(2)} USD
-                      </td>
-                      <td className="py-4 text-gray-300">{stats.openTime}</td>
-                      <td className="py-4 text-gray-300">{stats.closeTime}</td>
-                    </tr>
-                  ))}
+                        {stats.type === "DEAL_TYPE_BUY" ? (
+                          <ArrowUpRight className="h-4 w-4 mr-1" />
+                        ) : (
+                          <ArrowDownRight className="h-4 w-4 mr-1" />
+                        )}
+                        {stats.type == "DEAL_TYPE_BUY" ? "BUY" : "SELL"}
+                      </div>
+                    </td>
+                    <td className="py-4 text-gray-300">{stats.volume}</td>
+                    <td className="py-4 text-gray-300">{stats.openPrice}</td>
+                    <td className="py-4 text-gray-300">{stats.closePrice}</td>
+                    <td
+                      className={`py-4 font-medium ${
+                        stats.profit >= 0 ? "text-emerald-400" : "text-red-400"
+                      }`}
+                    >
+                      {stats.profit >= 0 ? "+" : ""}
+                      {stats.profit.toFixed(2)} USD
+                    </td>
+                    <td className="py-4 text-gray-300">{stats.openTime}</td>
+                    <td className="py-4 text-gray-300">{stats.closeTime}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
             {loading && (

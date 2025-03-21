@@ -93,7 +93,7 @@ export default function SignalsView() {
               </div>
             </>
           )}
-          <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4 h-min items-start">
             {webhooksState
               .filter((webhook) => webhook.webhookMode === "basic")
               .map((webhook) => (

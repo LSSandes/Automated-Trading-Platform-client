@@ -1,42 +1,17 @@
-import { useState } from "react";
-import { Plus /*Brain*/ } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Plus, Brain } from "lucide-react";
 import { GrOverview } from "react-icons/gr";
-// import TradeStats from '../components/trades/TradeStats';
-// import TradesCalendar from '../components/trades/TradesCalendar';
+import TradeStats from "../components/trades/TradeStats";
+import TradesCalendar from "../components/trades/TradesCalendar";
 import TradesTable from "../components/trades/TradesTable";
 import AIInsights from "../components/trades/AIInsights";
-// import LiveTradesPanel from '../components/trades/LiveTradesPanel';
+import LiveTradesPanel from "../components/trades/LiveTradesPanel";
 import AdvancedAnalytics from "../components/trades/AdvancedAnalytics";
 import TradeFilters from "../components/trades/TradeFilters";
 import { useAtom } from "jotai";
 import { selectedAccountAtom, selectedAccountTypeAtom } from "@/store/atoms";
-
-// const liveTrades = [
-//   {
-//     id: '1',
-//     tradeBy: 'YT GOLD1',
-//     app: 'Metatrader',
-//     symbol: 'XAUUSD',
-//     type: 'sell' as 'sell',
-//     lot: 0.55,
-//     openPrice: 2687.59,
-//     currentPrice: 2685.26,
-//     time: '2024 11 08 18:51:01',
-//     profit: 251.91
-//   },
-//   {
-//     id: '2',
-//     tradeBy: 'YT GOLD1',
-//     app: 'Metatrader',
-//     symbol: 'XAUUSD',
-//     type: 'sell' as 'sell',
-//     lot: 0.14,
-//     openPrice: 2698.97,
-//     currentPrice: 2685.26,
-//     time: '2024 11 08 17:20:07',
-//     profit: 769.11
-//   }
-// ];
+import { dispatch, useSelector } from "@/app/store";
+import { getActivePositions } from "@/app/reducers/trade";
 
 export default function TradesView() {
   const [activeTab, setActiveTab] = useState<
@@ -44,6 +19,14 @@ export default function TradesView() {
   >("overview");
   const [selectedAccount] = useAtom(selectedAccountAtom);
   const [selectedAccountType] = useAtom(selectedAccountTypeAtom);
+  const activePositions = useSelector((state) => state.trade.positions);
+  useEffect(() => {
+    if (selectedAccountType == "MetaTrader") {
+      selectedAccount &&
+        dispatch(getActivePositions({ accountId: selectedAccount }));
+    } else {
+    }
+  }, [selectedAccount, selectedAccountType]);
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -66,10 +49,18 @@ export default function TradesView() {
       <div className="border-b border-dark-300/30">
         <div className="flex space-x-8">
           {[
-            { id: "overview", label: "Overview", icon: <GrOverview className="w-5 h-5"/> },
-            // { id: 'advanced', label: 'Advanced Analytics', icon: null },
-            // { id: 'ai', label: 'AI Insights', icon: <Brain className="h-4 w-4" /> },
-            // { id: 'journal', label: 'Trading Journal', icon: null }
+            {
+              id: "overview",
+              label: "Overview",
+              icon: <GrOverview className="w-5 h-5" />,
+            },
+            { id: "advanced", label: "Advanced Analytics", icon: null },
+            {
+              id: "ai",
+              label: "AI Insights",
+              icon: <Brain className="h-4 w-4" />,
+            },
+            { id: "journal", label: "Trading Journal", icon: null },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -91,13 +82,19 @@ export default function TradesView() {
       <TradeFilters />
 
       {/* Live Trades */}
-      {/* <LiveTradesPanel trades={liveTrades} /> */}
+      <LiveTradesPanel trades={activePositions} />
 
       {/* Content based on active tab */}
       {activeTab === "overview" && (
         <>
-          {/* <TradeStats /> */}
-          {/* <TradesCalendar /> */}
+          <TradeStats
+            account={selectedAccount}
+            accountType={selectedAccountType}
+          />
+          <TradesCalendar
+            account={selectedAccount}
+            accountType={selectedAccountType}
+          />
           <TradesTable
             account={selectedAccount}
             accountType={selectedAccountType}

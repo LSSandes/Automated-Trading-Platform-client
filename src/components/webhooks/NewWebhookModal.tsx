@@ -9,9 +9,8 @@ import { createMarketOrder } from "@/app/reducers/webhook";
 import { MdOutlineWebhook } from "react-icons/md";
 import { tooltips } from "@/constant/webhook";
 
-
 type WebhookMode = "basic" | "advanced";
-type OrderType = "Market Order" | "Modify Order" | "Close Order";
+type OrderType = "Create Order" | "Modify Order" | "Close Order";
 
 export default function NewWebhookModal({
   isOpen,
@@ -19,15 +18,18 @@ export default function NewWebhookModal({
 }: NewWebhookModalProps) {
   const [user] = useAtom(userAtom);
   const [mode, setMode] = useState<WebhookMode>("basic");
-  const [orderType, setOrderType] = useState<OrderType>("Market Order");
+  const [orderClass, setOrderClass] = useState<OrderType>("Create Order");
   const [webhookName, setWebhookName] = useState("");
   const [pair, setPair] = useState("");
-  const [orderDirection, setOrderDirection] = useState("buy");
-  const [usePercentageSize, setUsePercentageSize] = useState(true);
-  const [percentageSize, setPercentageSize] = useState(1);
-  const [fixedSize, setFixedSize] = useState(0);
+  const [orderDirection, setOrderDirection] = useState<string>("buy");
+  const [orderType, setOrderType] = useState<string>("market");
+  const [usePercentageSize, setUsePercentageSize] = useState<boolean>(true);
+  const [percentageSize, setPercentageSize] = useState<number>(1);
+  const [fixedSize, setFixedSize] = useState<number>(0);
   const [stopLoss_pips, setStopLoss] = useState<number>(200);
   const [takeProfit_pips, setTakeProfit] = useState<number>(200);
+  const [openPrice_pips, setOpenPrice] = useState<number>(50);
+  const [stopLimit_pips, setStopLimit] = useState<number>(50);
   const [trailingStopLoss, setTrailingStopLoss] = useState<number>(100);
   const [modifyType, setModifyType] = useState<string>("StopLoss");
   const [moveStopLoss_pips, setMoveStopLoss] = useState<number>(200);
@@ -47,11 +49,14 @@ export default function NewWebhookModal({
         ? {
             ...commonData,
             orderDirection,
+            orderType,
             volume: usePercentageSize
               ? (percentageSize / 100).toFixed(4).toString()
               : fixedSize.toString(),
             stopLoss_pips: String(stopLoss_pips),
             takeProfit_pips: String(takeProfit_pips),
+            openPrice_pips: String(openPrice_pips),
+            stopLimit_pips: String(stopLimit_pips),
             trailingStopLoss: String(trailingStopLoss),
             modifyType,
             moveStopLoss_pips: String(moveStopLoss_pips),
@@ -62,9 +67,12 @@ export default function NewWebhookModal({
         : {
             ...commonData,
             orderDirection: "",
+            orderType: "",
             volume: fixedSize.toString(),
             stopLoss_pips: "0",
             takeProfit_pips: "0",
+            openPrice_pips: "0",
+            stopLimit_pips: "0",
             trailingStopLoss: "0",
             modifyType: "",
             moveStopLoss_pips: "0",
@@ -74,20 +82,8 @@ export default function NewWebhookModal({
           };
     dispatch(createMarketOrder(orderData));
   };
-
-  /* ********************  Close Order Fields ******************************/
-
-  // const [partialClose, setPartialClose] = useState(false);
-  // const [closeAllTrades, setCloseAllTrades] = useState(false);
-  // const [closeType, setCloseType] = useState('Market');
-
-  /********************  Modify Order Fields******************************/
-
-  // const [modifyPrice, setModifyPrice] = useState('');
-  // const [modifyType, setModifyType] = useState('Stop Loss');
-
   if (!isOpen) return null;
-
+  console.log("-------orderType-------->", orderType);
   return (
     <div className="fixed inset-0 z-50 flex lg:items-center items-start justify-center px-4">
       <div
@@ -119,7 +115,7 @@ export default function NewWebhookModal({
         <div className="lg:p-3 p-3 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
           {/* *******************Web Hook Mode******************* */}
           <div className="flex rounded-xl  p-1.5 justify-center items-center">
-            <div className="flex justify-center items-center gap-3 w-[70%] bg-dark-200/30 rounded-lg">
+            <div className="flex justify-center items-center gap-3 lg:w-[70%] w-full bg-dark-200/30 rounded-lg">
               <button
                 onClick={() => setMode("basic")}
                 className={`flex-1 px-6 py-2 rounded-lg text-sm font-medium transition-all ${
@@ -145,7 +141,7 @@ export default function NewWebhookModal({
 
           {/* Mode Description */}
           <div className=" rounded-xl  flex justify-center items-center">
-            <div className="flex items-start space-x-3 w-[80%] bg-dark-200/30 p-6 rounded-lg">
+            <div className="flex items-start space-x-3 lg:w-[80%] w-full bg-dark-200/30 p-6 rounded-lg">
               <AlertTriangle className="h-4 w-4 text-accent flex-shrink-0 mt-0.5" />
               <div className="space-y-0">
                 {mode === "basic" ? (
@@ -181,19 +177,19 @@ export default function NewWebhookModal({
           {mode === "basic" && (
             <div className="space-y-4">
               <div className="flex justify-center items-center">
-                <div className="flex rounded-xl bg-dark-200/30 p-1.5 w-[80%]">
+                <div className="flex rounded-xl bg-dark-200/30 p-1.5 lg:w-[80%] w-full">
                   {(
                     [
-                      "Market Order",
+                      "Create Order",
                       "Modify Order",
                       "Close Order",
                     ] as OrderType[]
                   ).map((type) => (
                     <button
                       key={type}
-                      onClick={() => setOrderType(type)}
+                      onClick={() => setOrderClass(type)}
                       className={`flex-1 px-6 py-2 rounded-lg text-sm font-medium transition-all ${
-                        orderType === type
+                        orderClass === type
                           ? "bg-blue-500 outline-1 outline-dashed outline-blue-500 outline-offset-2 text-white"
                           : "text-gray-400 hover:text-white"
                       }`}
@@ -206,7 +202,7 @@ export default function NewWebhookModal({
 
               {/* Common Fields */}
               <div className="w-full flex justify-center items-center">
-                <div className="flex flex-col justify-center items-center w-[70%] gap-4">
+                <div className="flex flex-col justify-center items-center lg:w-[70%] w-[90%] gap-4">
                   <div className="flex justify-between items-center w-full">
                     <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                       <span>Webhook Name</span>
@@ -242,7 +238,7 @@ export default function NewWebhookModal({
                   <div className="flex justify-between items-center w-full">
                     <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                       <span>Order Direction</span>
-                      <Tooltip content={tooltips.orderType}>
+                      <Tooltip content={tooltips.orderDirection}>
                         <HelpCircle className="h-4 w-4" />
                       </Tooltip>
                     </label>
@@ -262,9 +258,29 @@ export default function NewWebhookModal({
 
               {/* Order Type Specific Fields */}
               <div className="flex w-full justify-center items-center">
-                <div className="space-y-4 flex w-[70%] justify-center items-center flex-col">
-                  {orderType === "Market Order" && (
+                <div className="space-y-4 flex lg:w-[70%] w-[90%] justify-center items-center flex-col">
+                  {orderClass === "Create Order" && (
                     <>
+                      <div className="flex  justify-between items-center w-full gap-2">
+                        <label className="flex items-center space-x-2 text-sm text-gray-400">
+                          <span>Order Type</span>
+                          <Tooltip content={tooltips.orderType}>
+                            <HelpCircle className="h-4 w-4" />
+                          </Tooltip>
+                        </label>
+                        <select
+                          value={orderType}
+                          onChange={(e) => setOrderType(e.target.value)}
+                          className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                                 border border-dashed border-gray-500
+                                  text-sm"
+                        >
+                          <option value={"market"}>Market</option>
+                          <option value={"stop"}>Stop</option>
+                          <option value={"limit"}>Limit</option>
+                          <option value={"stopLimit"}>StopLimit</option>
+                        </select>
+                      </div>
                       <div className="flex flex-col justify-center items-center w-full gap-2">
                         <div className="flex items-center justify-between mb-2 w-full">
                           <label className="flex items-center space-x-2 text-sm text-gray-400">
@@ -354,29 +370,73 @@ export default function NewWebhookModal({
                                    border border-dashed border-gray-500 focus:outline-none text-sm"
                           />
                         </div>
-                        <div className="flex justify-between items-center w-full">
-                          <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
-                            <span>Trailing StopLoss (distance)</span>
-                            <Tooltip content={tooltips.trailingStoploss}>
-                              <HelpCircle className="h-4 w-4" />
-                            </Tooltip>
-                          </label>
-                          <input
-                            type="number"
-                            value={trailingStopLoss}
-                            placeholder="0"
-                            step={1}
-                            onChange={(e) =>
-                              setTrailingStopLoss(Number(e.target.value))
-                            }
-                            className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                        {orderType == "market" && (
+                          <div className="flex justify-between items-center w-full">
+                            <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                              <span>Trailing StopLoss (pips)</span>
+                              <Tooltip content={tooltips.trailingStoploss}>
+                                <HelpCircle className="h-4 w-4" />
+                              </Tooltip>
+                            </label>
+                            <input
+                              type="number"
+                              value={trailingStopLoss}
+                              placeholder="0"
+                              step={1}
+                              onChange={(e) =>
+                                setTrailingStopLoss(Number(e.target.value))
+                              }
+                              className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
                                    border border-dashed border-gray-500 focus:outline-none text-sm"
-                          />
-                        </div>
+                            />
+                          </div>
+                        )}
+                        {orderType !== "market" && (
+                          <div className="flex justify-between items-center w-full">
+                            <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                              <span>Open Price (pips)</span>
+                              <Tooltip content={tooltips.openPrice}>
+                                <HelpCircle className="h-4 w-4" />
+                              </Tooltip>
+                            </label>
+                            <input
+                              type="number"
+                              value={openPrice_pips}
+                              placeholder="0"
+                              step={1}
+                              onChange={(e) =>
+                                setOpenPrice(Number(e.target.value))
+                              }
+                              className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                                   border border-dashed border-gray-500 focus:outline-none text-sm"
+                            />
+                          </div>
+                        )}
+                        {orderType == "stopLimit" && (
+                          <div className="flex justify-between items-center w-full">
+                            <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                              <span>StopLimit Price (pips)</span>
+                              <Tooltip content={tooltips.stopLimitPrice}>
+                                <HelpCircle className="h-4 w-4" />
+                              </Tooltip>
+                            </label>
+                            <input
+                              type="number"
+                              value={stopLimit_pips}
+                              placeholder="0"
+                              step={1}
+                              onChange={(e) =>
+                                setStopLimit(Number(e.target.value))
+                              }
+                              className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                                   border border-dashed border-gray-500 focus:outline-none text-sm"
+                            />
+                          </div>
+                        )}
                       </div>
                     </>
                   )}
-                  {orderType === "Modify Order" && (
+                  {orderClass === "Modify Order" && (
                     <>
                       <div className="flex justify-between items-center w-full">
                         <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
@@ -425,7 +485,7 @@ export default function NewWebhookModal({
                       </div>
                     </>
                   )}
-                  {orderType == "Close Order" && (
+                  {orderClass == "Close Order" && (
                     <>
                       <div className="flex justify-between items-center w-full">
                         <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">

@@ -1,54 +1,48 @@
-import { useState } from 'react';
-import { Edit2, X } from 'lucide-react';
-import TradeCounts from './TradeCounts';
-
-interface Trade {
-  id: string;
-  symbol: string;
-  type: 'buy' | 'sell';
-  lot: number;
-  openPrice: number;
-  currentPrice: number;
-  profit: number;
-  time: string;
-  tradeBy: string;
-}
+import { useState } from "react";
+import { Edit2, X } from "lucide-react";
+import TradeCounts from "./TradeCounts";
+import { PositionConfig } from "@/types/trade";
 
 interface TradesListProps {
-  trades: Trade[];
+  trades: PositionConfig[];
   onModify?: (tradeId: string) => void;
   onClose?: (tradeId: string) => void;
 }
 
-export default function TradesList({ trades, onModify, onClose }: TradesListProps) {
-  const [selectedTrades] = useState<string[]>([]);
-  const [filterType, setFilterType] = useState<'all' | 'buy' | 'sell'>('all');
+export default function TradesList({
+  trades,
+  onModify,
+  onClose,
+}: TradesListProps) {
+  // const [selectedTrades] = useState<string[]>([]);
+  const [filterType, setFilterType] = useState<"all" | "buy" | "sell">("all");
 
-  const tradeCounts = trades.reduce((acc, trade) => ({
-    buys: acc.buys + (trade.type === 'buy' ? 1 : 0),
-    sells: acc.sells + (trade.type === 'sell' ? 1 : 0)
-  }), { buys: 0, sells: 0 });
+  const tradeCounts = trades.reduce(
+    (acc, trade) => ({
+      buys: acc.buys + (trade.type === "BUY" ? 1 : 0),
+      sells: acc.sells + (trade.type === "SELL" ? 1 : 0),
+    }),
+    { buys: 0, sells: 0 }
+  );
 
-  const handleBulkModify = () => {
-    // Implement bulk modify logic
-    console.log('Modifying trades:', selectedTrades);
-  };
+  // const handleBulkModify = () => {
+  //   console.log("Modifying trades:", selectedTrades);
+  // };
 
-  const handleBulkClose = () => {
-    // Implement bulk close logic
-    console.log('Closing trades:', selectedTrades);
-  };
+  // const handleBulkClose = () => {
+  //   console.log("Closing trades:", selectedTrades);
+  // };
 
-  const filteredTrades = trades.filter(trade => {
-    if (filterType === 'all') return true;
-    return trade.type === filterType;
+  const filteredTrades = trades.filter((trade) => {
+    if (filterType === "all") return true;
+    return trade.type === filterType.toUpperCase();
   });
 
   return (
     <div className="glass-panel rounded-xl">
       <div className="p-4 border-b border-dark-300/30">
         <div className="flex items-center justify-between">
-          <TradeCounts 
+          <TradeCounts
             total={trades.length}
             buys={tradeCounts.buys}
             sells={tradeCounts.sells}
@@ -58,7 +52,9 @@ export default function TradesList({ trades, onModify, onClose }: TradesListProp
           <div className="flex items-center space-x-4">
             <select
               value={filterType}
-              onChange={(e) => setFilterType(e.target.value as 'all' | 'buy' | 'sell')}
+              onChange={(e) =>
+                setFilterType(e.target.value as "all" | "buy" | "sell")
+              }
               className="px-4 py-2 bg-dark-200/30 text-gray-300 rounded-lg 
                        border border-dark-300/30 focus:outline-none focus:ring-1 
                        focus:ring-accent/50"
@@ -68,7 +64,7 @@ export default function TradesList({ trades, onModify, onClose }: TradesListProp
               <option value="sell">Sell Only</option>
             </select>
 
-            {selectedTrades.length > 0 && (
+            {/* {selectedTrades.length > 0 && (
               <div className="flex items-center space-x-2">
                 <button
                   onClick={handleBulkModify}
@@ -87,14 +83,14 @@ export default function TradesList({ trades, onModify, onClose }: TradesListProp
                   <span>Close ({selectedTrades.length})</span>
                 </button>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
 
-      <div className="divide-y divide-dark-300/30">
+      <div className="divide-dark-300/30 max-h-[300px] overflow-y-auto">
         {filteredTrades.map((trade) => (
-          <div 
+          <div
             key={trade.id}
             className="p-4 hover:bg-dark-200/30 transition-colors"
           >
@@ -102,15 +98,20 @@ export default function TradesList({ trades, onModify, onClose }: TradesListProp
               <div>
                 <div className="flex items-center space-x-2">
                   <span className="text-white font-medium">{trade.symbol}</span>
-                  <span className="text-gray-400">{trade.tradeBy}</span>
+                  <span className="text-gray-400">{trade.webhookName}</span>
                 </div>
                 <div className="text-sm text-gray-400 mt-1">
-                  {trade.lot} lots @ {trade.openPrice}
+                  {trade.volume} lots @ {trade.openPrice}
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                <div className={trade.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}>
-                  {trade.profit >= 0 ? '+' : ''}{trade.profit.toFixed(2)} USD
+                <div
+                  className={
+                    trade.profit >= 0 ? "text-emerald-400" : "text-red-400"
+                  }
+                >
+                  {trade.profit >= 0 ? "+" : ""}
+                  {trade.profit.toFixed(2)} USD
                 </div>
                 <div className="flex items-center space-x-2">
                   <button

@@ -1,107 +1,103 @@
-// import React, { useState } from 'react';
-import {  TrendingUp,/*Plus,TrendingDown, Users, Shield, Clock, Webhook,*/ Bot,  DollarSign, BarChart2, Zap } from 'lucide-react';
-import QuickActions from '../components/QuickActions';
-import PerformanceChart from '../components/dashboard/PerformanceChart';
-import ActiveTrades from '../components/dashboard/ActiveTrades';
-import SignalProviders from '../components/dashboard/SignalProviders';
-import RecentAlerts from '../components/dashboard/RecentAlerts';
-import AccountsOverview from '../components/dashboard/AccountsOverview';
-// import NewWebhookModal from '../components/webhooks/NewWebhookModal';
+import { Zap } from "lucide-react";
+import QuickActions from "../components/QuickActions";
+import PerformanceChart from "../components/dashboard/PerformanceChart";
+import ActiveTrades from "../components/dashboard/ActiveTrades";
+import SignalProviders from "../components/dashboard/SignalProviders";
+import RecentAlerts from "../components/dashboard/RecentAlerts";
+import AccountsOverview from "../components/dashboard/AccountsOverview";
 
 interface DashboardViewProps {
-  onCopyTrader: (traderId: string, name: string, profit: number, winRate: number, price: number) => void;
+  onCopyTrader: (
+    traderId: string,
+    name: string,
+    profit: number,
+    winRate: number,
+    price: number
+  ) => void;
   onChat: (traderId: string) => void;
   copyingTraders: string[];
   onViewChange: (view: string) => void;
 }
 
-export default function DashboardView({ onCopyTrader, onChat, copyingTraders, onViewChange }: DashboardViewProps) {
-  // const [showWebhookModal, setShowWebhookModal] = useState(false);
-
-  const stats = [
+export default function DashboardView({
+  onCopyTrader,
+  onChat,
+  copyingTraders,
+  onViewChange,
+}: DashboardViewProps) {
+  const introduction = [
     {
-      title: "Total Balance",
-      value: "$48,256.32",
-      change: "+12.5%",
-      timeframe: "vs last month",
-      icon: <DollarSign className="h-5 w-5 text-accent" />,
-      trend: "up"
+      title: "MAKE YOUR OWN BOTS",
+      content:
+        "with amazing built in features to help you turn your TradingView Alerts into profitable trades. Highly configurable and easy to manage. Works with all indicators and most prop firms, also tracks all account data so you can win more trades!",
+      button: "Start Now",
     },
     {
-      title: "Total Profit",
-      value: "$15,234.50",
-      change: "+8.3%",
-      timeframe: "vs last week",
-      icon: <TrendingUp className="h-5 w-5 text-emerald-400" />,
-      trend: "up"
+      title: "SHARE YOUR BOTS",
+      content:
+        "Once you find a profitable system you can make it public and it will show on your profile for others to follow. You can also automate your tradingview alerts into telegram & discord & become a Signal provider just start looking for the perfect alerts!",
+      button: "Coming soon",
     },
     {
-      title: "Win Rate",
-      value: "89.5%",
-      change: "+2.1%",
-      timeframe: "vs last week",
-      icon: <BarChart2 className="h-5 w-5 text-purple-400" />,
-      trend: "up"
+      title: "COPY OTHER TRADERS",
+      content:
+        "Don't worry if you are new to trading with Automated Trader you can connect to traders around the world. Passive investing handsfree, just find a profitable trading solution that works for you. We show you all the users public data so you can know exactly what to expect when following a signal provider!",
+      button: "Coming soon",
     },
     {
-      title: "Active Trades",
-      value: "12",
-      change: "+3",
-      timeframe: "since yesterday",
-      icon: <Bot className="h-5 w-5 text-accent" />,
-      trend: "up"
-    }
+      title: "TOP OF THE LINE AFFILIATE PROGRAM",
+      content:
+        "Competitive commission rates, which can add up quickly if you have a large and engaged audience. With every scale made through your affiliate link, you will earn a percentage of the revenue, which can be a powerful way to monetize your website or social media presence",
+      button: "Coming soon",
+    },
   ];
-
-  // const handleCreateWebhook = (name: string) => {
-  //   console.log('Creating webhook:', name);
-  //   // setShowWebhookModal(false);
-  // };
-
   return (
     <div className="space-y-8" style={{ height: "calc(100vh - 80px)" }}>
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-medium text-white tracking-tight">Dashboard</h1>
-          <p className="text-gray-400 mt-1">Welcome back, your portfolio is up 23% this week</p>
+          <h1 className="text-3xl font-medium text-white tracking-tight">
+            Dashboard
+          </h1>
+          <p className="text-gray-400 mt-1">
+            Welcome back, your portfolio is up 23% this week
+          </p>
         </div>
         <button className="premium-button flex items-center space-x-2 px-6 self-start lg:self-auto">
           <Zap className="h-5 w-5" />
           <div>
             <span className="block text-sm">Upgrade to Pro</span>
-            <span className="block text-xs opacity-80">Unlock Advanced Features</span>
+            <span className="block text-xs opacity-80">
+              Unlock Advanced Features
+            </span>
           </div>
         </button>
       </div>
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, index) => (
-          <div key={index} className="glass-panel rounded-xl p-6 transition-all duration-300 hover:scale-[1.02]">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-2 bg-dark-200/50 rounded-lg">
-                {stat.icon}
-              </div>
-              <div className={`text-sm ${
-                stat.trend === 'up' ? 'text-emerald-400' : 'text-red-400'
-              }`}>
-                {stat.change}
-              </div>
+      <div className="grid xl:grid-cols-4 lg:grid-cols-2 grid-cols-1 gap-2">
+        {introduction.map((item, index) => (
+          <div className="flex flex-col justify-between items-start gap-2 bg-dark-200 p-4 rounded-lg">
+            <div className="flex justify-between items-center gap-2 ">
+              <span className="bg-blue-500 rounded-lg px-[8px] py-[1px]">
+                {index + 1}
+              </span>
+              <span className="text-white font-bold">{item.title}</span>
             </div>
-            <div className="space-y-1">
-              <div className="text-2xl font-semibold text-white">{stat.value}</div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-400">{stat.title}</span>
-                <span className="text-xs text-gray-500">{stat.timeframe}</span>
-              </div>
+            <div className="flex justify-start items-center">
+              <span className="text-gray-400 font-bold text-sm">
+                {item.content}
+              </span>
+            </div>
+            <div className="flex justify-center items-center">
+              <button className="text-blue-700 font-bold">{item.button}</button>
             </div>
           </div>
         ))}
       </div>
-
       {/* Quick Actions */}
-      <QuickActions onNewWebhook={() => /*setShowWebhookModal(true)*/{}} onViewChange={onViewChange} />
+      <QuickActions
+        onNewWebhook={() => /*setShowWebhookModal(true)*/ {}}
+        onViewChange={onViewChange}
+      />
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -125,7 +121,7 @@ export default function DashboardView({ onCopyTrader, onChat, copyingTraders, on
 
         {/* Signal Providers */}
         <div>
-          <SignalProviders 
+          <SignalProviders
             copyingTraders={copyingTraders}
             onCopyTrader={onCopyTrader}
             onChat={onChat}

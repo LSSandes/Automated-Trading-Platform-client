@@ -63,7 +63,7 @@ const TradeLockerLogin: React.FC<LoginProps> = ({ onAuthSuccess }) => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className=" text-gray-300 placeholder-gray-700 text-sm mt-1 block w-full p-2 border border-gray-700 bg-[#070707] rounded-[10px] border-dashed focus:outline focus:outline-gray-500 focus:border-none"
+              className=" text-gray-300 placeholder-gray-700 text-sm mt-1 block w-full p-2 border border-gray-700 bg-[#070707] rounded-[10px] border-dashed"
               required
             />
           </div>
@@ -77,7 +77,7 @@ const TradeLockerLogin: React.FC<LoginProps> = ({ onAuthSuccess }) => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="text-gray-300 placeholder-gray-700 text-sm mt-1 block w-full p-2 border border-gray-700 bg-[#070707] rounded-[10px] border-dashed focus:outline focus:outline-gray-500 focus:border-none"
+              className="text-gray-300 placeholder-gray-700 text-sm mt-1 block w-full p-2 border border-gray-700 bg-[#070707] rounded-[10px] border-dashed"
               required
             />
           </div>
@@ -113,7 +113,7 @@ const TradeLockerLogin: React.FC<LoginProps> = ({ onAuthSuccess }) => {
               placeholder="Server"
               value={server}
               onChange={(e) => setServer(e.target.value)}
-              className="text-gray-300 placeholder-gray-700 text-sm mt-1 block w-full p-2 border border-gray-700 bg-[#070707] rounded-[10px] border-dashed focus:outline focus:outline-gray-500 focus:border-none"
+              className="text-gray-300 placeholder-gray-700 text-sm mt-1 block w-full p-2 border border-gray-700 bg-[#070707] rounded-[10px] border-dashed"
               required
             />
           </div>

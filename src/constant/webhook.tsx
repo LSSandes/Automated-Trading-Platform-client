@@ -19,7 +19,7 @@ export const tooltips = {
   webhookName: "A unique name to identify your webhook",
   messageName: "Name of the message template that will be sent to TradingView",
   pair: "Trading pair symbol (e.g., BTCUSD, EURUSD)",
-  orderType: "Type of order to execute",
+  orderDirection: "Type of order to execute",
   sizeType: "Choose between percentage of account balance or fixed lot size",
   stopLoss: "Price level where the trade will be closed to limit losses",
   takeProfit: "Price level where the trade will be closed to secure profits",
@@ -32,4 +32,7 @@ export const tooltips = {
   modifyType: "Parameter you are trying to move as modify order",
   trailingStoploss:
     "A trailing stop-loss moves with the price to protect your profits.",
+  orderType: "Market Order, stop order, limit order buy or sell signal",
+  openPrice: " OpenPrice field is a final open price value.",
+  stopLimitPrice: "Price at which the StopLimit order will be placed"
 };

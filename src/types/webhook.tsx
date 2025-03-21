@@ -7,11 +7,14 @@ export interface WebhookConfig {
   isPublic: boolean;
   connectionStatus: boolean;
   orderDirection: string;
+  orderType: string;
   webhookMode: string;
   tradeExecutionTime?: string;
   volume: number;
   stopLoss_pips: number;
   takeProfit_pips: number;
+  openPrice_pips: number;
+  stopLimit_pips: number;
   trailingStopLoss: number;
   modifyType: string;
   moveStopLoss_pips: number;

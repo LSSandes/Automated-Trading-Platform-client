@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+import { dispatch, useSelector } from "@/app/store";
+import { getCalendarTradesStats } from "@/app/reducers/trade";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -11,69 +13,77 @@ interface DayStats {
   worstTrade?: number;
 }
 
-export default function TradesCalendar() {
+export default function TradesCalendar({
+  account,
+  accountType,
+}: {
+  account: string;
+  accountType: string;
+}) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [hoveredDay, setHoveredDay] = useState<number | null>(null);
 
   // Mock data for calendar stats with realistic numbers
-  const monthStats: { [key: number]: DayStats } = {
-    1: {
-      trades: 15,
-      profit: 1250,
-      winRate: 92,
-      bestTrade: 450,
-      worstTrade: -120,
-    },
-    5: {
-      trades: 12,
-      profit: -320,
-      winRate: 75,
-      bestTrade: 280,
-      worstTrade: -450,
-    },
-    8: {
-      trades: 18,
-      profit: 2450,
-      winRate: 89,
-      bestTrade: 850,
-      worstTrade: -180,
-    },
-    12: {
-      trades: 14,
-      profit: 1780,
-      winRate: 86,
-      bestTrade: 620,
-      worstTrade: -250,
-    },
-    15: {
-      trades: 16,
-      profit: -500,
-      winRate: 81,
-      bestTrade: 380,
-      worstTrade: -480,
-    },
-    19: {
-      trades: 20,
-      profit: 3380,
-      winRate: 95,
-      bestTrade: 1250,
-      worstTrade: -150,
-    },
-    22: {
-      trades: 17,
-      profit: 2290,
-      winRate: 88,
-      bestTrade: 780,
-      worstTrade: -220,
-    },
-    25: {
-      trades: 13,
-      profit: -450,
-      winRate: 77,
-      bestTrade: 320,
-      worstTrade: -520,
-    },
-  };
+  // const monthStats: { [key: number]: DayStats } = {
+  //   1: {
+  //     trades: 15,
+  //     profit: 1250,
+  //     winRate: 92,
+  //     bestTrade: 450,
+  //     worstTrade: -120,
+  //   },
+  //   5: {
+  //     trades: 12,
+  //     profit: -320,
+  //     winRate: 75,
+  //     bestTrade: 280,
+  //     worstTrade: -450,
+  //   },
+  //   8: {
+  //     trades: 18,
+  //     profit: 2450,
+  //     winRate: 89,
+  //     bestTrade: 850,
+  //     worstTrade: -180,
+  //   },
+  //   12: {
+  //     trades: 14,
+  //     profit: 1780,
+  //     winRate: 86,
+  //     bestTrade: 620,
+  //     worstTrade: -250,
+  //   },
+  //   15: {
+  //     trades: 16,
+  //     profit: -500,
+  //     winRate: 81,
+  //     bestTrade: 380,
+  //     worstTrade: -480,
+  //   },
+  //   19: {
+  //     trades: 20,
+  //     profit: 3380,
+  //     winRate: 95,
+  //     bestTrade: 1250,
+  //     worstTrade: -150,
+  //   },
+  //   22: {
+  //     trades: 17,
+  //     profit: 2290,
+  //     winRate: 88,
+  //     bestTrade: 780,
+  //     worstTrade: -220,
+  //   },
+  //   25: {
+  //     trades: 13,
+  //     profit: -450,
+  //     winRate: 77,
+  //     bestTrade: 320,
+  //     worstTrade: -520,
+  //   },
+  // };
+  const monthStats = useSelector((state) => state.trade.monthStats);
+  const totalTradesStats = useSelector((state) => state.trade.totalTradesStats);
 
   const daysInMonth = new Date(
     currentDate.getFullYear(),
@@ -94,7 +104,6 @@ export default function TradesCalendar() {
   const nextMonth = () => {
     setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() + 1)));
   };
-
   const getDayColor = (_day: number, stats?: DayStats) => {
     if (!stats) return "hover:bg-dark-200/50";
     return stats.profit >= 0
@@ -107,6 +116,19 @@ export default function TradesCalendar() {
     const intensity = Math.min((Math.abs(stats.profit) / 1000) * 100, 100);
     return `opacity-${Math.round(intensity / 10) * 10}`;
   };
+
+  useEffect(() => {
+    if (accountType == "MetaTrader") {
+      account &&
+        dispatch(
+          getCalendarTradesStats({
+            currentDate: String(currentDate),
+            accountId: account,
+          })
+        );
+    } else {
+    }
+  }, [account, accountType, currentDate]);
 
   return (
     <div className="glass-panel rounded-xl p-6">
@@ -195,19 +217,19 @@ export default function TradesCalendar() {
                     }
                   >
                     Profit: {stats.profit >= 0 ? "+" : ""}
-                    {stats.profit} USD
+                    {stats.profit.toFixed(2)} USD
                   </div>
                   <div className="text-accent mt-1">
                     Win Rate: {stats.winRate}%
                   </div>
                   {stats.bestTrade && (
                     <div className="text-emerald-400 mt-1">
-                      Best: +${stats.bestTrade}
+                      Best: ${stats.bestTrade.toFixed(2)}
                     </div>
                   )}
                   {stats.worstTrade && (
                     <div className="text-red-400">
-                      Worst: ${stats.worstTrade}
+                      Worst: ${stats.worstTrade.toFixed(2)}
                     </div>
                   )}
                   <div
@@ -239,18 +261,54 @@ export default function TradesCalendar() {
       <div className="grid grid-cols-3 gap-4 mt-6">
         <div className="glass-panel rounded-lg p-4">
           <div className="text-sm text-gray-400 mb-1">Total Trades</div>
-          <div className="text-xl font-semibold text-white">125</div>
-          <div className="text-xs text-emerald-400">+12.5% vs last month</div>
+          <div className="text-xl font-semibold text-emerald-400">
+            {totalTradesStats.currentMonthTrades} trade
+          </div>
+          <div
+            className={`text-xs font-semibold ${
+              totalTradesStats.tradesPercent > 0
+                ? "text-emerald-400"
+                : "text-red-500"
+            }`}
+          >
+            {totalTradesStats.tradesPercent.toFixed(2)}% vs last month
+          </div>
         </div>
         <div className="glass-panel rounded-lg p-4">
-          <div className="text-sm text-gray-400 mb-1">Win Rate</div>
-          <div className="text-xl font-semibold text-emerald-400">87.5%</div>
-          <div className="text-xs text-emerald-400">+2.3% vs last month</div>
+          <div className="text-sm text-gray-400 mb-1">Lots</div>
+          <div className="text-xl font-semibold text-emerald-400">
+            {totalTradesStats.currentMonthLots.toFixed(2)} lot
+          </div>
+          <div
+            className={`text-xs font-semibold ${
+              totalTradesStats.lotsPercent > 0
+                ? "text-emerald-400"
+                : "text-red-500"
+            }`}
+          >
+            {totalTradesStats.lotsPercent.toFixed(2)}% vs last month
+          </div>
         </div>
         <div className="glass-panel rounded-lg p-4">
-          <div className="text-sm text-gray-400 mb-1">Net Profit</div>
-          <div className="text-xl font-semibold text-emerald-400">+$12,450</div>
-          <div className="text-xs text-emerald-400">+18.2% vs last month</div>
+          <div className="text-sm text-gray-400 mb-1">Profit</div>
+          <div
+            className={`text-xl font-semibold ${
+              totalTradesStats.profitPercent > 0
+                ? "text-emerald-400"
+                : "text-red-500"
+            }`}
+          >
+            ${totalTradesStats.currentMonthProfit.toFixed(2)}
+          </div>
+          <div
+            className={`text-xs font-semibold ${
+              totalTradesStats.profitPercent > 0
+                ? "text-emerald-400"
+                : "text-red-500"
+            }`}
+          >
+            {totalTradesStats.profitPercent.toFixed(2)}% vs last month
+          </div>
         </div>
       </div>
 
