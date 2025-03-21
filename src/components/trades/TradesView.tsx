@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
-import TradeStats from './TradeStats';
-import TradesCalendar from './TradesCalendar';
+// import TradeStats from './TradeStats';
+// import TradesCalendar from './TradesCalendar';
 // import TradesTable from './TradesTable';
 
 export default function TradesView() {
@@ -56,10 +56,10 @@ export default function TradesView() {
       </div>
 
       {/* Stats Grid */}
-      <TradeStats />
+      {/* <TradeStats /> */}
 
       {/* Calendar */}
-      <TradesCalendar />
+      {/* <TradesCalendar /> */}
 
       {/* Trades Table */}
       {/* <TradesTable /> */}
