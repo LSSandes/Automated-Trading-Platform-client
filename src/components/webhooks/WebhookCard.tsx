@@ -23,11 +23,12 @@ import {
 } from "@/store/atoms";
 import { dispatch, useSelector } from "@/app/store";
 import {
-  deleteMarketOrder,
+  deleteWebhook,
   openBasicTrade,
   openAdvancedTrade,
 } from "@/app/reducers/webhook";
 import { FaChartBar } from "react-icons/fa";
+import { MdWebhook } from "react-icons/md";
 import { toast } from "react-toastify";
 import OpenTradeModal from "./OpenTradeModal";
 import { UserParams } from "@/types/tradeLocker";
@@ -51,7 +52,7 @@ export default function WebhookCard({
   const [showRiskModal, setShowRiskModal] = useState(false);
   const [showAppsModal, setShowAppsModal] = useState(false);
   const findAccount = accounts.find(
-    (account) => account.accountId == webhook.accountId
+    (account) => account.accountId == webhook.accountId_m
   )?.accountName;
   const [accountName, setAccountName] = useState<string>(findAccount ?? "");
   const [openTradeModal, setOpenTradeModal] = useState<boolean>(false);
@@ -61,12 +62,12 @@ export default function WebhookCard({
   const [timeDiff, setTimeDiff] = useState("");
   useEffect(() => {
     const findAccount = accounts.find(
-      (account) => account.accountId == webhook.accountId
+      (account) => account.accountId == webhook.accountId_m
     );
     if (findAccount) {
       setAccountName(findAccount.accountName);
     }
-  }, [accounts, webhook.accountId]);
+  }, [accounts, webhook.accountId_m]);
 
   useEffect(() => {
     const updateTimeDiff = () => {
@@ -107,7 +108,7 @@ export default function WebhookCard({
   //  ***************************Handle the URL**********************************//
   const handleCopy = () => {
     navigator.clipboard.writeText(
-      `https://bullfrog-engaged-factually.ngrok-free.app/api/webhook/${webhook.hashedWebhook}`
+      `http://localhost:5000/api/alert/${webhook.hashedWebhook}`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -133,7 +134,7 @@ export default function WebhookCard({
         return;
       } else {
         dispatch(
-          deleteMarketOrder({
+          deleteWebhook({
             email: user.email,
             webhookName: webhook.webhookName,
             webhookMode: webhook.webhookMode,
@@ -145,7 +146,7 @@ export default function WebhookCard({
       }
     }
   };
-  console.log("actionType---ok--->", actionType);
+
   const handleOpenTrade = () => {
     if (webhook.connectionStatus == true) {
       setOpenTradeLoading(true);
@@ -158,18 +159,13 @@ export default function WebhookCard({
           dispatch(
             openBasicTrade({
               email: user?.email,
-              accountId: webhook.accountId,
               webhookName: webhook.webhookName,
               symbol: webhook.symbol,
               orderDirection: webhook.orderDirection,
               orderType: webhook.orderType,
               webhookMode: webhook.webhookMode,
-              accessToken:
-                webhook.appName == "MetaTrader" ? "" : accessToken ?? "",
-              accountType:
-                webhook.appName == "MetaTrader"
-                  ? ""
-                  : tradelockerUser?.accountType ?? "",
+              accessToken: accessToken ?? "",
+              accountType: tradelockerUser?.accountType ?? "",
               actionType,
               allTrades,
               trailingStopLoss,
@@ -184,7 +180,6 @@ export default function WebhookCard({
           dispatch(
             openAdvancedTrade({
               email: user?.email,
-              accountId: webhook.accountId,
               webhookName: webhook.webhookName,
               webhookMode: webhook.webhookMode,
               symbol: webhook.symbol,
@@ -214,30 +209,40 @@ export default function WebhookCard({
             <div className="flex items-center space-x-3">
               <div
                 className={`p-2 rounded-lg ${
-                  webhook.webhookMode === "advanced"
+                  webhook.webhookMode === "basic"
                     ? "bg-accent/10"
                     : "bg-purple-500/10"
                 }`}
               >
-                <Clock className="h-6 w-6 text-accent" />
+                <MdWebhook
+                  className={`h-6 w-6 ${
+                    webhook.webhookMode == "basic"
+                      ? "text-blue-500"
+                      : "text-purple-500"
+                  }`}
+                />
               </div>
               <div className="flex flex-col justify-center items-start">
-                <h3 className="text-lg font-medium text-white">
+                <h3
+                  className={`text-lg font-medium ${
+                    webhook.webhookMode == "basic"
+                      ? "text-blue-500"
+                      : "text-purple-500"
+                  }`}
+                >
                   {webhook.webhookName}
                 </h3>
                 <div className="flex items-center space-x-2">
-                  <span
-                    className={`text-sm ${
-                      webhook.webhookMode === "advanced"
+                  <div
+                    className={`text-sm flex justify-center items-center gap-2 ${
+                      webhook.webhookMode === "basic"
                         ? "text-accent"
                         : "text-purple-400"
                     }`}
                   >
-                    {webhook.appName == "MetaTrader"
-                      ? accountName
-                      : webhook.accountId}
-                  </span>
-                  <span className="text-sm">{webhook.appName}</span>
+                    {webhook.accountId_m && <span>{accountName}</span>}
+                    <span>{webhook.accountId_t}</span>
+                  </div>
                   <span className="text-gray-400">•</span>
                   <div className="flex items-center text-sm">
                     {webhook.connectionStatus === true ? (
@@ -253,7 +258,7 @@ export default function WebhookCard({
             <div className="flex items-center space-x-1 relative">
               {copied && (
                 <div
-                  className={`absolute -top-2 -left-8 rounded-lg transition-all -rotate-45 ${
+                  className={`absolute -top-5 left-1 rounded-lg transition-all -rotate-0 ${
                     copied ? "animate-pulse" : ""
                   }`}
                 >
@@ -337,21 +342,65 @@ export default function WebhookCard({
                   </div>
                 </div>
                 <div className=" text-sm mb-1 flex justify-start items-center gap-2">
-                  <span className="text-white text-sm">Last Signal:</span>
+                  <span className="text-white text-sm flex justify-center items-center gap-2">
+                    <Clock className="w-3 h-3" />
+                    Last Signal:
+                  </span>
                   <span className="text-white font-sm">
                     {timeDiff || "N/A"}
                   </span>
                 </div>
               </div>
             )}
-            {webhook.webhookMode == "advanced" && showBasicData && (
-              <div className="glass-panel rounded-lg p-3 border border-dark-300/30 w-full flex justify-around items-center">
-                <div className="text-sm mb-1 flex justify-start items-center gap-2">
-                  <span className="text-white text-sm">Lots:</span>
-                  <span className="text-white font-sm">{webhook.volume}</span>
+            {webhook.webhookMode == "premium" && showBasicData && (
+              <div className="glass-panel rounded-lg p-3 border border-dark-300/30 w-full space-y-2">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                  <div className="text-white text-sm mb-1 flex justify-start items-center gap-2">
+                    SL(pips):
+                    <span className="text-white font-sm">
+                      {webhook.stopLoss_pips}
+                    </span>
+                  </div>
+                  <div className="text-white text-sm mb-1 flex justify-start items-center gap-2">
+                    Multi TP(pips):
+                    <span className="text-white font-sm">
+                      {webhook.multiTakeProfits_pips.join(", ")}
+                    </span>
+                  </div>
+                  <div className="text-white text-sm mb-1 flex justify-start items-center gap-2">
+                    Time Based Exit (min):
+                    <span className="text-white font-sm">
+                      {webhook.timeBasedExitMinute}
+                    </span>
+                  </div>
+                  <div className="text-white text-sm mb-1 flex justify-start items-center gap-2">
+                    Break Even Setting (pips):
+                    <span className="text-white font-sm">
+                      {webhook.breakenEvenSetting_pips}
+                    </span>
+                  </div>
+                  <div className="text-white text-sm mb-1 flex justify-start items-center gap-2">
+                    Trailing Distance (pips):
+                    <span className="text-white font-sm">
+                      {webhook.trailingDistance_pips}
+                    </span>
+                  </div>
+                  <div className="text-white text-sm mb-1 flex justify-start items-center gap-2">
+                    Activation Trigger (pips):
+                    <span className="text-white font-sm">
+                      {webhook.activationTrigger_pips}
+                    </span>
+                  </div>
+                  <div className="text-white text-sm mb-1 flex justify-start items-center gap-2">
+                    Lots:
+                    <span className="text-white font-sm">{webhook.volume}</span>
+                  </div>
                 </div>
                 <div className=" text-sm mb-1 flex justify-start items-center gap-2">
-                  <span className="text-white text-sm">Last Signal:</span>
+                  <span className="text-white text-sm flex justify-center items-center gap-2">
+                    <Clock className="w-3 h-3" />
+                    Last Signal:
+                  </span>
                   <span className="text-white font-sm">
                     {timeDiff || "N/A"}
                   </span>
@@ -367,7 +416,8 @@ export default function WebhookCard({
               <FaNfcSymbol className="w-4 h-4" />
               <span>{webhook.symbol}</span>
             </div>
-            {webhook.webhookMode == "basic" && (
+            {(webhook.webhookMode == "basic" ||
+              webhook.webhookMode == "premium") && (
               <div
                 className="px-3 py-2 text-md rounded-lg bg-dark-200/50 text-gray-300
                          border border-dark-300/30 backdrop-blur-sm flex justify-center items-center gap-2"
@@ -378,13 +428,26 @@ export default function WebhookCard({
                   <FaArrowTrendDown className="w-4 h-4 text-red-500" />
                 )}
                 <span className=" capitalize">
-                  {webhook.orderDirection}-{webhook.orderType} order
+                  {webhook.orderDirection} - {webhook.orderType} order
                 </span>
               </div>
             )}
+            {(webhook.accountId_m || webhook.accountId_t) && (
+              <div
+                className="px-3 py-2 text-md rounded-lg bg-dark-200/50 text-gray-300
+                         border border-dark-300/30 backdrop-blur-sm flex justify-center items-center gap-2"
+              >
+                {webhook.accountId_m && (
+                  <img src="/mt5-logo.svg" alt="" className="w-5 h-5 invert" />
+                )}
+                {webhook.accountId_t && (
+                  <img src="/tradelocker-logo.svg" alt="" className="w-5 h-5" />
+                )}
+              </div>
+            )}
           </div>
-          <div className="flex 2xl:flex-row flex-col items-center justify-between gap-4">
-            <div className="flex items-center lg:justify-start justify-between space-x-6 lg:w-1/2 w-full">
+          <div className="flex 2xl:flex-row flex-col items-start justify-between gap-4">
+            <div className="flex items-center lg:justify-start justify-between  lg:w-1/2 w-full">
               <div className="flex justify-center items-center gap-4">
                 <div className="flex flex-col items-center space-y-1">
                   <span className="text-xs text-gray-400">Active</span>
@@ -433,15 +496,17 @@ export default function WebhookCard({
               )} */}
             </div>
 
-            <button
-              onClick={() => setOpenTradeModal(true)}
-              className="px-3 py-1.5 text-[16px] bg-dark-200/50 text-gray-300 rounded-lg
+            {webhook.webhookMode == "basic" && (
+              <button
+                onClick={() => setOpenTradeModal(true)}
+                className="px-3 py-1.5 text-[16px] bg-dark-200/50 text-gray-300 rounded-lg
                        border border-dark-300/30 hover:bg-dark-200/80 transition-colors
                        flex items-center space-x-1 2xl:w-1/3 w-full justify-center"
-            >
-              <FaChartBar className="h-4 w-4" />
-              <span>Open Trade</span>
-            </button>
+              >
+                <FaChartBar className="h-4 w-4" />
+                <span>Open Trade</span>
+              </button>
+            )}
           </div>
         </div>
         {showMenu && (

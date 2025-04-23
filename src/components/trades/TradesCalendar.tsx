@@ -2,16 +2,9 @@ import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import { dispatch, useSelector } from "@/app/store";
 import { getCalendarTradesStats } from "@/app/reducers/trade";
+import { DayStats } from "@/types/trade";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-interface DayStats {
-  trades: number;
-  profit: number;
-  winRate: number;
-  bestTrade?: number;
-  worstTrade?: number;
-}
 
 export default function TradesCalendar({
   account,
@@ -128,7 +121,7 @@ export default function TradesCalendar({
         );
     } else {
     }
-  }, [account, accountType, currentDate]);
+  }, [account, currentDate, setCurrentDate, accountType]);
 
   return (
     <div className="glass-panel rounded-xl p-6">

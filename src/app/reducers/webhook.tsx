@@ -45,7 +45,7 @@ export function getWebhooks(email: string | undefined) {
   return async () => {
     try {
       const response = await axios.post(
-        "webhook/get-marketorders",
+        "webhook/getWebhooks",
         { email },
         {
           headers: {
@@ -63,7 +63,7 @@ export function getWebhooks(email: string | undefined) {
   };
 }
 
-export function createMarketOrder({
+export function createBasicWebhook({
   email,
   webhookName,
   webhookMode,
@@ -102,7 +102,7 @@ export function createMarketOrder({
 }) {
   return async () => {
     try {
-      const response = await axios.post("webhook/create-marketorder", {
+      const response = await axios.post("webhook/createBasicWebhook", {
         email,
         webhookName,
         webhookMode,
@@ -133,7 +133,65 @@ export function createMarketOrder({
   };
 }
 
-export function deleteMarketOrder({
+export function createPremiumWebhook({
+  email,
+  webhookName,
+  webhookMode,
+  symbol,
+  orderDirection,
+  orderType,
+  volume,
+  multiTakeProfit_pips,
+  stopLoss_pips,
+  trailingDistance_pips,
+  activationTrigger_pips,
+  timeBasedExitMinute,
+  breakenEvenSetting_pips,
+}: {
+  email: string;
+  webhookName: string;
+  webhookMode: string;
+  symbol: string;
+  orderDirection: string;
+  orderType: string;
+  volume: string;
+  multiTakeProfit_pips: string;
+  stopLoss_pips: string;
+  trailingDistance_pips: string;
+  activationTrigger_pips: string;
+  timeBasedExitMinute: string;
+  breakenEvenSetting_pips: string;
+}) {
+  return async () => {
+    try {
+      const response = await axios.post("webhook/createPremiumWebhook", {
+        email,
+        webhookName,
+        webhookMode,
+        symbol,
+        orderDirection,
+        orderType,
+        volume,
+        multiTakeProfit_pips,
+        stopLoss_pips,
+        trailingDistance_pips,
+        activationTrigger_pips,
+        timeBasedExitMinute,
+        breakenEvenSetting_pips,
+      });
+      dispatch(
+        webhook.actions.addWebhookSuccess(response.data.data.newWebhook)
+      );
+      dispatch(webhook.actions.hasError(null));
+      toast.success("New MarketOrder is created");
+    } catch (err) {
+      dispatch(webhook.actions.hasError(err));
+      toast.warn("Internal Server Error");
+    }
+  };
+}
+
+export function deleteWebhook({
   email,
   webhookName,
   webhookMode,
@@ -148,7 +206,7 @@ export function deleteMarketOrder({
 }) {
   return async () => {
     try {
-      const response = await axios.post("webhook/delete-marketorder", {
+      const response = await axios.post("webhook/deleteWebhook", {
         email,
         webhookName,
         webhookMode,
@@ -165,36 +223,39 @@ export function deleteMarketOrder({
   };
 }
 
-export function connectMarketOrder({
+export function connectWebhook({
   email,
   accountId,
   webhookName,
   webhookMode,
   symbol,
-  orderDirection,
   appName,
   accNum,
+  accountType,
+  refreshToken,
 }: {
   email: string;
   accountId: string;
   webhookName: string;
   webhookMode: string;
   symbol: string;
-  orderDirection: string;
   appName: string;
   accNum: string;
+  accountType: string;
+  refreshToken: string;
 }) {
   return async () => {
     try {
-      const response = await axios.post("webhook/connect-marketorder", {
+      const response = await axios.post("webhook/connectWebhook", {
         email,
         accountId,
         webhookName,
         webhookMode,
         symbol,
-        orderDirection,
         appName,
         accNum,
+        accountType,
+        refreshToken,
       });
       dispatch(
         webhook.actions.udpateWebhookSuccess(response.data.data.updatedWebhook)
@@ -208,30 +269,30 @@ export function connectMarketOrder({
   };
 }
 
-export function disconnectMarketOrder({
+export function disconnectWebhook({
   email,
-  accountId,
   webhookName,
   webhookMode,
   symbol,
   orderDirection,
+  appName,
 }: {
   email: string;
-  accountId: string;
   webhookName: string;
   webhookMode: string;
   symbol: string;
   orderDirection: string;
+  appName: string;
 }) {
   return async () => {
     try {
-      const response = await axios.post("webhook/disconnect-marketorder", {
+      const response = await axios.post("webhook/diconnectWebhook", {
         email,
-        accountId,
         webhookName,
         webhookMode,
         symbol,
         orderDirection,
+        appName,
       });
       dispatch(
         webhook.actions.udpateWebhookSuccess(response.data.data.updatedWebhook)
@@ -245,19 +306,18 @@ export function disconnectMarketOrder({
   };
 }
 
-export function editMarketOrder({
+export function updateBasicWebhook({
   email,
   webhookName,
   webhookMode,
   symbol,
-  orderDirection,
   webhookName_new,
   symbol_new,
   orderDirection_new,
   orderType_new,
   volume_new,
-  stopLoss_new,
-  takeProfit_new,
+  stopLoss_pips_new,
+  takeProfit_pips_new,
   openPrice_new,
   stopLimit_new,
   trailingStopLoss_new,
@@ -271,14 +331,13 @@ export function editMarketOrder({
   webhookName: string;
   webhookMode: string;
   symbol: string;
-  orderDirection: string;
   webhookName_new: string;
   symbol_new: string;
   orderDirection_new: string;
   orderType_new: string;
   volume_new: string;
-  stopLoss_new: string;
-  takeProfit_new: string;
+  stopLoss_pips_new: string;
+  takeProfit_pips_new: string;
   openPrice_new: string;
   stopLimit_new: string;
   trailingStopLoss_new: string;
@@ -290,19 +349,18 @@ export function editMarketOrder({
 }) {
   return async () => {
     try {
-      const response = await axios.post("webhook/edit-marketorder", {
+      const response = await axios.post("webhook/updateBasicWebhook", {
         email,
         webhookName,
         webhookMode,
         symbol,
-        orderDirection,
         webhookName_new,
         symbol_new,
         orderDirection_new,
         orderType_new,
         volume_new,
-        stopLoss_new,
-        takeProfit_new,
+        stopLoss_pips_new,
+        takeProfit_pips_new,
         openPrice_new,
         stopLimit_new,
         trailingStopLoss_new,
@@ -323,9 +381,64 @@ export function editMarketOrder({
   };
 }
 
+export function updatePremiumWebhook({
+  email,
+  webhookName,
+  webhookMode,
+  symbol,
+  webhookName_new,
+  symbol_new,
+  volume_new,
+  multiTakeProfit_pips_new,
+  stopLoss_pips_new,
+  trailingDistance_pips_new,
+  activationTrigger_pips_new,
+  timeBasedExitMinute_new,
+  breakenEvenSetting_pips_new,
+}: {
+  email: string;
+  webhookName: string;
+  webhookMode: string;
+  symbol: string;
+  webhookName_new: string;
+  symbol_new: string;
+  volume_new: string;
+  multiTakeProfit_pips_new: string;
+  stopLoss_pips_new: string;
+  trailingDistance_pips_new: string;
+  activationTrigger_pips_new: string;
+  timeBasedExitMinute_new: string;
+  breakenEvenSetting_pips_new: string;
+}) {
+  return async () => {
+    try {
+      const response = await axios.post("webhook/updatePremiumWebhook", {
+        email,
+        webhookName,
+        webhookMode,
+        symbol,
+        webhookName_new,
+        symbol_new,
+        volume_new,
+        multiTakeProfit_pips_new,
+        stopLoss_pips_new,
+        trailingDistance_pips_new,
+        activationTrigger_pips_new,
+        timeBasedExitMinute_new,
+        breakenEvenSetting_pips_new,
+      });
+      dispatch(
+        webhook.actions.udpateWebhookSuccess(response.data.data.updatedWebhook)
+      );
+      toast.success("Webhook is updated successfully.");
+    } catch (err: any) {
+      toast.warn(err.response.data.message);
+    }
+  };
+}
+
 export function openBasicTrade({
   email,
-  accountId,
   webhookName,
   symbol,
   orderDirection,
@@ -338,7 +451,6 @@ export function openBasicTrade({
   trailingStopLoss,
 }: {
   email: string;
-  accountId: string;
   webhookName: string;
   symbol: string;
   orderDirection: string;
@@ -354,7 +466,6 @@ export function openBasicTrade({
     try {
       const response = await axios.post("webhook/open-basictrade", {
         email,
-        accountId,
         webhookName,
         symbol,
         orderDirection,
@@ -387,7 +498,6 @@ export function openBasicTrade({
 
 export function openAdvancedTrade({
   email,
-  accountId,
   webhookName,
   webhookMode,
   symbol,
@@ -395,7 +505,6 @@ export function openAdvancedTrade({
   allTrades,
 }: {
   email: string;
-  accountId: string;
   webhookName: string;
   webhookMode: string;
   symbol: string;
@@ -406,7 +515,6 @@ export function openAdvancedTrade({
     try {
       const response = await axios.post("webhook/open-advancedtrade", {
         email,
-        accountId,
         webhookName,
         webhookMode,
         symbol,

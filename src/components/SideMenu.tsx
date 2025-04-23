@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "@/app/store";
 import { useSetAtom } from "jotai";
 import { collapsedAtom } from "@/store/atoms";
 // import { SignalProvider } from "@/types/sidemenu";
@@ -25,6 +26,10 @@ const SideMenu = ({
 }: SideMenuProps) => {
   const [isAppsExpanded, setIsAppsExpanded] = useState(true);
   const setCollapsedGlobal = useSetAtom(collapsedAtom);
+  const alerts = useSelector((state) => state.alert.alerts);
+  console.log("alerts--->", alerts);
+  const unviewedAlerts = alerts.filter((alert) => alert.view === false);
+  console.log("unviewedAlerts--->", unviewedAlerts);
   // const { data: accounts } = useMetaAccounts();
 
   // const [activeProviders, setActiveProviders] = useState<SignalProvider[]>([
@@ -64,14 +69,13 @@ const SideMenu = ({
       id: "alerts",
       icon: <Bell className="h-5 w-5" />,
       label: "Alerts",
-      badge: "3",
+      badge: unviewedAlerts.length,
     },
     { id: "trades", icon: <LineChart className="h-5 w-5" />, label: "Trades" },
     {
       id: "signals",
       icon: <Webhook className="h-5 w-5" />,
       label: "Webhooks",
-      badge: "5",
     },
     { id: "markets", icon: <Globe className="h-5 w-5" />, label: "Markets" },
     // {
@@ -247,10 +251,12 @@ const SideMenu = ({
                 </div>
                 {!isCollapsed && <span>{item.label}</span>}
               </div>
-              {!isCollapsed && item.badge && (
-                <span className="px-2 py-1 text-xs bg-accent/10 text-accent rounded-full">
+              {!isCollapsed && item.badge && item.badge != 0 ? (
+                <span className="px-2 py-1 text-xs bg-red-500 text-white rounded-full">
                   {item.badge}
                 </span>
+              ) : (
+                <></>
               )}
             </button>
           ))}

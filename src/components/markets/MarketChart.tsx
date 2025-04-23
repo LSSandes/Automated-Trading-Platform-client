@@ -10,7 +10,7 @@ import { CheckIcon } from "@heroicons/react/20/solid";
 import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
 import { MdOutlineWebhook } from "react-icons/md";
 import MarketStrategyModal from "./MarketStrategyModal";
-import { FaChartBar } from "react-icons/fa";
+// import { FaChartBar } from "react-icons/fa";
 import NewWebhookModal from "../webhooks/NewWebhookModal";
 interface GlobalParams {
   ask: number;
@@ -65,13 +65,6 @@ export default function MarketChart() {
           </h2>
         </div>
         <div className="flex justify-end items-center gap-5 lg:flex-row flex-col lg:w-1/2 w-full">
-          <button
-            onClick={() => setIsOpenTrade(true)}
-            className="premium-button flex items-center 2xl:w-1/4 w-full justify-center outline-1 outline-dashed outline-offset-2 outline-blue-500"
-          >
-            <FaChartBar className="h-5 w-5 mr-2" />
-            Open Trade
-          </button>
           <button
             onClick={() => setIsCreateStrategy(true)}
             className="premium-button flex items-center 2xl:w-1/4 w-full justify-center outline-1 outline-dashed outline-offset-2 outline-blue-500"

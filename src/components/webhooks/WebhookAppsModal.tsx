@@ -9,10 +9,7 @@ import { useSelector, dispatch } from "@/app/store";
 import { getAccounts } from "@/app/reducers/metaAccount";
 import { getAccounts as getTradeLockerAccounts } from "@/app/reducers/tradelocker";
 import { UserParams } from "@/types/tradeLocker";
-import {
-  connectMarketOrder,
-  disconnectMarketOrder,
-} from "@/app/reducers/webhook";
+import { connectWebhook, disconnectWebhook } from "@/app/reducers/webhook";
 import { toast } from "react-toastify";
 
 interface LoadingType {
@@ -33,12 +30,12 @@ export default function WebhookAppsModal({
   const [accountId, setAccountId] = useState<string>("default"); //MetaTrader....
   const [selectedMetaTrader, setSelectedMetaTrader] =
     useState<string>(accountName);
-
   const [selectedTradeLocker, setSelectedTradeLocker] = useState<string>(
-    webhook.accountId
+    webhook.accountId_t
   );
   const [selectedAccNum, setSelectedAccNum] = useState<string>(""); //TradeLocker....
-
+  const [selectedAccountType, setSelectedAccountType] = useState<string>("");
+  const [refreshToken, setRefreshToken] = useState<string>("");
   const [loadingConnect, setLoadingConnect] = useState<LoadingType>({
     appName: "",
     loader: false,
@@ -47,13 +44,19 @@ export default function WebhookAppsModal({
     appName: "",
     loader: false,
   });
-
   useEffect(() => {
     if (user?.email) dispatch(getAccounts(user.email));
     const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
     const userTradeLocker: UserParams | null = JSON.parse(
       localStorage.getItem("user") || "null"
     );
+    if (userTradeLocker) {
+      setSelectedAccountType(userTradeLocker.accountType);
+    }
+    if (refreshToken) {
+      setRefreshToken(refreshToken);
+    }
     if (accessToken && userTradeLocker) {
       dispatch(
         getTradeLockerAccounts({
@@ -67,21 +70,21 @@ export default function WebhookAppsModal({
     const selectedAccount = metaAccounts.find(
       (account) => account.accountName === selectedMetaTrader
     );
-    if (selectedAccount) setAccountId(selectedAccount.accountId);
+    if (selectedAccount) {
+      setAccountId(selectedAccount.accountId);
+    }
   }, [selectedMetaTrader, metaAccounts]);
 
   useEffect(() => {
     const selectedAccNum = tradelockerAccounts.find(
       (account) => account.id == selectedTradeLocker
     );
-    if (selectedAccNum) setSelectedAccNum(selectedAccNum.accNum);
+    if (selectedAccNum) {
+      setSelectedAccNum(selectedAccNum.accNum);
+    }
   }, [selectedTradeLocker, tradelockerAccounts]);
-  console.log("tradelocker----->", selectedTradeLocker, selectedAccNum);
   const handleConnect = (appName: string) => {
     setLoadingConnect({ appName, loader: true });
-    if (webhook.connectionStatus == true) {
-      toast.info(`Please disconnect ${webhook.appName} account`);
-    }
     appName == "MetaTrader" &&
       selectedMetaTrader == "default" &&
       toast.info("Please select the account");
@@ -90,16 +93,16 @@ export default function WebhookAppsModal({
       toast.info("Please select the account");
     if (user) {
       dispatch(
-        connectMarketOrder({
+        connectWebhook({
           email: user.email,
           accountId: appName == "MetaTrader" ? accountId : selectedTradeLocker,
           webhookName: webhook.webhookName,
           webhookMode: webhook.webhookMode,
           symbol: webhook.symbol,
-          orderDirection:
-            webhook.webhookMode === "basic" ? webhook.orderDirection : "",
           appName,
           accNum: appName == "MetaTrader" ? "" : selectedAccNum,
+          accountType: appName == "MetaTrader" ? "" : selectedAccountType,
+          refreshToken: appName == "MetaTrader" ? "" : refreshToken,
         })
       ).then(() => {
         setLoadingConnect({ appName, loader: false });
@@ -114,14 +117,14 @@ export default function WebhookAppsModal({
     }
     if (user) {
       dispatch(
-        disconnectMarketOrder({
+        disconnectWebhook({
           email: user?.email,
-          accountId,
           webhookName: webhook.webhookName,
           webhookMode: webhook.webhookMode,
           symbol: webhook.symbol,
           orderDirection:
             webhook.webhookMode === "basic" ? webhook.orderDirection : "",
+          appName,
         })
       ).then(() => {
         setLoadingDisconnect({ appName, loader: false });
@@ -129,7 +132,13 @@ export default function WebhookAppsModal({
       });
     }
   };
-
+  const selectButton = (appName: string, webhook: any) => {
+    if (appName == "MetaTrader") {
+      return webhook.accountId_m;
+    } else if (appName == "TradeLocker") {
+      return webhook.accountId_t;
+    }
+  };
   if (!isOpen) return null;
 
   return (
@@ -229,7 +238,7 @@ export default function WebhookAppsModal({
                   </div>
                 </div>
                 <div className="mt-4 flex justify-center items-center">
-                  {webhook.connectionStatus === true ? (
+                  {selectButton(app.appName, webhook) ? (
                     <button
                       className="premium-button-outline text-sm px-3 py-1.5 flex justify-center items-center"
                       onClick={() => handleDisconnect(app.appName)}

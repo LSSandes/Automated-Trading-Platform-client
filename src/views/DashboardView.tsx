@@ -1,8 +1,8 @@
 import { Zap } from "lucide-react";
 import QuickActions from "../components/QuickActions";
-import PerformanceChart from "../components/dashboard/PerformanceChart";
+// import PerformanceChart from "../components/dashboard/PerformanceChart";
 import ActiveTrades from "../components/dashboard/ActiveTrades";
-import SignalProviders from "../components/dashboard/SignalProviders";
+// import SignalProviders from "../components/dashboard/SignalProviders";
 import RecentAlerts from "../components/dashboard/RecentAlerts";
 import AccountsOverview from "../components/dashboard/AccountsOverview";
 
@@ -20,9 +20,9 @@ interface DashboardViewProps {
 }
 
 export default function DashboardView({
-  onCopyTrader,
-  onChat,
-  copyingTraders,
+  // onCopyTrader,
+  // onChat,
+  // copyingTraders,
   onViewChange,
 }: DashboardViewProps) {
   const introduction = [
@@ -100,16 +100,12 @@ export default function DashboardView({
       />
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 w-full gap-8">
         {/* Left Column - Performance Chart */}
-        <div className="lg:col-span-2">
-          <PerformanceChart />
-        </div>
+
+        {/* <PerformanceChart /> */}
 
         {/* Right Column - Active Trades */}
-        <div>
-          <ActiveTrades onViewChange={onViewChange} />
-        </div>
       </div>
 
       {/* Bottom Grid */}
@@ -118,16 +114,19 @@ export default function DashboardView({
         <div>
           <AccountsOverview />
         </div>
+        <div>
+          <ActiveTrades onViewChange={onViewChange} />
+        </div>
 
         {/* Signal Providers */}
-        <div>
+        {/* <div>
           <SignalProviders
             copyingTraders={copyingTraders}
             onCopyTrader={onCopyTrader}
             onChat={onChat}
             onViewChange={onViewChange}
           />
-        </div>
+        </div> */}
 
         {/* Recent Alerts */}
         <div>

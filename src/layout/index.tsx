@@ -7,6 +7,7 @@ import { UserParams } from "@/types/tradeLocker";
 import { userAtom } from "@/store/atoms";
 import { useAtom } from "jotai";
 import { getAccounts } from "@/app/reducers/metaAccount";
+import { getAlerts } from "@/app/reducers/alert";
 import { dispatch } from "@/app/store";
 
 export default function Layout() {
@@ -18,6 +19,7 @@ export default function Layout() {
   const currentPath = location.pathname; // Extract the current path
   useEffect(() => {
     user && dispatch(getAccounts(user?.email));
+    user && dispatch(getAlerts(user?.email));
   }, [user]);
   useEffect(() => {
     const token = localStorage.getItem("token");

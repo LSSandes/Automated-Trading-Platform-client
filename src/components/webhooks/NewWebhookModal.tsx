@@ -1,16 +1,37 @@
 import { useState } from "react";
-import { X, AlertTriangle, Plus, HelpCircle } from "lucide-react";
 import Tooltip from "../ui/Tooltip";
 import { NewWebhookModalProps } from "@/types/webhook";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
 import { dispatch } from "@/app/store";
-import { createMarketOrder } from "@/app/reducers/webhook";
-import { MdOutlineWebhook } from "react-icons/md";
+import {
+  createBasicWebhook,
+  createPremiumWebhook,
+} from "@/app/reducers/webhook";
 import { tooltips } from "@/constant/webhook";
+import { FiMinus, FiPlus } from "react-icons/fi";
+import { X, Plus, HelpCircle } from "lucide-react";
+import { AiOutlineSafety } from "react-icons/ai";
+import { MdOutlineWorkspacePremium } from "react-icons/md";
+import { IoRocketOutline } from "react-icons/io5";
 
-type WebhookMode = "basic" | "advanced";
+type WebhookMode = "basic" | "premium" | "advanced";
 type OrderType = "Create Order" | "Modify Order" | "Close Order";
+const OrderDirection = [
+  "buy",
+  "sell",
+  "buyStop",
+  "sellStop",
+  "buyLimit",
+  "sellLimit",
+];
+
+const TradingSessions = [
+  { region: "London", time: "8am - 5pm (UTC)" },
+  { region: "New York", time: "1pm - 10pm (UTC)" },
+  { region: "Tokyo", time: "12am - 9am (UTC)" },
+  { region: "Sydney", time: "10pm - 7am (UTC)" },
+];
 
 export default function NewWebhookModal({
   isOpen,
@@ -19,6 +40,8 @@ export default function NewWebhookModal({
   const [user] = useAtom(userAtom);
   const [mode, setMode] = useState<WebhookMode>("basic");
   const [orderClass, setOrderClass] = useState<OrderType>("Create Order");
+
+  //----------Common Params---------------//
   const [webhookName, setWebhookName] = useState("");
   const [pair, setPair] = useState("");
   const [orderDirection, setOrderDirection] = useState<string>("buy");
@@ -26,16 +49,63 @@ export default function NewWebhookModal({
   const [usePercentageSize, setUsePercentageSize] = useState<boolean>(true);
   const [percentageSize, setPercentageSize] = useState<number>(1);
   const [fixedSize, setFixedSize] = useState<number>(0);
+  //**Basic webhook**//
+  //-----------Create Order Params------------//
   const [stopLoss_pips, setStopLoss] = useState<number>(200);
   const [takeProfit_pips, setTakeProfit] = useState<number>(200);
-  const [openPrice_pips, setOpenPrice] = useState<number>(50);
-  const [stopLimit_pips, setStopLimit] = useState<number>(50);
-  const [trailingStopLoss, setTrailingStopLoss] = useState<number>(100);
+  const [trailingStopLoss, setTrailingStopLoss] = useState<number>(100); //market order
+  const [openPrice_pips, setOpenPrice] = useState<number>(50); //stop, limit order
+  const [stopLimit_pips, setStopLimit] = useState<number>(50); // stoplimit order
+  //-----------Modify Order Params------------//
   const [modifyType, setModifyType] = useState<string>("StopLoss");
   const [moveStopLoss_pips, setMoveStopLoss] = useState<number>(200);
   const [moveTakeProfit_pips, setMoveTakeProfit] = useState<number>(200);
+  //-----------Close Order Params-------------//
   const [partialClose, setPartialClose] = useState<number>(40);
   const [allTrades, setAllTrades] = useState<boolean>(false);
+  //------------------------------------------//
+  //**Premium webhook**//
+  const [multiTakeProfit_pips, setMultiTakeProfit] = useState<number[]>([100]);
+  const [timeBasedExitMinute, setTimeBasedExitMinute] = useState<number>(60);
+  const [breakenEvenSetting_pips, setBreakenEvenSetting] = useState<number>(30);
+  const [takeProfitSettingToogle, setTakeProfitSettingToogle] =
+    useState<boolean>(false);
+  const [stopLossSettingToogle, setStopLossSettingToogle] =
+    useState<boolean>(false);
+  const [trailingStopLossSettingToogle, setTrailingStopLossSettingToogle] =
+    useState<boolean>(false);
+  const [trailingDistance_pips, setTrailingDistance] = useState<number>(10);
+  const [activationTrigger_pips, setActivationTrigger] = useState<number>(10);
+  const [timeBasedExitToogle, setTImeBasedExitToogle] =
+    useState<boolean>(false);
+  const [breakEvenSettingToogle, setBreakEvenSettingToogle] =
+    useState<boolean>(false);
+  const [multiTakeProfitCount, setMultiTakeProfitCount] = useState<number>(1);
+  const maxCounts = 3;
+  const handleIncrease = () => {
+    if (multiTakeProfitCount < maxCounts) {
+      const newValue =
+        multiTakeProfit_pips[multiTakeProfitCount - 1] +
+        multiTakeProfit_pips[0];
+      setMultiTakeProfitCount(multiTakeProfitCount + 1);
+      setMultiTakeProfit([...multiTakeProfit_pips, newValue]);
+    }
+  };
+  const handleDecrease = () => {
+    if (multiTakeProfitCount > 1) {
+      setMultiTakeProfitCount(multiTakeProfitCount - 1);
+      setMultiTakeProfit(multiTakeProfit_pips.slice(0, -1));
+    }
+  };
+  const multiTakeProfitPercentage = (100 / multiTakeProfitCount).toFixed(0);
+  const hanleMultiTakeProfitChange = (index: number, value: number): void => {
+    const newPips = [...multiTakeProfit_pips];
+    newPips[index] = value;
+    for (let i = index + 1; i < multiTakeProfitCount; i++) {
+      newPips[i] = newPips[i - 1] * 2;
+    }
+    setMultiTakeProfit(newPips);
+  };
   const handleCreateWebhook = async () => {
     if (!user?.email) return;
     const commonData = {
@@ -44,44 +114,71 @@ export default function NewWebhookModal({
       webhookMode: mode,
       symbol: pair.toUpperCase(),
     };
-    const orderData =
-      mode === "basic"
-        ? {
-            ...commonData,
-            orderDirection,
-            orderType,
-            volume: usePercentageSize
-              ? (percentageSize / 100).toFixed(4).toString()
-              : fixedSize.toString(),
-            stopLoss_pips: String(stopLoss_pips),
-            takeProfit_pips: String(takeProfit_pips),
-            openPrice_pips: String(openPrice_pips),
-            stopLimit_pips: String(stopLimit_pips),
-            trailingStopLoss: String(trailingStopLoss),
-            modifyType,
-            moveStopLoss_pips: String(moveStopLoss_pips),
-            moveTakeProfit_pips: String(moveTakeProfit_pips),
-            partialClose: String(partialClose),
-            allTrades,
-          }
-        : {
-            ...commonData,
-            orderDirection: "",
-            orderType: "",
-            volume: fixedSize.toString(),
-            stopLoss_pips: "0",
-            takeProfit_pips: "0",
-            openPrice_pips: "0",
-            stopLimit_pips: "0",
-            trailingStopLoss: "0",
-            modifyType: "",
-            moveStopLoss_pips: "0",
-            moveTakeProfit_pips: "0",
-            partialClose: "0",
-            allTrades,
-          };
-    dispatch(createMarketOrder(orderData));
+    if (mode == "basic") {
+      const orderData = {
+        ...commonData,
+        orderDirection,
+        orderType,
+        volume: usePercentageSize
+          ? (percentageSize / 100).toFixed(4).toString()
+          : fixedSize.toString(),
+        stopLoss_pips: String(stopLoss_pips),
+        takeProfit_pips: String(takeProfit_pips),
+        openPrice_pips: String(openPrice_pips),
+        stopLimit_pips: String(stopLimit_pips),
+        trailingStopLoss: String(trailingStopLoss),
+        modifyType,
+        moveStopLoss_pips: String(moveStopLoss_pips),
+        moveTakeProfit_pips: String(moveTakeProfit_pips),
+        partialClose: String(partialClose),
+        allTrades,
+      };
+      dispatch(createBasicWebhook(orderData));
+    } else {
+      const orderData = {
+        ...commonData,
+        orderDirection,
+        orderType,
+        volume: usePercentageSize
+          ? (percentageSize / 100).toFixed(4).toString()
+          : fixedSize.toString(),
+        multiTakeProfit_pips: multiTakeProfit_pips
+          .map((pips) => String(pips))
+          .join(","),
+        stopLoss_pips: stopLossSettingToogle ? String(stopLoss_pips) : "0",
+        trailingDistance_pips: trailingStopLossSettingToogle
+          ? String(trailingDistance_pips)
+          : "0",
+        activationTrigger_pips: trailingStopLossSettingToogle
+          ? String(activationTrigger_pips)
+          : "0",
+        timeBasedExitMinute: timeBasedExitToogle
+          ? String(timeBasedExitMinute)
+          : "0",
+        breakenEvenSetting_pips: breakEvenSettingToogle
+          ? String(breakenEvenSetting_pips)
+          : "0",
+      };
+      dispatch(createPremiumWebhook(orderData));
+    }
   };
+  //**Advanced webhook**//
+  const [advancedOrderDirection, setAdvancedOrderDirection] =
+    useState<string>("buy");
+  const [RSI, setRSI] = useState<number>(14);
+  const [MACD, setMACD] = useState<number>(12);
+  const [movingAverage, setMovingAverage] = useState<number>(50);
+  const [tradingSession, setTradingSession] = useState<string>("New York");
+  const [toogleRSI, setToogleRSI] = useState<boolean>(false);
+  const [toogleMACD, setToogleMACD] = useState<boolean>(false);
+  const [toogleMovingAverage, setToogleMovingAverage] =
+    useState<boolean>(false);
+  const [toogleTradingSessions, setToogleTradingSessions] =
+    useState<boolean>(false);
+  const [toogleRiskManagement, setToogleRiskManagement] =
+    useState<boolean>(false);
+  //-----------------------------------//
+
   if (!isOpen) return null;
   console.log("-------orderType-------->", orderType);
   return (
@@ -102,9 +199,9 @@ export default function NewWebhookModal({
             <X className="h-5 w-5" />
           </button>
           <div className="flex items-center gap-2">
-            <MdOutlineWebhook className="h-5 w-5 mr-2" />
-            <h3 className="text-xl font-medium text-white tracking-tight">
-              Create New Webhook
+            {GenerateIconByMode(mode)}
+            <h3 className="text-xl font-medium text-white tracking-tight capitalize">
+              {mode} Webhook
             </h3>
           </div>
           <p className="text-gray-400 mt-2 text-sm">
@@ -118,35 +215,56 @@ export default function NewWebhookModal({
             <div className="flex justify-center items-center gap-3 lg:w-[70%] w-full bg-dark-200/30 rounded-lg">
               <button
                 onClick={() => setMode("basic")}
-                className={`flex-1 px-6 py-2 rounded-lg text-sm font-medium transition-all ${
+                className={`flex-1 px-6 py-2 rounded-lg text-sm font-medium transition-all flex justify-center items-center gap-2 ${
                   mode === "basic"
                     ? " text-white bg-blue-500 outline-1 outline-dashed outline-blue-500 outline-offset-2"
                     : "text-gray-400 hover:text-white"
                 }`}
               >
-                Basic Mode
+                <AiOutlineSafety className="w-5 h-5" />
+                Basic
               </button>
               <button
-                onClick={() => setMode("advanced")}
-                className={`flex-1 px-6 py-2 rounded-lg text-sm font-medium transition-all ${
-                  mode === "advanced"
-                    ? " text-white bg-blue-500 outline-1 outline-dashed outline-blue-500 outline-offset-2"
+                onClick={() => setMode("premium")}
+                className={`flex-1 px-6 py-2 rounded-lg text-sm font-medium transition-all flex justify-center gap-2 items-center ${
+                  mode === "premium"
+                    ? " text-white bg-purple-500 outline-1 outline-dashed outline-purple-500 outline-offset-2"
                     : "text-gray-400 hover:text-white"
                 }`}
               >
-                Advanced Mode
+                <MdOutlineWorkspacePremium className="w-5 h-5" />
+                Premium
+              </button>
+              <button
+                onClick={() => setMode("advanced")}
+                className={`flex-1 px-6 py-2 rounded-lg text-sm font-medium transition-all flex justify-center items-center ${
+                  mode === "advanced"
+                    ? " text-white bg-orange-500 outline-1 outline-dashed outline-orange-500 outline-offset-2"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                <IoRocketOutline className="w-5 h-5" />
+                Advanced
               </button>
             </div>
           </div>
-
           {/* Mode Description */}
           <div className=" rounded-xl  flex justify-center items-center">
-            <div className="flex items-start space-x-3 lg:w-[80%] w-full bg-dark-200/30 p-6 rounded-lg">
-              <AlertTriangle className="h-4 w-4 text-accent flex-shrink-0 mt-0.5" />
+            <div
+              className={`flex items-start space-x-3 lg:w-[80%] w-full bg-opacity-10 ${
+                mode == "basic"
+                  ? "border-blue-500 bg-blue-500"
+                  : mode == "premium"
+                  ? "border-[#4D3168] bg-[#4D3168]"
+                  : "border-[#683B1C] bg-[#683B1C]"
+              } border p-6 rounded-lg`}
+            >
+              {GenerateIconByMode(mode)}
+
               <div className="space-y-0">
-                {mode === "basic" ? (
+                {mode === "basic" && (
                   <>
-                    <p className="text-white text-sm">
+                    <p className="text-accent text-sm">
                       Basic webhook supports three message types:
                     </p>
                     <ul className="list-disc text-gray-400 ml-4 space-y-1 text-sm">
@@ -163,12 +281,43 @@ export default function NewWebhookModal({
                       </li>
                     </ul>
                   </>
-                ) : (
-                  <p className="text-white text-sm">
-                    Advanced mode enables direct integration with TradingView
-                    indicators and custom strategies. Perfect for complex
-                    automation needs.
-                  </p>
+                )}
+                {mode == "premium" && (
+                  <>
+                    <p className="text-[#D8B2F7]">
+                      Premium webhook includes advanced features:
+                    </p>
+                    <ul className="list-disc text-gray-400 ml-4 space-y-1 text-sm">
+                      <li className="text-sm">
+                        Multiple Take-Profit Levels with Smart Distribution
+                      </li>
+                      <li className="text-sm">
+                        Advanced Position Sizing with Risk Management
+                      </li>
+                      <li className="text-sm">
+                        Dynamic Trailing Stop-Loss System
+                      </li>
+                      <li className="text-sm">Time-Based Exit Strategies</li>
+                      <li className="text-sm">Break-Even Automation</li>
+                    </ul>
+                  </>
+                )}
+                {mode == "advanced" && (
+                  <>
+                    <p className="text-orange-400 text-sm">
+                      Advanced webhook provides professional tools:
+                    </p>
+                    <ul className="list-disc text-gray-400 ml-4 space-y-1 text-sm">
+                      <li className="text-sm">
+                        Complex Order Types (Market, Limit, Stop)
+                      </li>
+                      <li className="text-sm">
+                        Advanced Risk Management Suite
+                      </li>
+                      <li className="text-sm">Custom Trading Strategies</li>
+                      <li className="text-sm">Real-time Market Analysis</li>
+                    </ul>
+                  </>
                 )}
               </div>
             </div>
@@ -199,7 +348,6 @@ export default function NewWebhookModal({
                   ))}
                 </div>
               </div>
-
               {/* Common Fields */}
               <div className="w-full flex justify-center items-center">
                 <div className="flex flex-col justify-center items-center lg:w-[70%] w-[90%] gap-4">
@@ -216,7 +364,7 @@ export default function NewWebhookModal({
                       onChange={(e) => setWebhookName(e.target.value)}
                       placeholder="My First Webhook"
                       className="w-1/2 bg-dark-50 text-white rounded-lg px-4 py-3
-                             border border-dashed border-gray-500 focus:outline-none text-sm"
+                             border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0 text-sm"
                     />
                   </div>
                   <div className="flex justify-between items-center w-full">
@@ -232,7 +380,7 @@ export default function NewWebhookModal({
                       onChange={(e) => setPair(e.target.value)}
                       placeholder="BTCUSD"
                       className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                             border border-dashed border-gray-500 focus:outline-none text-sm"
+                             border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0 text-sm"
                     />
                   </div>
                   <div className="flex justify-between items-center w-full">
@@ -246,7 +394,7 @@ export default function NewWebhookModal({
                       value={orderDirection}
                       onChange={(e) => setOrderDirection(e.target.value)}
                       className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                                 border border-dashed border-gray-500 focus:outline-none 
+                                 border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0
                                   text-sm"
                     >
                       <option value={"buy"}>Buy</option>
@@ -255,7 +403,6 @@ export default function NewWebhookModal({
                   </div>
                 </div>
               </div>
-
               {/* Order Type Specific Fields */}
               <div className="flex w-full justify-center items-center">
                 <div className="space-y-4 flex lg:w-[70%] w-[90%] justify-center items-center flex-col">
@@ -272,7 +419,7 @@ export default function NewWebhookModal({
                           value={orderType}
                           onChange={(e) => setOrderType(e.target.value)}
                           className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                                 border border-dashed border-gray-500
+                                 border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0
                                   text-sm"
                         >
                           <option value={"market"}>Market</option>
@@ -326,7 +473,7 @@ export default function NewWebhookModal({
                               setFixedSize(Number(e.target.value))
                             }
                             className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-3
-                                   border border-dashed border-gray-500 focus:outline-none text-sm"
+                                   border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0 text-sm"
                           />
                         )}
                       </div>
@@ -348,7 +495,7 @@ export default function NewWebhookModal({
                               setStopLoss(Number(e.target.value))
                             }
                             className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                                   border border-dashed border-gray-500 focus:outline-none text-sm"
+                                   border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0 text-sm"
                           />
                         </div>
                         <div className="flex justify-between items-center w-full">
@@ -367,7 +514,7 @@ export default function NewWebhookModal({
                               setTakeProfit(Number(e.target.value))
                             }
                             className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                                   border border-dashed border-gray-500 focus:outline-none text-sm"
+                                   border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0 text-sm"
                           />
                         </div>
                         {orderType == "market" && (
@@ -387,7 +534,7 @@ export default function NewWebhookModal({
                                 setTrailingStopLoss(Number(e.target.value))
                               }
                               className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                                   border border-dashed border-gray-500 focus:outline-none text-sm"
+                                   border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0 text-sm"
                             />
                           </div>
                         )}
@@ -408,7 +555,7 @@ export default function NewWebhookModal({
                                 setOpenPrice(Number(e.target.value))
                               }
                               className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                                   border border-dashed border-gray-500 focus:outline-none text-sm"
+                                   border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0 text-sm"
                             />
                           </div>
                         )}
@@ -429,7 +576,7 @@ export default function NewWebhookModal({
                                 setStopLimit(Number(e.target.value))
                               }
                               className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                                   border border-dashed border-gray-500 focus:outline-none text-sm"
+                                   border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0 text-sm"
                             />
                           </div>
                         )}
@@ -449,7 +596,7 @@ export default function NewWebhookModal({
                           value={modifyType}
                           onChange={(e) => setModifyType(e.target.value)}
                           className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                                 border border-dashed border-gray-500 focus:outline-none 
+                                 border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0 
                                   text-sm"
                         >
                           <option value={"StopLoss"}>StopLoss</option>
@@ -480,7 +627,7 @@ export default function NewWebhookModal({
                             }
                           }}
                           className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                                   border border-dashed border-gray-500 focus:outline-none text-sm"
+                                   border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0 text-sm"
                         />
                       </div>
                     </>
@@ -523,7 +670,7 @@ export default function NewWebhookModal({
                             setPartialClose(Number(e.target.value))
                           }
                           className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                             border border-dashed border-gray-500 focus:outline-none text-sm"
+                             border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0 text-sm"
                         />
                       </div>
                     </>
@@ -533,9 +680,591 @@ export default function NewWebhookModal({
             </div>
           )}
 
+          {mode === "premium" && (
+            <div className="space-y-4">
+              <div className="w-full flex justify-center items-center">
+                <div className="flex flex-col justify-center items-center lg:w-[70%] w-[90%] gap-4">
+                  <div className="flex justify-between items-center w-full">
+                    <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                      <span>Webhook Name</span>
+                      <Tooltip content={tooltips.webhookName}>
+                        <HelpCircle className="h-4 w-4" />
+                      </Tooltip>
+                    </label>
+                    <input
+                      type="text"
+                      value={webhookName}
+                      onChange={(e) => setWebhookName(e.target.value)}
+                      placeholder="My First Webhook"
+                      className="w-1/2 bg-dark-50 text-white rounded-lg px-4 py-3
+                             border border-dashed border-gray-500 focus:border-purple-500 focus:ring-0 text-sm"
+                    />
+                  </div>
+                  <div className="flex justify-between items-center w-full">
+                    <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                      <span>Trading Pair</span>
+                      <Tooltip content={tooltips.pair}>
+                        <HelpCircle className="h-4 w-4" />
+                      </Tooltip>
+                    </label>
+                    <input
+                      type="text"
+                      value={pair}
+                      onChange={(e) => setPair(e.target.value)}
+                      placeholder="BTCUSD"
+                      className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                             border border-dashed border-gray-500 focus:border-purple-500 focus:ring-0 text-sm"
+                    />
+                  </div>
+                  <div className="flex justify-between items-center w-full">
+                    <label className="flex items-center space-x-2 text-sm text-gray-400">
+                      <span>Order Type</span>
+                      <Tooltip content={tooltips.orderType}>
+                        <HelpCircle className="h-4 w-4" />
+                      </Tooltip>
+                    </label>
+                    <select
+                      value={orderType}
+                      onChange={(e) => setOrderType(e.target.value)}
+                      className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                                 border border-dashed border-gray-500 focus:border-purple-500 focus:ring-0
+                                  text-sm"
+                    >
+                      <option value={"market"}>Market</option>
+                      <option value={"limit"}>Limit</option>
+                    </select>
+                  </div>
+                  <div className="flex justify-between items-center w-full">
+                    <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                      <span>Order Direction</span>
+                      <Tooltip content={tooltips.orderDirection}>
+                        <HelpCircle className="h-4 w-4" />
+                      </Tooltip>
+                    </label>
+                    <select
+                      value={orderDirection}
+                      onChange={(e) => setOrderDirection(e.target.value)}
+                      className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                                 border border-dashed border-gray-500 focus:border-purple-500 focus:ring-0
+                                  text-sm"
+                    >
+                      <option value={"buy"}>Buy</option>
+                      <option value={"sell"}>Sell</option>
+                    </select>
+                  </div>
+                  <div className="flex flex-col justify-center items-center w-full gap-2">
+                    <div className="flex items-center justify-between mb-2 w-full">
+                      <label className="flex items-center space-x-2 text-sm text-gray-400">
+                        <span>Position Size</span>
+                        <Tooltip content={tooltips.sizeType}>
+                          <HelpCircle className="h-4 w-4" />
+                        </Tooltip>
+                      </label>
+                      <button
+                        onClick={() => setUsePercentageSize(!usePercentageSize)}
+                        className="text-sm text-purple-500 hover:text-accent-dark"
+                      >
+                        Switch to {usePercentageSize ? "fixed" : "percentage"}
+                      </button>
+                    </div>
+                    {usePercentageSize ? (
+                      <div className="space-y-2 w-full">
+                        <input
+                          type="range"
+                          min="1"
+                          max="40"
+                          step={0.1}
+                          value={percentageSize}
+                          onChange={(e) =>
+                            setPercentageSize(Number(e.target.value))
+                          }
+                          className="w-full accent-purple-500"
+                        />
+                        <div className="flex justify-between text-sm text-gray-400">
+                          <span>1%</span>
+                          <span>{percentageSize.toFixed(1)}%</span>
+                          <span>40%</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <input
+                        type="number"
+                        value={fixedSize}
+                        onChange={(e) => setFixedSize(Number(e.target.value))}
+                        className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-3
+                                   border border-dashed border-gray-500 focus:border-purple-500 focus:ring-0 text-sm"
+                      />
+                    )}
+                  </div>
+                  <div className="flex flex-col justify-center items-center w-full gap-2">
+                    <div className="flex justify-between items-center w-full">
+                      <span className="text-sm text-gray-400">
+                        Take Profit Settings
+                      </span>
+                      <div className="flex justify-center items-center gap-2">
+                        <span className="text-gray-400 text-sm">
+                          Multiple TPs
+                        </span>
+                        <button
+                          onClick={() =>
+                            setTakeProfitSettingToogle(!takeProfitSettingToogle)
+                          }
+                          className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                            takeProfitSettingToogle
+                              ? "bg-purple-500"
+                              : "bg-dark-300"
+                          }`}
+                        >
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                              takeProfitSettingToogle
+                                ? "translate-x-6"
+                                : "translate-x-1"
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                    {Array.from({ length: multiTakeProfitCount }).map(
+                      (_, index) => (
+                        <div
+                          key={index}
+                          className="flex justify-between gap-2 items-center w-full"
+                        >
+                          <div
+                            className={`flex justify-center ${
+                              takeProfitSettingToogle ? "w-[80%]" : "w-full"
+                            } relative`}
+                          >
+                            <input
+                              type="text"
+                              value={multiTakeProfit_pips[index] || 0}
+                              onChange={(e) =>
+                                hanleMultiTakeProfitChange(
+                                  index,
+                                  Number(e.target.value)
+                                )
+                              }
+                              className="w-full bg-dark-50 text-white rounded-lg px-4 py-3 border border-dashed border-gray-500 focus:border-purple-500 focus:ring-0 text-sm"
+                            />
+                            <span className="text-gray-400 text-sm absolute right-[15px] top-[15px]">
+                              Pips
+                            </span>
+                          </div>
+                          {takeProfitSettingToogle && (
+                            <div className="flex justify-center items-center flex-1 outline-dashed outline-gray-500 outline-1 py-3 text-sm rounded-lg">
+                              {multiTakeProfitPercentage} %
+                            </div>
+                          )}
+                        </div>
+                      )
+                    )}
+                    {takeProfitSettingToogle && (
+                      <div className="flex justify-end items-center w-full">
+                        <div className="flex justify-end items-center gap-2">
+                          <button
+                            className="bg-dark-300 p-1 rounded-md"
+                            onClick={handleDecrease}
+                          >
+                            <FiMinus className="w-6 h-6" />
+                          </button>
+                          <button
+                            className="bg-dark-300 p-1 rounded-md"
+                            onClick={handleIncrease}
+                          >
+                            <FiPlus className="w-6 h-6" />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col justify-center items-center w-full gap-2">
+                    <div className="flex justify-between items-center w-full">
+                      <span className="text-sm text-gray-400">
+                        Stop Loss Settings
+                      </span>
+                      <div className="flex justify-center items-center gap-2">
+                        <span className="text-gray-400 text-sm">Stop Loss</span>
+                        <button
+                          onClick={() =>
+                            setStopLossSettingToogle(!stopLossSettingToogle)
+                          }
+                          className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                            stopLossSettingToogle
+                              ? "bg-purple-500"
+                              : "bg-dark-300"
+                          }`}
+                        >
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                              stopLossSettingToogle
+                                ? "translate-x-6"
+                                : "translate-x-1"
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                    {stopLossSettingToogle && (
+                      <div className="flex justify-center w-full relative">
+                        <input
+                          type="text"
+                          value={stopLoss_pips}
+                          onChange={(e) => setStopLoss(Number(e.target.value))}
+                          placeholder="My First Webhook"
+                          className="w-full bg-dark-50 text-white rounded-lg px-4 py-3
+                             border border-dashed border-gray-500 focus:border-purple-500 focus:ring-0 text-sm"
+                        />
+                        <span className="text-gray-400 text-sm absolute right-[15px] top-[15px]">
+                          Pips
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col justify-center items-center w-full gap-2">
+                    <div className="flex justify-between items-center w-full">
+                      <span className="text-sm text-gray-400">
+                        Trailing Stop Loss Setting
+                      </span>
+                      <div className="flex justify-center items-center gap-2">
+                        <span className="text-gray-400 text-sm">
+                          Trailing Stop
+                        </span>
+                        <button
+                          onClick={() =>
+                            setTrailingStopLossSettingToogle(
+                              !trailingStopLossSettingToogle
+                            )
+                          }
+                          className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                            trailingStopLossSettingToogle
+                              ? "bg-purple-500"
+                              : "bg-dark-300"
+                          }`}
+                        >
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                              trailingStopLossSettingToogle
+                                ? "translate-x-6"
+                                : "translate-x-1"
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                    {trailingStopLossSettingToogle && (
+                      <div className="flex flex-col justify-center items-start w-full gap-2">
+                        <div className="flex justify-start items-center text-[12px] text-gray-400">
+                          Trailing Distance (pips)
+                        </div>
+                        <div className="flex justify-center w-full relative">
+                          <input
+                            type="text"
+                            value={trailingDistance_pips}
+                            onChange={(e) =>
+                              setTrailingDistance(Number(e.target.value))
+                            }
+                            placeholder="Trailing Stop Loss"
+                            className="w-full bg-dark-50 text-white rounded-lg px-4 py-3
+                             border border-dashed border-gray-500 focus:border-purple-500 focus:ring-0 text-sm"
+                          />
+                          <span className="text-gray-400 text-sm absolute right-[15px] top-[15px]">
+                            Pips
+                          </span>
+                        </div>
+                        <div className="flex justify-start items-center text-[12px] text-gray-400">
+                          Activation Trigger (pips)
+                        </div>
+                        <div className="flex justify-center w-full relative">
+                          <input
+                            type="text"
+                            value={activationTrigger_pips}
+                            onChange={(e) =>
+                              setActivationTrigger(Number(e.target.value))
+                            }
+                            placeholder="Activation Trigger"
+                            className="w-full bg-dark-50 text-white rounded-lg px-4 py-3
+                             border border-dashed border-gray-500 focus:border-purple-500 focus:ring-0 text-sm"
+                          />
+                          <span className="text-gray-400 text-sm absolute right-[15px] top-[15px]">
+                            Pips
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex flex-col justify-center items-center gap-2 w-full">
+                      <div className="flex justify-between items-center w-full">
+                        <span className="text-sm text-gray-400">
+                          Time Based Exit
+                        </span>
+                        <div className="flex justify-center items-center gap-2">
+                          <span className="text-gray-400 text-sm">Enable</span>
+                          <button
+                            onClick={() =>
+                              setTImeBasedExitToogle(!timeBasedExitToogle)
+                            }
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                              timeBasedExitToogle
+                                ? "bg-purple-500"
+                                : "bg-dark-300"
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                                timeBasedExitToogle
+                                  ? "translate-x-6"
+                                  : "translate-x-1"
+                              }`}
+                            />
+                          </button>
+                        </div>
+                      </div>
+                      {timeBasedExitToogle && (
+                        <div className="flex justify-center w-full relative">
+                          <input
+                            type="text"
+                            value={timeBasedExitMinute}
+                            onChange={(e) =>
+                              setTimeBasedExitMinute(Number(e.target.value))
+                            }
+                            placeholder="Trailing Stop Loss"
+                            className="w-full bg-dark-50 text-white rounded-lg px-4 py-3
+                             border border-dashed border-gray-500 focus:border-purple-500 focus:ring-0 text-sm"
+                          />
+                          <span className="text-gray-400 text-sm absolute right-[15px] top-[15px]">
+                            Minute
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col justify-center items-center gap-2 w-full">
+                      <div className="flex justify-between w-full items-center">
+                        <span className="text-sm text-gray-400">
+                          Break-Even Setting
+                        </span>
+                        <div className="flex justify-center items-center gap-2">
+                          <span className="text-gray-400 text-sm">Enable</span>
+                          <button
+                            onClick={() =>
+                              setBreakEvenSettingToogle(!breakEvenSettingToogle)
+                            }
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                              breakEvenSettingToogle
+                                ? "bg-purple-500"
+                                : "bg-dark-300"
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                                breakEvenSettingToogle
+                                  ? "translate-x-6"
+                                  : "translate-x-1"
+                              }`}
+                            />
+                          </button>
+                        </div>
+                      </div>
+                      {breakEvenSettingToogle && (
+                        <div className="flex justify-center w-full relative">
+                          <input
+                            type="text"
+                            value={breakenEvenSetting_pips}
+                            onChange={(e) =>
+                              setBreakenEvenSetting(Number(e.target.value))
+                            }
+                            placeholder="Trailing Stop Loss"
+                            className="w-full bg-dark-50 text-white rounded-lg px-4 py-3
+                             border border-dashed border-gray-500 focus:border-purple-500 focus:ring-0 text-sm"
+                          />
+                          <span className="text-gray-400 text-sm absolute right-[15px] top-[15px]">
+                            Pips
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {mode === "advanced" && (
-            <div className="flex w-full justify-center items-center">
-              <div className="space-y-8 w-[70%]">
+            <div className="flex w-full justify-center items-center flex-col gap-2">
+              <div className="w-full flex flex-col justify-center items-center gap-2">
+                <div className="flex w-[80%] justify-start items-center">
+                  <span className="text-gray-400 text-sm">Order Direction</span>
+                </div>
+                <div className=" w-[80%] grid grid-cols-3 gap-2">
+                  {OrderDirection.map((item: string) => (
+                    <button
+                      key={item}
+                      onClick={() => setAdvancedOrderDirection(item)}
+                      className={`w-full text-center py-2 rounded-lg ${
+                        item === advancedOrderDirection
+                          ? "bg-orange-500 text-white"
+                          : "bg-dark-300 text-gray-400"
+                      }`}
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="w-full flex flex-col justify-center items-center gap-2">
+                <div className="flex w-[80%] justify-start items-center">
+                  <span className="text-gray-400 text-sm">
+                    Techincal Indicators
+                  </span>
+                </div>
+                <div className="flex w-[80%] justify-between items-center gap-2">
+                  <div className="flex justify-center items-center gap-2">
+                    <button
+                      onClick={() => setToogleRSI(!toogleRSI)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                        toogleRSI ? "bg-orange-500" : "bg-dark-300"
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                          toogleRSI ? "translate-x-6" : "translate-x-1"
+                        }`}
+                      />
+                    </button>
+                    <span className="text-gray-400 text-sm">RSI</span>
+                  </div>
+                  <div className="flex justify-center items-center w-1/2">
+                    <input
+                      type="text"
+                      value={RSI}
+                      onChange={(e) => setRSI(Number(e.target.value))}
+                      placeholder="RSI"
+                      className="w-full bg-dark-50 text-white rounded-lg px-4 py-3
+                             border border-dashed border-gray-500 focus:border-orange-500 focus:ring-0 text-sm"
+                    />
+                  </div>
+                </div>
+                <div className="flex w-[80%] justify-between items-center gap-2">
+                  <div className="flex justify-center items-center gap-2">
+                    <button
+                      onClick={() => setToogleMACD(!toogleMACD)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                        toogleMACD ? "bg-orange-500" : "bg-dark-300"
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                          toogleMACD ? "translate-x-6" : "translate-x-1"
+                        }`}
+                      />
+                    </button>
+                    <span className="text-gray-400 text-sm">MACD</span>
+                  </div>
+                  <div className="flex justify-center items-center w-1/2">
+                    <input
+                      type="text"
+                      value={MACD}
+                      onChange={(e) => setMACD(Number(e.target.value))}
+                      placeholder="MACD"
+                      className="w-full bg-dark-50 text-white rounded-lg px-4 py-3
+                             border border-dashed border-gray-500 focus:border-orange-500 focus:ring-0 text-sm"
+                    />
+                  </div>
+                </div>
+                <div className="flex w-[80%] justify-between items-center gap-2">
+                  <div className="flex justify-center items-center gap-2">
+                    <button
+                      onClick={() =>
+                        setToogleMovingAverage(!toogleMovingAverage)
+                      }
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                        toogleMovingAverage ? "bg-orange-500" : "bg-dark-300"
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                          toogleMovingAverage
+                            ? "translate-x-6"
+                            : "translate-x-1"
+                        }`}
+                      />
+                    </button>
+                    <span className="text-gray-400 text-sm">
+                      Moving Average
+                    </span>
+                  </div>
+                  <div className="flex justify-center items-center w-1/2">
+                    <input
+                      type="text"
+                      value={movingAverage}
+                      onChange={(e) => setMovingAverage(Number(e.target.value))}
+                      placeholder="Moving Average"
+                      className="w-full bg-dark-50 text-white rounded-lg px-4 py-3
+                             border border-dashed border-gray-500 focus:border-orange-500 focus:ring-0 text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="w-full flex flex-col justify-center items-center gap-2">
+                <div className="flex w-[80%] justify-between items-center">
+                  <span className="text-gray-400 text-sm">
+                    Trading Sessions
+                  </span>
+                  <button
+                    onClick={() =>
+                      setToogleTradingSessions(!toogleTradingSessions)
+                    }
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                      toogleTradingSessions ? "bg-orange-500" : "bg-dark-300"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                        toogleTradingSessions
+                          ? "translate-x-6"
+                          : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 gap-2 w-[80%]">
+                  {toogleTradingSessions &&
+                    TradingSessions.map((item, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setTradingSession(item.region)}
+                        className={`w-full flex justify-center items-center gap-2 text-center py-2 rounded-lg ${
+                          item.region === tradingSession
+                            ? "bg-orange-500 text-white"
+                            : "bg-dark-300 text-gray-400"
+                        }`}
+                      >
+                        <span>{item.region}</span>
+                        <span>{item.time}</span>
+                      </button>
+                    ))}
+                </div>
+              </div>
+              <div className="w-full flex flex-col justify-center items-center gap-2">
+                <div className="flex w-[80%] justify-between items-center">
+                  <span className="text-gray-400 text-sm">Risk Management</span>
+                  <button
+                    onClick={() =>
+                      setToogleRiskManagement(!toogleRiskManagement)
+                    }
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                      toogleRiskManagement ? "bg-orange-500" : "bg-dark-300"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                        toogleRiskManagement ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
+              </div>
+
+              {/* <div className="space-y-8 w-[70%]">
                 <div className="flex justify-between items-center">
                   <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                     <span>Webhook Name</span>
@@ -552,7 +1281,6 @@ export default function NewWebhookModal({
                            border border-dashed border-gray-500 focus:outline-none text-sm"
                   />
                 </div>
-
                 <div className="flex justify-between items-center">
                   <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                     <span>Trading Pairs</span>
@@ -588,36 +1316,58 @@ export default function NewWebhookModal({
                                    border border-dashed border-gray-500 focus:outline-none text-sm"
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
           )}
         </div>
 
         {/* Footer */}
         <div className="py-4 px-8 border-t border-dark-300/50">
-          <div className="flex items-center justify-between">
-            <button
-              onClick={onClose}
-              className="lg:px-6 px-4 py-2 text-gray-400 hover:text-gray-300 
+          {mode != "advanced" ? (
+            <div className="flex items-center justify-between">
+              <button
+                onClick={onClose}
+                className="lg:px-6 px-4 py-2 text-gray-400 hover:text-gray-300 
                        transition-colors duration-300 bg-dark-100 outline-1 outline-dashed outline-dark-300 outline-offset-2 rounded-xl text-sm"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => {
-                handleCreateWebhook();
-                onClose();
-              }}
-              disabled={!webhookName || !pair}
-              className="premium-button lg:px-6 px-4 py-2 flex items-center space-x-2
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  handleCreateWebhook();
+                  onClose();
+                }}
+                disabled={!webhookName || !pair}
+                className="premium-button lg:px-6 px-4 py-2 flex items-center space-x-2
                        disabled:opacity-50 disabled:cursor-not-allowed text-sm bg-blue-500 outline-1 outline-dashed outline-blue-500 outline-offset-2"
-            >
-              <span>Create Webhook</span>
-              <Plus className="h-5 w-5" />
-            </button>
-          </div>
+              >
+                <span>Create Webhook</span>
+                <Plus className="h-5 w-5" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col justify-center items-center">
+              <div className="font-bold text-xl text-gray-400">Coming Soon</div>
+            </div>
+          )}
         </div>
       </div>
     </div>
+  );
+}
+
+function GenerateIconByMode(mode: string) {
+  return (
+    <>
+      {mode == "basic" && (
+        <AiOutlineSafety className="h-6 w-6 text-accent flex-shrink-0 mt-0.5" />
+      )}
+      {mode == "premium" && (
+        <MdOutlineWorkspacePremium className="h-6 w-6 text-purple-500 flex-shrink-0 mt-0.5" />
+      )}
+      {mode == "advanced" && (
+        <IoRocketOutline className="h-6 w-6 text-orange-500 flex-shrink-0 mt-0.5" />
+      )}
+    </>
   );
 }

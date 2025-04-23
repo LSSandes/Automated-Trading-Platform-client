@@ -1,15 +1,12 @@
 export interface WebhookConfig {
   id: string;
-  accountId: string;
+  accountId_m: string;
+  accountId_t: string;
   webhookName: string;
+  webhookMode: string;
   symbol: string;
-  isActive: boolean;
-  isPublic: boolean;
-  connectionStatus: boolean;
   orderDirection: string;
   orderType: string;
-  webhookMode: string;
-  tradeExecutionTime?: string;
   volume: number;
   stopLoss_pips: number;
   takeProfit_pips: number;
@@ -21,11 +18,17 @@ export interface WebhookConfig {
   moveTakeProfit_pips: number;
   partialClose: number;
   allTrades: boolean;
-  successRate?: number;
-  totalTrades?: number;
+  multiTakeProfits_pips: number[];
+  trailingDistance_pips: number;
+  activationTrigger_pips: number;
+  timeBasedExitMinute: number;
+  breakenEvenSetting_pips: number;
+  isActive: boolean;
+  isPublic: boolean;
+  connectionStatus: boolean;
   appName?: string;
   hashedWebhook: string;
-  price?: number;
+  tradeExecutionTime?: string;
 }
 
 export interface WebhookCardProps {

@@ -40,7 +40,7 @@ const initialState: TradesStateProps = {
     marginUsage: 0,
   },
   monthStats: {},
-  positions: [],
+  positionsMetatrader: [],
 };
 
 const trade = createSlice({
@@ -60,7 +60,7 @@ const trade = createSlice({
       state.monthStats = action.payload;
     },
     getActivePositionsSuccess(state, action) {
-      state.positions = action.payload;
+      state.positionsMetatrader = action.payload;
     },
   },
 });
@@ -134,7 +134,7 @@ export function getCalendarTradesStats({
   };
 }
 
-export function getActivePositions({ accountId }: { accountId: string }) {
+export function getActivePositionsMetatrader({ accountId }: { accountId: string }) {
   return async () => {
     try {
       const response = await axios.post("/trade/meta/getTrades", { accountId });

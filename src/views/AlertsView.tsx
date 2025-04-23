@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Bell, Filter, Search } from "lucide-react";
+import { dispatch, useSelector } from "@/app/store";
+import AlertsList from "@/components/AlertsList";
+import { getAlerts, updateAlert } from "@/app/reducers/alert";
+import { useAtom } from "jotai";
+import { userAtom } from "@/store/atoms";
 
 export default function AlertsView() {
+  const [user] = useAtom(userAtom);
   const [filterType, setFilterType] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-
-
-
+  const alerts = useSelector((state) => state.alert.alerts);
+  useEffect(() => {
+    user && dispatch(getAlerts(user?.email));
+    user && dispatch(updateAlert(user?.email));
+  }, []);
+  console.log("-----------alert2------------>", alerts);
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -82,7 +91,7 @@ export default function AlertsView() {
       </div> */}
 
       {/* Alerts List */}
-      {/* <AlertsList alerts={filteredAlerts} expanded={true} /> */}
+      <AlertsList alerts={alerts} expanded={true} />
     </div>
   );
 }

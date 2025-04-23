@@ -1,4 +1,5 @@
-import { TrendingUp, TrendingDown, Clock, DollarSign } from 'lucide-react';
+import { useSelector } from "@/app/store";
+import { TrendingUp, TrendingDown, Clock, DollarSign } from "lucide-react";
 
 interface ActiveTradesProps {
   onViewChange: (view: string) => void;
@@ -9,21 +10,21 @@ const trades = [
     id: 1,
     symbol: "EURUSD",
     type: "buy",
-    openPrice: 1.0950,
-    currentPrice: 1.0980,
-    profit: 150.50,
+    openPrice: 1.095,
+    currentPrice: 1.098,
+    profit: 150.5,
     profitPercentage: 1.25,
-    time: "2h 15m"
+    time: "2h 15m",
   },
   {
     id: 2,
     symbol: "XAUUSD",
     type: "sell",
-    openPrice: 2025.50,
-    currentPrice: 2015.80,
+    openPrice: 2025.5,
+    currentPrice: 2015.8,
     profit: 485.25,
     profitPercentage: 2.15,
-    time: "45m"
+    time: "45m",
   },
   {
     id: 3,
@@ -33,11 +34,13 @@ const trades = [
     currentPrice: 40200,
     profit: 350.75,
     profitPercentage: 0.85,
-    time: "1h 30m"
-  }
+    time: "1h 30m",
+  },
 ];
 
 export default function ActiveTrades({ onViewChange }: ActiveTradesProps) {
+  const accounts = useSelector((state) => state.metaAccount.accounts);
+  console.log("dashboard accounts--------->", accounts);
   return (
     <div className="glass-panel rounded-xl p-6">
       <div className="flex items-center justify-between mb-6">
@@ -47,19 +50,19 @@ export default function ActiveTrades({ onViewChange }: ActiveTradesProps) {
 
       <div className="space-y-4">
         {trades.map((trade) => (
-          <div 
+          <div
             key={trade.id}
             className="glass-panel rounded-lg p-4 hover:bg-dark-200/30 transition-colors cursor-pointer"
-            onClick={() => onViewChange('trades')}
+            onClick={() => onViewChange("trades")}
           >
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center space-x-3">
-                <div className={`p-2 rounded-lg ${
-                  trade.type === 'buy' 
-                    ? 'bg-emerald-500/10' 
-                    : 'bg-red-500/10'
-                }`}>
-                  {trade.type === 'buy' ? (
+                <div
+                  className={`p-2 rounded-lg ${
+                    trade.type === "buy" ? "bg-emerald-500/10" : "bg-red-500/10"
+                  }`}
+                >
+                  {trade.type === "buy" ? (
                     <TrendingUp className="h-4 w-4 text-emerald-400" />
                   ) : (
                     <TrendingDown className="h-4 w-4 text-red-400" />
@@ -68,7 +71,13 @@ export default function ActiveTrades({ onViewChange }: ActiveTradesProps) {
                 <div>
                   <div className="text-white font-medium">{trade.symbol}</div>
                   <div className="flex items-center space-x-2 text-sm">
-                    <span className={trade.type === 'buy' ? 'text-emerald-400' : 'text-red-400'}>
+                    <span
+                      className={
+                        trade.type === "buy"
+                          ? "text-emerald-400"
+                          : "text-red-400"
+                      }
+                    >
                       {trade.type.toUpperCase()}
                     </span>
                     <span className="text-gray-400">@{trade.openPrice}</span>
@@ -76,11 +85,17 @@ export default function ActiveTrades({ onViewChange }: ActiveTradesProps) {
                 </div>
               </div>
               <div className="text-right">
-                <div className={trade.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}>
-                  {trade.profit >= 0 ? '+' : ''}{trade.profit.toFixed(2)} USD
+                <div
+                  className={
+                    trade.profit >= 0 ? "text-emerald-400" : "text-red-400"
+                  }
+                >
+                  {trade.profit >= 0 ? "+" : ""}
+                  {trade.profit.toFixed(2)} USD
                 </div>
                 <div className="text-sm text-gray-400">
-                  ({trade.profitPercentage >= 0 ? '+' : ''}{trade.profitPercentage}%)
+                  ({trade.profitPercentage >= 0 ? "+" : ""}
+                  {trade.profitPercentage}%)
                 </div>
               </div>
             </div>
@@ -99,8 +114,8 @@ export default function ActiveTrades({ onViewChange }: ActiveTradesProps) {
         ))}
       </div>
 
-      <button 
-        onClick={() => onViewChange('trades')}
+      <button
+        onClick={() => onViewChange("trades")}
         className="w-full mt-4 px-4 py-2 border border-accent/30 text-accent rounded-lg
                  hover:bg-accent/10 transition-all duration-300"
       >

@@ -67,7 +67,7 @@ export interface MonthStats {
   [key: number]: DayStats; // Key is the day of the month (1-31)
 }
 
-export interface PositionConfig {
+export interface MetatraderPositionConfig {
   id: string;
   type: string;
   symbol: string;
@@ -84,5 +84,5 @@ export interface TradesStateProps {
   tradelockerOrdersHistory: TradelockerOrderHistoryParams[];
   totalTradesStats: TotalTradesStats;
   monthStats: MonthStats;
-  positions: PositionConfig[];
+  positionsMetatrader: MetatraderPositionConfig[];
 }

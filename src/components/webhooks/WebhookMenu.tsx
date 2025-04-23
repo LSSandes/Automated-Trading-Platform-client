@@ -1,7 +1,7 @@
 // import React from 'react';
 import { 
   Edit2, /*Palette,*/ Trash2, DollarSign, 
-  Shield, LayoutGrid, /*AlertTriangle */
+  /*Shield,*/ LayoutGrid, /*AlertTriangle */
 } from 'lucide-react';
 import { WebhookMenuProps } from '@/types/webhook';
 
@@ -9,7 +9,7 @@ export default function WebhookMenu({
   onEdit, 
   onDelete, 
   onSetPrice,
-  onManageRisk,
+  // onManageRisk,
   onManageApps,
   isPublic 
 }: WebhookMenuProps) {
@@ -34,14 +34,14 @@ export default function WebhookMenu({
         <span>Change color</span>
       </button> */}
 
-      <button
+      {/* <button
         onClick={onManageRisk}
         className="flex items-center space-x-2 w-full px-3 py-2 text-sm text-gray-300
                  hover:bg-dark-300/50 rounded-lg transition-colors"
       >
         <Shield className="h-4 w-4" />
         <span>Risk Management</span>
-      </button>
+      </button> */}
 
       <button
         onClick={onManageApps}

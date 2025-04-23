@@ -11,7 +11,7 @@ import TradeFilters from "../components/trades/TradeFilters";
 import { useAtom } from "jotai";
 import { selectedAccountAtom, selectedAccountTypeAtom } from "@/store/atoms";
 import { dispatch, useSelector } from "@/app/store";
-import { getActivePositions } from "@/app/reducers/trade";
+import { getActivePositionsMetatrader } from "@/app/reducers/trade";
 
 export default function TradesView() {
   const [activeTab, setActiveTab] = useState<
@@ -19,11 +19,11 @@ export default function TradesView() {
   >("overview");
   const [selectedAccount] = useAtom(selectedAccountAtom);
   const [selectedAccountType] = useAtom(selectedAccountTypeAtom);
-  const activePositions = useSelector((state) => state.trade.positions);
+  const activePositions = useSelector((state) => state.trade.positionsMetatrader);
   useEffect(() => {
     if (selectedAccountType == "MetaTrader") {
       selectedAccount &&
-        dispatch(getActivePositions({ accountId: selectedAccount }));
+        dispatch(getActivePositionsMetatrader({ accountId: selectedAccount }));
     } else {
     }
   }, [selectedAccount, selectedAccountType]);

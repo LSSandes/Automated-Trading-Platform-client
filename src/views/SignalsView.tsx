@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
-import { Signal, Plus, Terminal, ExternalLink } from "lucide-react";
+import { Signal, Plus } from "lucide-react";
 import WebhookCard from "../components/webhooks/WebhookCard";
 import NewWebhookModal from "../components/webhooks/NewWebhookModal";
 import { userAtom } from "@/store/atoms";
 import { useAtom } from "jotai";
 import { useSelector, dispatch } from "@/app/store";
 import { getWebhooks } from "@/app/reducers/webhook";
-import { GiShoppingCart } from "react-icons/gi";
+// import { GiShoppingCart } from "react-icons/gi";
+import { AiOutlineSafety } from "react-icons/ai";
+import { MdOutlineWorkspacePremium } from "react-icons/md";
 
 export default function SignalsView() {
   const [user] = useAtom(userAtom);
@@ -28,14 +30,6 @@ export default function SignalsView() {
   const handleTogglePublicMarketOrder = (id: string) => {
     console.log("--------handleTogglePublic------->", id);
   };
-
-  // const handleTogglePublicCloseOrder = (id: number) => {
-  //   console.log("-------handleTogglePublic--------->", id);
-  // };
-
-  // const handleToggleActiveCloseOrder = (id: number) => {
-  //   console.log("--------handleToggleActive--------->", id);
-  // };
   return (
     <div className="space-y-6">
       <div className="flex justify-between lg:items-center items-start lg:flex-row flex-col gap-4">
@@ -63,18 +57,20 @@ export default function SignalsView() {
       {webhooksState.length > 0 && (
         <div className="space-y-6">
           {webhooksState.find(
-            (webhook) => webhook.webhookMode === "advanced"
+            (webhook) => webhook.webhookMode === "premium"
           ) && (
             <>
               <div className="text-2xl mb-4 flex justify-start items-center gap-2">
-                <GiShoppingCart className="w-6 h-6"/>
-                <span className="text-white font-medium">Advanced webhooks</span>
+                <MdOutlineWorkspacePremium className="w-6 h-6 text-purple-500" />
+                <span className="text-purple-500 font-medium">
+                  Premium webhooks
+                </span>
               </div>
             </>
           )}
-          <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4 h-min items-start">
             {webhooksState
-              .filter((webhook) => webhook.webhookMode === "advanced")
+              .filter((webhook) => webhook.webhookMode === "premium")
               .map((webhook) => (
                 <WebhookCard
                   key={webhook.id}
@@ -88,8 +84,10 @@ export default function SignalsView() {
           {webhooksState.find((webhook) => webhook.webhookMode === "basic") && (
             <>
               <div className="text-2xl mb-4 flex justify-start items-center gap-2">
-                <GiShoppingCart className="w-6 h-6"/>
-                <span className="text-white font-medium">Basic webhooks</span>
+                <AiOutlineSafety className="w-6 h-6 text-blue-500" />
+                <span className=" font-medium text-blue-500">
+                  Basic webhooks
+                </span>
               </div>
             </>
           )}
@@ -108,34 +106,6 @@ export default function SignalsView() {
           </div>
         </div>
       )}
-      {/* Documentation Link */}
-      {webhooksState.length > 0 && (
-        <div className="mt-8 p-6 glass-panel rounded-xl">
-          <div className="flex items-start space-x-4">
-            <div className="p-3 bg-accent/10 rounded-lg">
-              <Terminal className="h-6 w-6 text-accent" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-lg font-medium text-white mb-2">
-                TradingView Webhook Documentation
-              </h3>
-              <p className="text-gray-400 mb-4">
-                Learn how to set up and configure TradingView alerts to work
-                with our webhook system. Get detailed examples and best
-                practices for reliable signal automation.
-              </p>
-              <a
-                href="#"
-                className="inline-flex items-center text-accent hover:text-accent-dark transition-colors"
-              >
-                View Documentation
-                <ExternalLink className="h-4 w-4 ml-2" />
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
-
       <NewWebhookModal
         isOpen={showNewWebhook}
         onClose={() => setShowNewWebhook(false)}
