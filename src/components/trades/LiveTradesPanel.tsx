@@ -1,10 +1,10 @@
-import { PositionConfig } from '@/types/trade';
+import { MetatraderPositionConfig } from '@/types/trade';
 import ProfitCard from './ProfitCard';
 import TradesList from './TradesList';
 
 
 interface LiveTradesPanelProps {
-  trades: PositionConfig[];
+  trades: MetatraderPositionConfig[];
   onModify?: (tradeId: string) => void;
   onClose?: (tradeId: string) => void;
 }

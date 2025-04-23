@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Edit2, X } from "lucide-react";
 import TradeCounts from "./TradeCounts";
-import { PositionConfig } from "@/types/trade";
+import { MetatraderPositionConfig } from "@/types/trade";
 
 interface TradesListProps {
-  trades: PositionConfig[];
+  trades: MetatraderPositionConfig[];
   onModify?: (tradeId: string) => void;
   onClose?: (tradeId: string) => void;
 }

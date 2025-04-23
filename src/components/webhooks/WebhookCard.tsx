@@ -107,8 +107,11 @@ export default function WebhookCard({
   }, []);
   //  ***************************Handle the URL**********************************//
   const handleCopy = () => {
+    // navigator.clipboard.writeText(
+    //   `http://localhost:5000/api/alert/${webhook.hashedWebhook}`
+    // );
     navigator.clipboard.writeText(
-      `http://localhost:5000/api/alert/${webhook.hashedWebhook}`
+      `https://automated-trading-platform-server.onrender.com/api/alert/${webhook.hashedWebhook}`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

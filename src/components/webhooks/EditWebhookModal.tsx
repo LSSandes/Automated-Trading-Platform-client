@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { X, Check, HelpCircle } from "lucide-react";
-import { CiEdit } from "react-icons/ci";
+// import { CiEdit } from "react-icons/ci";
 import Tooltip from "../ui/Tooltip";
 import { EditWebhookModalProps } from "@/types/webhook";
 import { useAtom } from "jotai";
