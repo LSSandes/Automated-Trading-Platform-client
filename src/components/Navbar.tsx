@@ -44,7 +44,7 @@ export default function Navbar() {
     }
   }, []);
 
-  const socket = io("http://localhost:5000");
+  const socket = io("https://automated-trading-platform-server.onrender.com");
   useEffect(() => {
     console.log("===============>");
 
