@@ -125,7 +125,7 @@ export function createBasicWebhook({
         webhook.actions.addWebhookSuccess(response.data.data.newWebhook)
       );
       dispatch(webhook.actions.hasError(null));
-      toast.success("New MarketOrder is created");
+      toast.success(response.data.message);
     } catch (err) {
       dispatch(webhook.actions.hasError(err));
       toast.warn("Internal Server Error");
@@ -183,10 +183,10 @@ export function createPremiumWebhook({
         webhook.actions.addWebhookSuccess(response.data.data.newWebhook)
       );
       dispatch(webhook.actions.hasError(null));
-      toast.success("New MarketOrder is created");
-    } catch (err) {
+      toast.success(response.data.message);
+    } catch (err: any) {
       dispatch(webhook.actions.hasError(err));
-      toast.warn("Internal Server Error");
+      toast.warn(err.response.data.message);
     }
   };
 }

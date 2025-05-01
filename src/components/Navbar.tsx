@@ -183,7 +183,7 @@ export default function Navbar() {
           picture={userInfoGlobal?.picture || ""}
           onClose={() => setIsMenuOpen(false)}
         />
-      )}
+      )}  
       <SideMenu_M
         isOpen={openSideMenu}
         onClose={() => setOpenSideMenu(false)}

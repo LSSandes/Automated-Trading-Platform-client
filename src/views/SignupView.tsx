@@ -21,9 +21,12 @@ const SignupView: React.FC = () => {
         console.log("Backend Response:", response.data);
         localStorage.setItem("token", response.data.token);
         navigate("/dashboard");
-      } catch (error) {
-        console.error("Error during authentication:", error);
-        toast.warn("Error during authentication!");
+      } catch (error: any) {
+        console.error(
+          "Error during authentication:",
+          error.response.data.message
+        );
+        toast.warn(error.response.data.message);
       }
     },
     onError: () => {
@@ -47,14 +50,10 @@ const SignupView: React.FC = () => {
             if (res.data.token) {
               window.location.href = "/signin";
             }
-          })
-          .catch((error) => {
-            console.error("Failed", error);
-            toast.warn("Failed! You have already have an account");
           });
-      } catch (err) {
+      } catch (err: any) {
         console.log(err);
-        toast.warn("Internal server error!");
+        toast.warn(err.response.data.message);
       }
     } else {
       toast.warn("Password doesn't match!");
