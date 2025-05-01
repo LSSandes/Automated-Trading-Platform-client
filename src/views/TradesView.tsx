@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Plus, Brain } from "lucide-react";
+import { Brain } from "lucide-react";
 import { GrOverview } from "react-icons/gr";
 import TradeStats from "../components/trades/TradeStats";
 import TradesCalendar from "../components/trades/TradesCalendar";
@@ -39,12 +39,7 @@ export default function TradesView() {
             View and analyze your trading history
           </p>
         </div>
-        <button className="premium-button flex items-center outline-1 outline-dashed outline-blue-500 outline-offset-2 rounded-lg">
-          <Plus className="h-5 w-5 mr-2" />
-          Open Trade
-        </button>
       </div>
-
       {/* Tabs */}
       <div className="border-b border-dark-300/30">
         <div className="flex space-x-8">
@@ -77,14 +72,8 @@ export default function TradesView() {
           ))}
         </div>
       </div>
-
-      {/* Filters Bar */}
       <TradeFilters />
-
-      {/* Live Trades */}
       <LiveTradesPanel trades={activePositions} />
-
-      {/* Content based on active tab */}
       {activeTab === "overview" && (
         <>
           <TradeStats
@@ -111,7 +100,6 @@ export default function TradesView() {
           <h2 className="text-lg font-medium text-white mb-4">
             Trading Journal
           </h2>
-          {/* Add trading journal content */}
         </div>
       )}
     </div>
