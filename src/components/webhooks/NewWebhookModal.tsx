@@ -17,21 +17,6 @@ import { IoRocketOutline } from "react-icons/io5";
 
 type WebhookMode = "basic" | "premium" | "advanced";
 type OrderType = "Create Order" | "Modify Order" | "Close Order";
-const OrderDirection = [
-  "buy",
-  "sell",
-  "buyStop",
-  "sellStop",
-  "buyLimit",
-  "sellLimit",
-];
-
-const TradingSessions = [
-  { region: "London", time: "8am - 5pm (UTC)" },
-  { region: "New York", time: "1pm - 10pm (UTC)" },
-  { region: "Tokyo", time: "12am - 9am (UTC)" },
-  { region: "Sydney", time: "10pm - 7am (UTC)" },
-];
 
 export default function NewWebhookModal({
   isOpen,
@@ -134,7 +119,7 @@ export default function NewWebhookModal({
         allTrades,
       };
       dispatch(createBasicWebhook(orderData));
-    } else {
+    } else if (mode == "premium") {
       const orderData = {
         ...commonData,
         orderDirection,
@@ -160,24 +145,10 @@ export default function NewWebhookModal({
           : "0",
       };
       dispatch(createPremiumWebhook(orderData));
+    } else if(mode == "advanced") {
+      
     }
   };
-  //**Advanced webhook**//
-  const [advancedOrderDirection, setAdvancedOrderDirection] =
-    useState<string>("buy");
-  const [RSI, setRSI] = useState<number>(14);
-  const [MACD, setMACD] = useState<number>(12);
-  const [movingAverage, setMovingAverage] = useState<number>(50);
-  const [tradingSession, setTradingSession] = useState<string>("New York");
-  const [toogleRSI, setToogleRSI] = useState<boolean>(false);
-  const [toogleMACD, setToogleMACD] = useState<boolean>(false);
-  const [toogleMovingAverage, setToogleMovingAverage] =
-    useState<boolean>(false);
-  const [toogleTradingSessions, setToogleTradingSessions] =
-    useState<boolean>(false);
-  const [toogleRiskManagement, setToogleRiskManagement] =
-    useState<boolean>(false);
-  //-----------------------------------//
 
   if (!isOpen) return null;
   console.log("-------orderType-------->", orderType);
@@ -305,18 +276,15 @@ export default function NewWebhookModal({
                 {mode == "advanced" && (
                   <>
                     <p className="text-orange-400 text-sm">
-                      Advanced webhook provides professional tools:
+                      Advanced webhook support by algo companies
                     </p>
-                    <ul className="list-disc text-gray-400 ml-4 space-y-1 text-sm">
-                      <li className="text-sm">
-                        Complex Order Types (Market, Limit, Stop)
-                      </li>
-                      <li className="text-sm">
-                        Advanced Risk Management Suite
-                      </li>
-                      <li className="text-sm">Custom Trading Strategies</li>
-                      <li className="text-sm">Real-time Market Analysis</li>
-                    </ul>
+                    <div className="list-disc text-gray-400 space-y-1 text-sm">
+                      Advanced webhook support by algo companies integrates our
+                      alerts directly with their indicators, making it easier
+                      for you to automate your trades. One or our partners in
+                      the endeavor or{" "}
+                      <a href="trustedsignals.com">trustedsignals.com</a>
+                    </div>
                   </>
                 )}
               </div>
@@ -1090,181 +1058,7 @@ export default function NewWebhookModal({
 
           {mode === "advanced" && (
             <div className="flex w-full justify-center items-center flex-col gap-2">
-              <div className="w-full flex flex-col justify-center items-center gap-2">
-                <div className="flex w-[80%] justify-start items-center">
-                  <span className="text-gray-400 text-sm">Order Direction</span>
-                </div>
-                <div className=" w-[80%] grid grid-cols-3 gap-2">
-                  {OrderDirection.map((item: string) => (
-                    <button
-                      key={item}
-                      onClick={() => setAdvancedOrderDirection(item)}
-                      className={`w-full text-center py-2 rounded-lg ${
-                        item === advancedOrderDirection
-                          ? "bg-orange-500 text-white"
-                          : "bg-dark-300 text-gray-400"
-                      }`}
-                    >
-                      {item}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="w-full flex flex-col justify-center items-center gap-2">
-                <div className="flex w-[80%] justify-start items-center">
-                  <span className="text-gray-400 text-sm">
-                    Techincal Indicators
-                  </span>
-                </div>
-                <div className="flex w-[80%] justify-between items-center gap-2">
-                  <div className="flex justify-center items-center gap-2">
-                    <button
-                      onClick={() => setToogleRSI(!toogleRSI)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full ${
-                        toogleRSI ? "bg-orange-500" : "bg-dark-300"
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-                          toogleRSI ? "translate-x-6" : "translate-x-1"
-                        }`}
-                      />
-                    </button>
-                    <span className="text-gray-400 text-sm">RSI</span>
-                  </div>
-                  <div className="flex justify-center items-center w-1/2">
-                    <input
-                      type="text"
-                      value={RSI}
-                      onChange={(e) => setRSI(Number(e.target.value))}
-                      placeholder="RSI"
-                      className="w-full bg-dark-50 text-white rounded-lg px-4 py-3
-                             border border-dashed border-gray-500 focus:border-orange-500 focus:ring-0 text-sm"
-                    />
-                  </div>
-                </div>
-                <div className="flex w-[80%] justify-between items-center gap-2">
-                  <div className="flex justify-center items-center gap-2">
-                    <button
-                      onClick={() => setToogleMACD(!toogleMACD)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full ${
-                        toogleMACD ? "bg-orange-500" : "bg-dark-300"
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-                          toogleMACD ? "translate-x-6" : "translate-x-1"
-                        }`}
-                      />
-                    </button>
-                    <span className="text-gray-400 text-sm">MACD</span>
-                  </div>
-                  <div className="flex justify-center items-center w-1/2">
-                    <input
-                      type="text"
-                      value={MACD}
-                      onChange={(e) => setMACD(Number(e.target.value))}
-                      placeholder="MACD"
-                      className="w-full bg-dark-50 text-white rounded-lg px-4 py-3
-                             border border-dashed border-gray-500 focus:border-orange-500 focus:ring-0 text-sm"
-                    />
-                  </div>
-                </div>
-                <div className="flex w-[80%] justify-between items-center gap-2">
-                  <div className="flex justify-center items-center gap-2">
-                    <button
-                      onClick={() =>
-                        setToogleMovingAverage(!toogleMovingAverage)
-                      }
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full ${
-                        toogleMovingAverage ? "bg-orange-500" : "bg-dark-300"
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-                          toogleMovingAverage
-                            ? "translate-x-6"
-                            : "translate-x-1"
-                        }`}
-                      />
-                    </button>
-                    <span className="text-gray-400 text-sm">
-                      Moving Average
-                    </span>
-                  </div>
-                  <div className="flex justify-center items-center w-1/2">
-                    <input
-                      type="text"
-                      value={movingAverage}
-                      onChange={(e) => setMovingAverage(Number(e.target.value))}
-                      placeholder="Moving Average"
-                      className="w-full bg-dark-50 text-white rounded-lg px-4 py-3
-                             border border-dashed border-gray-500 focus:border-orange-500 focus:ring-0 text-sm"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="w-full flex flex-col justify-center items-center gap-2">
-                <div className="flex w-[80%] justify-between items-center">
-                  <span className="text-gray-400 text-sm">
-                    Trading Sessions
-                  </span>
-                  <button
-                    onClick={() =>
-                      setToogleTradingSessions(!toogleTradingSessions)
-                    }
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full ${
-                      toogleTradingSessions ? "bg-orange-500" : "bg-dark-300"
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-                        toogleTradingSessions
-                          ? "translate-x-6"
-                          : "translate-x-1"
-                      }`}
-                    />
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 gap-2 w-[80%]">
-                  {toogleTradingSessions &&
-                    TradingSessions.map((item, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setTradingSession(item.region)}
-                        className={`w-full flex justify-center items-center gap-2 text-center py-2 rounded-lg ${
-                          item.region === tradingSession
-                            ? "bg-orange-500 text-white"
-                            : "bg-dark-300 text-gray-400"
-                        }`}
-                      >
-                        <span>{item.region}</span>
-                        <span>{item.time}</span>
-                      </button>
-                    ))}
-                </div>
-              </div>
-              <div className="w-full flex flex-col justify-center items-center gap-2">
-                <div className="flex w-[80%] justify-between items-center">
-                  <span className="text-gray-400 text-sm">Risk Management</span>
-                  <button
-                    onClick={() =>
-                      setToogleRiskManagement(!toogleRiskManagement)
-                    }
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full ${
-                      toogleRiskManagement ? "bg-orange-500" : "bg-dark-300"
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-                        toogleRiskManagement ? "translate-x-6" : "translate-x-1"
-                      }`}
-                    />
-                  </button>
-                </div>
-              </div>
-
-              {/* <div className="space-y-8 w-[70%]">
+              <div className="space-y-8 w-[70%]">
                 <div className="flex justify-between items-center">
                   <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                     <span>Webhook Name</span>
@@ -1278,7 +1072,7 @@ export default function NewWebhookModal({
                     onChange={(e) => setWebhookName(e.target.value)}
                     placeholder="My Advanced Webhook"
                     className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                           border border-dashed border-gray-500 focus:outline-none text-sm"
+                            border border-dashed border-gray-500 focus:border-orange-500 focus:ring-0 text-sm"
                   />
                 </div>
                 <div className="flex justify-between items-center">
@@ -1294,7 +1088,7 @@ export default function NewWebhookModal({
                     onChange={(e) => setPair(e.target.value)}
                     placeholder="BTCUSD"
                     className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                           border border-dashed border-gray-500 focus:outline-none text-sm"
+                           border border-dashed border-gray-500 focus:border-orange-500 focus:ring-0 text-sm"
                   />
                 </div>
                 <div className="flex justify-between items-center">
@@ -1313,43 +1107,37 @@ export default function NewWebhookModal({
                     onChange={(e) => setFixedSize(Number(e.target.value))}
                     onWheel={(e) => e.currentTarget.blur()}
                     className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                                   border border-dashed border-gray-500 focus:outline-none text-sm"
+                                    border border-dashed border-gray-500 focus:border-orange-500 focus:ring-0 text-sm"
                   />
                 </div>
-              </div> */}
+              </div>
             </div>
           )}
         </div>
 
         {/* Footer */}
         <div className="py-4 px-8 border-t border-dark-300/50">
-          {mode != "advanced" ? (
-            <div className="flex items-center justify-between">
-              <button
-                onClick={onClose}
-                className="lg:px-6 px-4 py-2 text-gray-400 hover:text-gray-300 
+          <div className="flex items-center justify-between">
+            <button
+              onClick={onClose}
+              className="lg:px-6 px-4 py-2 text-gray-400 hover:text-gray-300 
                        transition-colors duration-300 bg-dark-100 outline-1 outline-dashed outline-dark-300 outline-offset-2 rounded-xl text-sm"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  handleCreateWebhook();
-                  onClose();
-                }}
-                disabled={!webhookName || !pair}
-                className="premium-button lg:px-6 px-4 py-2 flex items-center space-x-2
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                handleCreateWebhook();
+                onClose();
+              }}
+              disabled={!webhookName || !pair}
+              className="premium-button lg:px-6 px-4 py-2 flex items-center space-x-2
                        disabled:opacity-50 disabled:cursor-not-allowed text-sm bg-blue-500 outline-1 outline-dashed outline-blue-500 outline-offset-2"
-              >
-                <span>Create Webhook</span>
-                <Plus className="h-5 w-5" />
-              </button>
-            </div>
-          ) : (
-            <div className="flex flex-col justify-center items-center">
-              <div className="font-bold text-xl text-gray-400">Coming Soon</div>
-            </div>
-          )}
+            >
+              <span>Create Webhook</span>
+              <Plus className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
