@@ -68,7 +68,7 @@ const SigninView: React.FC = () => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className=" text-gray-300 placeholder-gray-700 text-sm mt-1 block w-full p-2 border border-gray-700 bg-[#070707] rounded-[10px] border-dashed focus:outline focus:outline-gray-500 focus:border-none"
+              className=" text-gray-300 placeholder-gray-700 text-sm mt-1 block w-full p-2 bg-[#070707] rounded-[10px] border-dashed border border-gray-500 focus:border-blue-500 focus:ring-0 focus:ring-none"
               required
             />
           </div>
@@ -82,7 +82,7 @@ const SigninView: React.FC = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="text-gray-300 placeholder-gray-700 text-sm mt-1 block w-full p-2 border border-gray-700 bg-[#070707] rounded-[10px] border-dashed focus:outline focus:outline-gray-500 focus:border-none"
+              className="text-gray-300 placeholder-gray-700 text-sm mt-1 block w-full p-2 bg-[#070707] rounded-[10px] border-dashed border border-gray-500 focus:border-blue-500 focus:ring-0 focus:ring-nonee"
               required
             />
           </div>
