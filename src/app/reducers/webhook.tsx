@@ -191,6 +191,40 @@ export function createPremiumWebhook({
   };
 }
 
+export function createAdvancedWebhook({
+  email,
+  webhookName,
+  webhookMode,
+  symbol,
+  volume,
+}: {
+  email: string;
+  webhookName: string;
+  webhookMode: string;
+  symbol: string;
+  volume: string;
+}) {
+  return async () => {
+    try {
+      const response = await axios.post("webhook/createAdvancedWebhook", {
+        email,
+        webhookName,
+        webhookMode,
+        symbol,
+        volume,
+      });
+      dispatch(
+        webhook.actions.addWebhookSuccess(response.data.data.newWebhook)
+      );
+      dispatch(webhook.actions.hasError(null));
+      toast.success(response.data.message);
+    } catch (err: any) {
+      dispatch(webhook.actions.hasError(err));
+      toast.warn(err.response.data.message);
+    }
+  };
+}
+
 export function deleteWebhook({
   email,
   webhookName,
@@ -374,7 +408,7 @@ export function updateBasicWebhook({
         webhook.actions.udpateWebhookSuccess(response.data.data.updatedWebhook)
       );
       dispatch(webhook.actions.hasError(null));
-      toast.success("Webhook is updated successfully.");
+      toast.success(response.data.message);
     } catch (err: any) {
       toast.warn(err.response.data.message);
     }
@@ -430,7 +464,45 @@ export function updatePremiumWebhook({
       dispatch(
         webhook.actions.udpateWebhookSuccess(response.data.data.updatedWebhook)
       );
-      toast.success("Webhook is updated successfully.");
+      toast.success(response.data.message);
+    } catch (err: any) {
+      toast.warn(err.response.data.message);
+    }
+  };
+}
+
+export function updateAdvancedWebhook({
+  email,
+  webhookName,
+  webhookMode,
+  symbol,
+  webhookName_new,
+  symbol_new,
+  volume_new,
+}: {
+  email: string;
+  webhookName: string;
+  webhookMode: string;
+  symbol: string;
+  webhookName_new: string;
+  symbol_new: string;
+  volume_new: string;
+}) {
+  return async () => {
+    try {
+      const response = await axios.post("webhook/updateAdvancedWebhook", {
+        email,
+        webhookName,
+        webhookMode,
+        symbol,
+        webhookName_new,
+        symbol_new,
+        volume_new,
+      });
+      dispatch(
+        webhook.actions.udpateWebhookSuccess(response.data.data.updatedWebhook)
+      );
+      toast.success(response.data.message);
     } catch (err: any) {
       toast.warn(err.response.data.message);
     }

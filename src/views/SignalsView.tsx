@@ -9,6 +9,7 @@ import { getWebhooks } from "@/app/reducers/webhook";
 // import { GiShoppingCart } from "react-icons/gi";
 import { AiOutlineSafety } from "react-icons/ai";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
+import { IoRocketOutline } from "react-icons/io5";
 
 export default function SignalsView() {
   const [user] = useAtom(userAtom);
@@ -56,6 +57,31 @@ export default function SignalsView() {
       {/* Webhooks Sections */}
       {webhooksState.length > 0 && (
         <div className="space-y-6">
+          {webhooksState.find(
+            (webhook) => webhook.webhookMode === "advanced"
+          ) && (
+            <>
+              <div className="text-2xl mb-4 flex justify-start items-center gap-2">
+                <IoRocketOutline className="w-6 h-6 text-orange-500" />
+                <span className="text-orange-500 font-medium">
+                  Advanced webhooks
+                </span>
+              </div>
+            </>
+          )}
+          <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4 h-min items-start">
+            {webhooksState
+              .filter((webhook) => webhook.webhookMode === "advanced")
+              .map((webhook) => (
+                <WebhookCard
+                  key={webhook.id}
+                  webhook={webhook}
+                  onChangeColor={handleChangeColor}
+                  onToggleActive={handleToggleActiveMarketOrder}
+                  onTogglePublic={handleTogglePublicMarketOrder}
+                />
+              ))}
+          </div>
           {webhooksState.find(
             (webhook) => webhook.webhookMode === "premium"
           ) && (
