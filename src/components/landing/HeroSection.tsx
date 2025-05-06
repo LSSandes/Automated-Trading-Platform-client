@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Award, Star, Shield, Clock, ChevronRight } from "lucide-react";
-import { createAppIframeSDK } from "@whop-apps/sdk";
+// import { createAppIframeSDK } from "@whop-apps/sdk";
 import DemoModal from "./DemoModal";
 // import { useNavigate } from "react-router-dom";
 // import { userAtom } from "@/store/atoms";
@@ -39,52 +39,52 @@ export default function HeroSection() {
   // const [userInfoGlobal] = useAtom(userAtom);
   const [showDemo, setShowDemo] = useState(false);
   const [currentUpdate, setCurrentUpdate] = useState(0);
-  const [sdk, setSdk] = useState<any>(null); // Store Whop SDK instance
+  // const [sdk, setSdk] = useState<any>(null); // Store Whop SDK instance
   // const [hasAccess, setHasAccess] = useState<boolean>(false); // Track user access
-  const [isProcessing, setIsProcessing] = useState(false); // Track button state
+  // const [isProcessing, setIsProcessing] = useState(false); // Track button state
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentUpdate((prev) => (prev + 1) % liveUpdates.length);
     }, 3000);
     return () => clearInterval(interval);
   }, []);
-  useEffect(() => {
-    const initializeWhopSDK = async () => {
-      // Initialize Whop SDK
-      const appId = "app_H5pFLzlICI4fDn";
-      const whopSdk = createAppIframeSDK({
-        onMessage: {},
-        appId,
-      });
-      setSdk(whopSdk);
+  // useEffect(() => {
+  //   const initializeWhopSDK = async () => {
+  //     // Initialize Whop SDK
+  //     const appId = "app_H5pFLzlICI4fDn";
+  //     const whopSdk = createAppIframeSDK({
+  //       onMessage: {},
+  //       appId,
+  //     });
+  //     setSdk(whopSdk);
 
-      return () => {
-        whopSdk._cleanupTransport(); // Clean up SDK on unmount
-      };
-    };
+  //     return () => {
+  //       whopSdk._cleanupTransport(); // Clean up SDK on unmount
+  //     };
+  //   };
 
-    const cleanup = initializeWhopSDK();
-    return () => {
-      cleanup.then((fn) => fn && fn());
-    };
-  }, []);
+  //   const cleanup = initializeWhopSDK();
+  //   return () => {
+  //     cleanup.then((fn) => fn && fn());
+  //   };
+  // }, []);
   const handleFreeTrial = async () => {
-    if (isProcessing) return; // Prevent multiple clicks
-    setIsProcessing(true); // Disable the button while processing
+    // if (isProcessing) return; // Prevent multiple clicks
+    // setIsProcessing(true); // Disable the button while processing
 
-    try {
-      if (sdk) {
-        console.log("Whop SDK instance:", sdk);
-        sdk.navigate("https://whop.com/checkout/plan_k3Qm1nWejXxDa?d2c=true");
-      } else {
-        console.error("Whop SDK is not initialized.");
-      }
-    } catch (err) {
-      console.error("Error redirecting to Whop checkout:", err);
-      alert("Failed to redirect to Whop checkout. Please try again.");
-    } finally {
-      setIsProcessing(false); // Re-enable the button
-    }
+    // try {
+    //   if (sdk) {
+    //     console.log("Whop SDK instance:", sdk);
+    //     sdk.navigate("https://whop.com/checkout/plan_k3Qm1nWejXxDa?d2c=true");
+    //   } else {
+    //     console.error("Whop SDK is not initialized.");
+    //   }
+    // } catch (err) {
+    //   console.error("Error redirecting to Whop checkout:", err);
+    //   alert("Failed to redirect to Whop checkout. Please try again.");
+    // } finally {
+    //   setIsProcessing(false); // Re-enable the button
+    // }
   };
   return (
     <div className="relative min-h-[90vh] flex items-center">
