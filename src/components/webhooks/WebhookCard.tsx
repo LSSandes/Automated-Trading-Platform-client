@@ -214,14 +214,18 @@ export default function WebhookCard({
                 className={`p-2 rounded-lg ${
                   webhook.webhookMode === "basic"
                     ? "bg-accent/10"
-                    : "bg-purple-500/10"
+                    : webhook.webhookMode == "premium"
+                    ? "bg-purple-500/10"
+                    : "bg-orange-500/10"
                 }`}
               >
                 <MdWebhook
                   className={`h-6 w-6 ${
                     webhook.webhookMode == "basic"
                       ? "text-blue-500"
-                      : "text-purple-500"
+                      : webhook.webhookMode == "premium"
+                      ? "text-purple-500"
+                      : "text-orange-500"
                   }`}
                 />
               </div>
@@ -230,7 +234,9 @@ export default function WebhookCard({
                   className={`text-lg font-medium ${
                     webhook.webhookMode == "basic"
                       ? "text-blue-500"
-                      : "text-purple-500"
+                      : webhook.webhookMode == "premium"
+                      ? "text-purple-500"
+                      : "text-orange-500"
                   }`}
                 >
                   {webhook.webhookName}
@@ -240,7 +246,9 @@ export default function WebhookCard({
                     className={`text-sm flex justify-center items-center gap-2 ${
                       webhook.webhookMode === "basic"
                         ? "text-accent"
-                        : "text-purple-400"
+                        : webhook.webhookMode == "premium"
+                        ? "text-purple-400"
+                        : "text-orange-500"
                     }`}
                   >
                     {webhook.accountId_m && <span>{accountName}</span>}
@@ -407,6 +415,14 @@ export default function WebhookCard({
                   <span className="text-white font-sm">
                     {timeDiff || "N/A"}
                   </span>
+                </div>
+              </div>
+            )}
+            {webhook.webhookMode == "advanced" && showBasicData && (
+              <div className="glass-panel rounded-lg p-3 border border-dark-300/30 w-full space-y-2">
+                <div className="flex justify-start w-full items-center text-white gap-2">
+                  Lots:
+                  <span className="text-white font-sm">{webhook.volume}</span>
                 </div>
               </div>
             )}

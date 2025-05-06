@@ -7,6 +7,7 @@ import { dispatch } from "@/app/store";
 import {
   createBasicWebhook,
   createPremiumWebhook,
+  createAdvancedWebhook,
 } from "@/app/reducers/webhook";
 import { tooltips } from "@/constant/webhook";
 import { FiMinus, FiPlus } from "react-icons/fi";
@@ -145,8 +146,12 @@ export default function NewWebhookModal({
           : "0",
       };
       dispatch(createPremiumWebhook(orderData));
-    } else if(mode == "advanced") {
-      
+    } else if (mode == "advanced") {
+      const orderData = {
+        ...commonData,
+        volume: fixedSize.toString(),
+      };
+      dispatch(createAdvancedWebhook(orderData));
     }
   };
 
@@ -420,7 +425,7 @@ export default function NewWebhookModal({
                               type="range"
                               min="1"
                               max="40"
-                              step={0.1}
+                              step={1}
                               value={percentageSize}
                               onChange={(e) =>
                                 setPercentageSize(Number(e.target.value))
@@ -437,6 +442,7 @@ export default function NewWebhookModal({
                           <input
                             type="number"
                             value={fixedSize}
+                            step={0.01}
                             onChange={(e) =>
                               setFixedSize(Number(e.target.value))
                             }
@@ -741,7 +747,7 @@ export default function NewWebhookModal({
                           type="range"
                           min="1"
                           max="40"
-                          step={0.1}
+                          step={1}
                           value={percentageSize}
                           onChange={(e) =>
                             setPercentageSize(Number(e.target.value))
@@ -758,6 +764,7 @@ export default function NewWebhookModal({
                       <input
                         type="number"
                         value={fixedSize}
+                        step={0.01}
                         onChange={(e) => setFixedSize(Number(e.target.value))}
                         className="w-full bg-dark-200/30 text-white rounded-lg px-4 py-3
                                    border border-dashed border-gray-500 focus:border-purple-500 focus:ring-0 text-sm"
@@ -1103,7 +1110,7 @@ export default function NewWebhookModal({
                   <input
                     type="number"
                     value={fixedSize}
-                    step={0.0001}
+                    step={0.01}
                     onChange={(e) => setFixedSize(Number(e.target.value))}
                     onWheel={(e) => e.currentTarget.blur()}
                     className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
