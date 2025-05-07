@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Award, Star, Shield, Clock, ChevronRight } from "lucide-react";
-import { useWhop } from "../../context/whopContext";
+import { useWhop } from "../../context/WhopContext";
 import DemoModal from "./DemoModal";
 const tradingStats = [
   { value: "$2.8B+", label: "Trading Volume", change: "+12.5% this month" },
