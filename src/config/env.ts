@@ -39,10 +39,5 @@ export const env = {
   SELLIX_API_KEY: import.meta.env.SELLIX_API_KEY,
   SELLIX_MERCHANT_ID: import.meta.env.SELLIX_MERCHANT_ID,
 
-<<<<<<< HEAD
   WHOP_APPID: import.meta.env.VITE_WHOP_APPID,
 };
-=======
-  WHOP_PLAN_ID: import.meta.env.VITE_WHOP_PLAN_ID,
-};
->>>>>>> de87acdcbae303aa911091dba203d45373ffe8ab
