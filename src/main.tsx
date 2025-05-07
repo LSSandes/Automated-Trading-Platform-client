@@ -7,6 +7,7 @@ import "./index.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { store } from "./app/store";
 import { Provider as ReduxProvider } from "react-redux";
+import { WhopProvider } from "./context/whopContext";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -26,13 +27,15 @@ if (!root) {
 createRoot(root).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <JotaiProvider>
-        <ReduxProvider store={store}>
-          <GoogleOAuthProvider clientId="579336041727-ugm3o0uvteodirpjas3c15r981dju9je.apps.googleusercontent.com">
-            <App />
-          </GoogleOAuthProvider>
-        </ReduxProvider>
-      </JotaiProvider>
+      <WhopProvider>
+        <JotaiProvider>
+          <ReduxProvider store={store}>
+            <GoogleOAuthProvider clientId="579336041727-ugm3o0uvteodirpjas3c15r981dju9je.apps.googleusercontent.com">
+              <App />
+            </GoogleOAuthProvider>
+          </ReduxProvider>
+        </JotaiProvider>
+      </WhopProvider>
     </QueryClientProvider>
   </StrictMode>
 );

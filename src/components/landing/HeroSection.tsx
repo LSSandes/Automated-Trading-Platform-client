@@ -1,13 +1,8 @@
 import { useState, useEffect } from "react";
-import {
-  Award,
-  Star,
-  Shield,
-  Clock,
-  ChevronRight,
-} from "lucide-react";
+import { Award, Star, Shield, Clock, ChevronRight } from "lucide-react";
+import { useWhop } from "@/context/whopContext";
 import DemoModal from "./DemoModal";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 const tradingStats = [
   { value: "$2.8B+", label: "Trading Volume", change: "+12.5% this month" },
   { value: "0.04s", label: "Execution Speed", change: "Industry leading" },
@@ -37,19 +32,23 @@ const liveUpdates = [
 ];
 
 export default function HeroSection() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const { isAuthenticated } = useWhop();
   const [showDemo, setShowDemo] = useState(false);
   const [currentUpdate, setCurrentUpdate] = useState(0);
-
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentUpdate((prev) => (prev + 1) % liveUpdates.length);
     }, 3000);
     return () => clearInterval(interval);
   }, []);
-  const handleFreeTrial = () => {
-    navigate("/dashboard");
-  }
+  const handleGetAccess = async () => {
+    const whopCheckoutLink =
+      "https://whop.com/checkout/plan_k3Qm1nWejXxDa?d2c=true";
+    window.location.href = whopCheckoutLink;
+  };
+  console.log("-0------------->", isAuthenticated);
+
   return (
     <div className="relative min-h-[90vh] flex items-center">
       {/* Background Effects */}
@@ -110,7 +109,7 @@ export default function HeroSection() {
             className="w-full sm:w-auto group px-8 py-4 bg-accent hover:bg-accent-dark text-white rounded-xl
                          flex items-center justify-center space-x-2 transition-all duration-300
                          transform hover:translate-y-[-2px] hover:shadow-xl hover:shadow-accent/20"
-                         onClick={handleFreeTrial}
+            onClick={handleGetAccess}
           >
             <span className="text-lg font-medium">Start Free Trial</span>
             <ChevronRight className="h-5 w-5 transform group-hover:translate-x-1 transition-transform" />

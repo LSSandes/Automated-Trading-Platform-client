@@ -15,6 +15,7 @@ import { env } from "@/config/env";
 import { io } from "socket.io-client";
 import { dispatch, useSelector } from "@/app/store";
 import { addAlert } from "@/app/reducers/alert";
+
 export default function Navbar() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,23 +29,29 @@ export default function Navbar() {
   const alerts = useSelector((state) => state.alert.alerts);
   const unviewedAlerts = alerts.filter((alert) => alert.view === false);
   useEffect(() => {
-    const userToken = localStorage.getItem("token") || "";
-    if (userToken) {
-      setToken(userToken);
-      setUserInfoGlobal(jwtDecode(userToken));
-    }
+    const asyncFn = async () => {
+      const userToken = localStorage.getItem("token") || "";
+      if (userToken) {
+        setToken(userToken);
+        setUserInfoGlobal(jwtDecode(userToken));
+      }
+    };
+    asyncFn();
   }, []);
   useEffect(() => {
-    if (userInfoGlobal) {
-      axios
-        .post(`${env.BASE_URL}/profile/get`, { email: userInfoGlobal?.email })
-        .then((res) => {
-          setUserInfoGlobal(res.data.data.user);
-        });
-    }
+    const asyncFn = async () => {
+      if (userInfoGlobal) {
+        axios
+          .post(`${env.BASE_URL}/profile/get`, { email: userInfoGlobal?.email })
+          .then((res) => {
+            setUserInfoGlobal(res.data.data.user);
+          });
+      }
+    };
+    asyncFn();
   }, []);
 
-  const socket = io("https://automated-trading-platform-server.onrender.com");
+  const socket = io("http://localhost:5000");
   useEffect(() => {
     console.log("===============>");
 
@@ -183,7 +190,7 @@ export default function Navbar() {
           picture={userInfoGlobal?.picture || ""}
           onClose={() => setIsMenuOpen(false)}
         />
-      )}  
+      )}
       <SideMenu_M
         isOpen={openSideMenu}
         onClose={() => setOpenSideMenu(false)}
