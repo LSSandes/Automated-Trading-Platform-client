@@ -51,7 +51,7 @@ export default function Navbar() {
     asyncFn();
   }, []);
 
-  const socket = io("http://localhost:5000");
+  const socket = io(env.AVATAR_URL);
   useEffect(() => {
     const handleAlert = (newAlert: string) => {
       dispatch(addAlert({ newAlert }));
