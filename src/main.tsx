@@ -7,7 +7,7 @@ import "./index.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { store } from "./app/store";
 import { Provider as ReduxProvider } from "react-redux";
-import { WhopProvider } from "@/context/whopContext";
+import { WhopProvider } from "./context/whopContext";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
