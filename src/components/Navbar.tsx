@@ -53,15 +53,10 @@ export default function Navbar() {
 
   const socket = io("http://localhost:5000");
   useEffect(() => {
-    console.log("===============>");
-
     const handleAlert = (newAlert: string) => {
-      console.log("--------alertMessage------->", newAlert);
       dispatch(addAlert({ newAlert }));
     };
-
     socket.on(`${userInfoGlobal?.email}`, handleAlert);
-
     return () => {
       socket.off(`${userInfoGlobal?.email}`, handleAlert); // make sure this matches exactly
     };

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Award, Star, Shield, Clock, ChevronRight } from "lucide-react";
 import { useWhop } from "@/context/whopContext";
 import DemoModal from "./DemoModal";
-// import { useNavigate } from "react-router-dom";
 const tradingStats = [
   { value: "$2.8B+", label: "Trading Volume", change: "+12.5% this month" },
   { value: "0.04s", label: "Execution Speed", change: "Industry leading" },
@@ -32,10 +31,10 @@ const liveUpdates = [
 ];
 
 export default function HeroSection() {
-  // const navigate = useNavigate();
   const { isAuthenticated } = useWhop();
   const [showDemo, setShowDemo] = useState(false);
   const [currentUpdate, setCurrentUpdate] = useState(0);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentUpdate((prev) => (prev + 1) % liveUpdates.length);
@@ -48,7 +47,6 @@ export default function HeroSection() {
     window.location.href = whopCheckoutLink;
   };
   console.log("-0------------->", isAuthenticated);
-
   return (
     <div className="relative min-h-[90vh] flex items-center">
       {/* Background Effects */}
