@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Award, Star, Shield, Clock, ChevronRight } from "lucide-react";
-import { useWhop } from "../../context/WhopContext";
 import DemoModal from "./DemoModal";
+import { useWhop } from "@/context/WhopContext";
 const tradingStats = [
   { value: "$2.8B+", label: "Trading Volume", change: "+12.5% this month" },
   { value: "0.04s", label: "Execution Speed", change: "Industry leading" },
@@ -31,7 +31,7 @@ const liveUpdates = [
 ];
 
 export default function HeroSection() {
-  const { isAuthenticated } = useWhop();
+  const { isAuthenticated, sdk } = useWhop();
   const [showDemo, setShowDemo] = useState(false);
   const [currentUpdate, setCurrentUpdate] = useState(0);
 
@@ -42,11 +42,15 @@ export default function HeroSection() {
     return () => clearInterval(interval);
   }, []);
   const handleGetAccess = async () => {
+    // if (!isAuthenticated) {
+    //   console.log("User is not authenticated");
+    //   return;
+    // }
     const whopCheckoutLink =
       "https://whop.com/checkout/plan_k3Qm1nWejXxDa?d2c=true";
     window.location.href = whopCheckoutLink;
+    console.log("--------ok------", isAuthenticated, sdk);
   };
-  console.log("-0------------->", isAuthenticated);
   return (
     <div className="relative min-h-[90vh] flex items-center">
       {/* Background Effects */}

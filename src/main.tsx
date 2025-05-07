@@ -27,15 +27,15 @@ if (!root) {
 createRoot(root).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <WhopProvider>
-        <JotaiProvider>
-          <ReduxProvider store={store}>
-            <GoogleOAuthProvider clientId="579336041727-ugm3o0uvteodirpjas3c15r981dju9je.apps.googleusercontent.com">
+      <JotaiProvider>
+        <ReduxProvider store={store}>
+          <GoogleOAuthProvider clientId="579336041727-ugm3o0uvteodirpjas3c15r981dju9je.apps.googleusercontent.com">
+            <WhopProvider>
               <App />
-            </GoogleOAuthProvider>
-          </ReduxProvider>
-        </JotaiProvider>
-      </WhopProvider>
+            </WhopProvider>
+          </GoogleOAuthProvider>
+        </ReduxProvider>
+      </JotaiProvider>
     </QueryClientProvider>
   </StrictMode>
 );

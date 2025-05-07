@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { createAppIframeSDK } from "@whop-apps/sdk";
-import { env } from "@/config/env";
+// import { env } from "@/config/env";
 
 type WhopContextType = {
   isAuthenticated: boolean;
@@ -21,27 +21,18 @@ export const WhopProvider: React.FC<{ children: React.ReactNode }> = ({
     null
   );
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   useEffect(() => {
-    const whopSdk = createAppIframeSDK({
-      onMessage: {
-        appPing: (data: any) => {
-          if (data?.authenticated) {
-            setIsAuthenticated(true);
-          }
-          return "app_pong";
-        },
-      },
-      appId: env.WHOP_APPID,
-    });
+    // const sdk = createAppIframeSDK({
+    //   onMessage: {},
+    // });
 
-    setSdk(whopSdk);
-
-    // Optional: auto-auth on mount
-
-    return () => {
-      whopSdk._cleanupTransport();
-    };
+    // // Use / Save a reference to the sdk here.
+    // // For example you may want to pass it down in a react context.
+    setSdk(null);
+    setIsAuthenticated(true);
+    // return () => {
+    //   sdk._cleanupTransport();
+    // };
   }, []);
 
   return (
