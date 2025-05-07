@@ -113,7 +113,7 @@ export default function HeroSection() {
                          transform hover:translate-y-[-2px] hover:shadow-xl hover:shadow-accent/20"
             onClick={handleGetAccess}
           >
-            <span className="text-lg font-medium">Start Free Trial</span>
+            <span className="text-lg font-medium">Get Access</span>
             <ChevronRight className="h-5 w-5 transform group-hover:translate-x-1 transition-transform" />
           </button>
 
