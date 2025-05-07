@@ -40,4 +40,6 @@ export const env = {
   SELLIX_MERCHANT_ID: import.meta.env.SELLIX_MERCHANT_ID,
 
   WHOP_APPID: import.meta.env.VITE_WHOP_APP_ID,
+  CLINET_ID: import.meta.env.VITE_CLIENT_ID,
+  REDIRECT_URL: import.meta.env.VITE_REDIRECT_URL
 };

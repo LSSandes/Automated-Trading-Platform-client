@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Award, Star, Shield, Clock, ChevronRight } from "lucide-react";
 import DemoModal from "./DemoModal";
 import { useWhop } from "@/context/WhopContext";
+import { env } from "@/config/env";
 const tradingStats = [
   { value: "$2.8B+", label: "Trading Volume", change: "+12.5% this month" },
   { value: "0.04s", label: "Execution Speed", change: "Industry leading" },
@@ -46,8 +47,7 @@ export default function HeroSection() {
     //   console.log("User is not authenticated");
     //   return;
     // }
-    const whopCheckoutLink =
-      "https://whop.com/checkout/plan_k3Qm1nWejXxDa?d2c=true";
+    const whopCheckoutLink = `https://whop.com/oauth?client_id=${env.CLINET_ID}&redirect_uri=${env.REDIRECT_URL}`;
     window.location.href = whopCheckoutLink;
     console.log("--------ok------", isAuthenticated, sdk);
   };
