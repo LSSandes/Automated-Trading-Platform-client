@@ -47,9 +47,10 @@ export default function HeroSection() {
   }, []);
   const handleGetAccess = async () => {
     console.log("--------ok------", hasAccess);
+    if (!hasAccess && loading) return;
     if (hasAccess && !loading) {
       navigate("/dashboard");
-    } else {
+    } else if (!hasAccess && !loading) {
       const whopCheckoutLink = `https://whop.com/checkout/plan_5ooq3Zpf6Xxzs?d2c=true`;
       window.location.href = whopCheckoutLink;
     }
