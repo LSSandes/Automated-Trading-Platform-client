@@ -34,7 +34,7 @@ export default function Layout() {
     ) {
       navigate("/"); // Redirect to login page if no token
     }
-  }, [navigate, currentPath]);
+  }, [navigate, currentPath, hasAccess, loading]);
 
   useEffect(() => {
     const fetchData = async () => {

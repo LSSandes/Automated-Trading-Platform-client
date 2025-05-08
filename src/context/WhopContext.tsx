@@ -41,7 +41,7 @@ export const WhopProvider: React.FC<{ children: React.ReactNode }> = ({
   };
   useEffect(() => {
     getHasAccess();
-  }, [hasAccess]);
+  }, []);
 
   return (
     <WhopContext.Provider value={{ hasAccess, loading }}>

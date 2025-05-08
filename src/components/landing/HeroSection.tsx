@@ -4,6 +4,7 @@ import DemoModal from "./DemoModal";
 import { useWhop } from "@/context/WhopContext";
 // import { env } from "@/config/env";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const tradingStats = [
   { value: "$2.8B+", label: "Trading Volume", change: "+12.5% this month" },
@@ -47,12 +48,17 @@ export default function HeroSection() {
   }, []);
   const handleGetAccess = async () => {
     console.log("--------ok------", hasAccess);
-    if (!hasAccess && loading) return;
-    if (hasAccess && !loading) {
-      navigate("/dashboard");
-    } else if (!hasAccess && !loading) {
-      const whopCheckoutLink = `https://whop.com/checkout/plan_5ooq3Zpf6Xxzs?d2c=true`;
-      window.location.href = whopCheckoutLink;
+    const jwtToken = localStorage.getItem("jwtToken");
+    if (jwtToken) {
+      if (!hasAccess && loading) return;
+      if (hasAccess && !loading) {
+        navigate("/dashboard");
+      } else if (!hasAccess && !loading) {
+        const whopCheckoutLink = `https://whop.com/checkout/plan_5ooq3Zpf6Xxzs?d2c=true`;
+        window.location.href = whopCheckoutLink;
+      }
+    } else {
+      toast.warn("Please log in using Whop.");
     }
   };
   return (
