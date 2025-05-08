@@ -2,14 +2,18 @@ import WHOP_LOGO from "@/assets/whop_logo.png";
 import { toast } from "react-toastify";
 import { env } from "@/config/env";
 import axios from "axios";
+import { Loader } from "lucide-react";
+import { useState } from "react";
 
 const WhopCallbackView: React.FC = () => {
   const params = new URLSearchParams(window.location.search);
+  const [loading, setLoading] = useState<boolean>(false);
   const code = params.get("code");
   const client_id = env.CLINET_ID;
   const client_secret = env.CLIENT_SECRET;
   const redirect_url = env.REDIRECT_URL;
   const handleGetAccess = async () => {
+    setLoading(true);
     if (code) {
       try {
         const response = await axios.post(`${env.BASE_URL}/auth/whop`, {
@@ -18,6 +22,7 @@ const WhopCallbackView: React.FC = () => {
           client_secret,
           redirect_url,
         });
+        setLoading(false);
         console.log("whop response----->", response.data);
       } catch (error: any) {
         toast.warn(error.response.data.message);
@@ -38,7 +43,8 @@ const WhopCallbackView: React.FC = () => {
           className="flex justify-center items-center p-2 bg-[#FA4616] hover:bg-[#ff9378] text-white w-52 rounded-full"
           onClick={handleGetAccess}
         >
-          Get Access
+          {loading && <Loader className="h-5 w-5 mr-2 animate-spin" />}
+          <span>Get Access</span>
         </button>
       </div>
     </div>
