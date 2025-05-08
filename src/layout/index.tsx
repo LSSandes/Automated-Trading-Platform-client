@@ -23,12 +23,16 @@ export default function Layout() {
     user && dispatch(getAccounts(user?.email));
     user && dispatch(getAlerts(user?.email));
   }, [user]);
+
+  console.log("has==========>", hasAccess);
+
   useEffect(() => {
     const jwtToken = localStorage.getItem("jwtToken");
-    if (!jwtToken && currentPath != "/" && !hasAccess) {
+    if (!jwtToken && currentPath != "/" && hasAccess == false) {
       navigate("/"); // Redirect to login page if no token
     }
   }, [navigate, currentPath]);
+
   useEffect(() => {
     const fetchData = async () => {
       const refreshToken = localStorage.getItem("refreshToken");

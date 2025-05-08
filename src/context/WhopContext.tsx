@@ -19,14 +19,19 @@ export const WhopProvider: React.FC<{ children: React.ReactNode }> = ({
   const getHasAccess = async () => {
     const whopToken = localStorage.getItem("whopToken");
     try {
-      const response = await axios.get(
-        `https://access.api.whop.com/check/${env.PRODUCT_ID}`,
-        {
-          headers: {
-            Authorization: `Bearer ${whopToken}`,
-          },
-        }
-      );
+      // const response = await axios.get(
+      //   `https://access.api.whop.com/check/${env.PRODUCT_ID}`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${whopToken}`,
+      //     },
+      //   }
+      // );
+      const response = await axios.get(`/api/whop/check/${env.PRODUCT_ID}`, {
+        headers: {
+          Authorization: `Bearer ${whopToken}`,
+        },
+      });
       if (response.data.access) {
         setHasAccess(true);
       } else {

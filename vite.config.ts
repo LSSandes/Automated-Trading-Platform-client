@@ -16,6 +16,13 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3000,
       host: true,
+      proxy: {
+        '/api/whop': {
+          target: 'https://access.api.whop.com',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api\/whop/, ''),
+        },
+      },
     },
     build: {
       sourcemap: true,
