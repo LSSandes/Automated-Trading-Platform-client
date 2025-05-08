@@ -1,11 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  User,
-  LogOut,
-  ChevronRight,
-  SettingsIcon,
-} from "lucide-react";
+import { User, LogOut, ChevronRight, SettingsIcon } from "lucide-react";
 import { env } from "@/config/env";
 
 interface MenuItemProps {
@@ -82,8 +77,9 @@ export default function UserMenu({
     navigate("/settings");
   };
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("whopToken");
+    window.location.href = "/";
   };
   console.log("----->picture----->", picture);
   return (
@@ -100,7 +96,11 @@ export default function UserMenu({
             <div className="relative">
               {picture != null ? (
                 <img
-                  src={`${picture.includes("uploads") ? env.AVATAR_URL + picture : picture}`}
+                  src={`${
+                    picture.includes("uploads")
+                      ? env.AVATAR_URL + picture
+                      : picture
+                  }`}
                   alt="Profile"
                   className="w-7 h-7 rounded-full border border-accent/20"
                 />

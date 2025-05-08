@@ -23,7 +23,7 @@ export default function Navbar() {
   const handleLogo = () => {
     navigate("/");
   };
-  const [token, setToken] = useState<string>("");
+  const [jwtToken, setJwtToken] = useState<string>("");
   const setUserInfoGlobal = useSetAtom(userAtom);
   const [userInfoGlobal] = useAtom(userAtom);
   const [openSideMenu, setOpenSideMenu] = useState<boolean>(false);
@@ -31,10 +31,10 @@ export default function Navbar() {
   const unviewedAlerts = alerts.filter((alert) => alert.view === false);
   useEffect(() => {
     const asyncFn = async () => {
-      const userToken = localStorage.getItem("token") || "";
-      if (userToken) {
-        setToken(userToken);
-        setUserInfoGlobal(jwtDecode(userToken));
+      const jwtToken = localStorage.getItem("jwtToken") || "";
+      if (jwtToken) {
+        setJwtToken(jwtToken);
+        setUserInfoGlobal(jwtDecode(jwtToken));
       }
     };
     asyncFn();
@@ -104,7 +104,7 @@ export default function Navbar() {
               <></>
             )}
           </button>
-          {token != "" ? (
+          {jwtToken != "" ? (
             <button
               onClick={() => setIsMenuOpen(true)}
               className="flex items-center space-x-2 p-1.5 text-gray-400 
@@ -204,7 +204,7 @@ export default function Navbar() {
         )}
       </div>
 
-      {token != "" && (
+      {jwtToken != "" && (
         <UserMenu
           isOpen={isMenuOpen}
           email={userInfoGlobal?.email || ""}
