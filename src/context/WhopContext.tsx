@@ -32,6 +32,8 @@ export const WhopProvider: React.FC<{ children: React.ReactNode }> = ({
           Authorization: `Bearer ${whopToken}`,
         },
       });
+
+      console.log("Whop API Response ============>", response)
       if (response.data.access) {
         setHasAccess(true);
       } else {
