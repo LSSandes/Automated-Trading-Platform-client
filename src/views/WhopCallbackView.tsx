@@ -35,7 +35,7 @@ const WhopCallbackView: React.FC = () => {
           <span>{code}</span>
         </div>
         <button
-          className="flex justify-center items-center p-2 bg-[#FA4616] text-white w-52 rounded-full"
+          className="flex justify-center items-center p-2 bg-[#FA4616] hover:bg-[#ff9378] text-white w-52 rounded-full"
           onClick={handleGetAccess}
         >
           Get Access
