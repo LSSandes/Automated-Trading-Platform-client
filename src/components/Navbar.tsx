@@ -114,9 +114,9 @@ export default function Navbar() {
               {userInfoGlobal?.picture !== undefined ? (
                 <img
                   src={`${
-                    userInfoGlobal.picture.includes("uploads")
+                    userInfoGlobal?.picture.includes("uploads")
                       ? env.AVATAR_URL + userInfoGlobal.picture
-                      : userInfoGlobal.picture
+                      : userInfoGlobal?.picture
                   }`}
                   alt=""
                   referrerPolicy="no-referrer"
