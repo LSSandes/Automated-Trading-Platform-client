@@ -9,10 +9,12 @@ import { useAtom } from "jotai";
 import { getAccounts } from "@/app/reducers/metaAccount";
 import { getAlerts } from "@/app/reducers/alert";
 import { dispatch } from "@/app/store";
+import { useWhop } from "@/context/WhopContext";
 
 export default function Layout() {
   const navigate = useNavigate();
   const [user] = useAtom(userAtom);
+  const { hasAccess } = useWhop();
   const [menuCollapsed, setMenuCollapsed] = useState(false);
   const [activeView, setActiveView] = useState("landing");
   const location = useLocation(); // Get the current location
@@ -22,9 +24,9 @@ export default function Layout() {
     user && dispatch(getAlerts(user?.email));
   }, [user]);
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token && currentPath != "/") {
-      navigate("/login"); // Redirect to login page if no token
+    const jwtToken = localStorage.getItem("jwtToken");
+    if (!jwtToken && currentPath != "/" && !hasAccess) {
+      navigate("/"); // Redirect to login page if no token
     }
   }, [navigate, currentPath]);
   useEffect(() => {

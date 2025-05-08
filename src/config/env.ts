@@ -42,5 +42,6 @@ export const env = {
   WHOP_APPID: import.meta.env.VITE_WHOP_APP_ID,
   CLINET_ID: import.meta.env.VITE_CLIENT_ID,
   CLIENT_SECRET: import.meta.env.VITE_CLIENT_SECRET,
-  REDIRECT_URL: import.meta.env.VITE_REDIRECT_URL
+  REDIRECT_URL: import.meta.env.VITE_REDIRECT_URL,
+  PRODUCT_ID: import.meta.env.VITE_PRODUCT_ID,
 };

@@ -1,15 +1,13 @@
+import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { createAppIframeSDK } from "@whop-apps/sdk";
-// import { env } from "@/config/env";
+import { env } from "@/config/env";
 
 type WhopContextType = {
-  isAuthenticated: boolean;
-  sdk: ReturnType<typeof createAppIframeSDK> | null;
+  hasAccess: boolean;
 };
 
 const WhopContext = createContext<WhopContextType>({
-  isAuthenticated: false,
-  sdk: null,
+  hasAccess: false,
 });
 
 export const useWhop = () => useContext(WhopContext);
@@ -17,26 +15,33 @@ export const useWhop = () => useContext(WhopContext);
 export const WhopProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [sdk, setSdk] = useState<ReturnType<typeof createAppIframeSDK> | null>(
-    null
-  );
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [hasAccess, setHasAccess] = useState(false);
+  const getHasAccess = async () => {
+    const whopToken = localStorage.getItem("whopToken");
+    try {
+      const response = await axios.get(
+        `https://access.api.whop.com/check/${env.PRODUCT_ID}`,
+        {
+          headers: {
+            Authorization: `Bearer ${whopToken}`,
+          },
+        }
+      );
+      if (response.data.access) {
+        setHasAccess(true);
+      } else {
+        setHasAccess(false);
+      }
+    } catch (error) {
+      console.error("Error checking access:", error);
+    }
+  };
   useEffect(() => {
-    // const sdk = createAppIframeSDK({
-    //   onMessage: {},
-    // });
-
-    // // Use / Save a reference to the sdk here.
-    // // For example you may want to pass it down in a react context.
-    setSdk(null);
-    setIsAuthenticated(true);
-    // return () => {
-    //   sdk._cleanupTransport();
-    // };
+    getHasAccess();
   }, []);
 
   return (
-    <WhopContext.Provider value={{ sdk, isAuthenticated }}>
+    <WhopContext.Provider value={{ hasAccess }}>
       {children}
     </WhopContext.Provider>
   );

@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { Award, Star, Shield, Clock, ChevronRight } from "lucide-react";
 import DemoModal from "./DemoModal";
 import { useWhop } from "@/context/WhopContext";
-import { env } from "@/config/env";
+// import { env } from "@/config/env";
+import { useNavigate } from "react-router-dom";
+
 const tradingStats = [
   { value: "$2.8B+", label: "Trading Volume", change: "+12.5% this month" },
   { value: "0.04s", label: "Execution Speed", change: "Industry leading" },
@@ -32,7 +34,8 @@ const liveUpdates = [
 ];
 
 export default function HeroSection() {
-  const { isAuthenticated, sdk } = useWhop();
+  const { hasAccess } = useWhop();
+  const navigate = useNavigate();
   const [showDemo, setShowDemo] = useState(false);
   const [currentUpdate, setCurrentUpdate] = useState(0);
 
@@ -43,13 +46,13 @@ export default function HeroSection() {
     return () => clearInterval(interval);
   }, []);
   const handleGetAccess = async () => {
-    // if (!isAuthenticated) {
-    //   console.log("User is not authenticated");
-    //   return;
-    // }
-    const whopCheckoutLink = `https://whop.com/oauth?client_id=${env.CLINET_ID}&redirect_uri=${env.REDIRECT_URL}`;
-    window.location.href = whopCheckoutLink;
-    console.log("--------ok------", isAuthenticated, sdk);
+    console.log("--------ok------", hasAccess);
+    if (hasAccess) {
+      navigate("/dashboard");
+    } else {
+      const whopCheckoutLink = `https://whop.com/checkout/plan_5ooq3Zpf6Xxzs?d2c=true`;
+      window.location.href = whopCheckoutLink;
+    }
   };
   return (
     <div className="relative min-h-[90vh] flex items-center">
