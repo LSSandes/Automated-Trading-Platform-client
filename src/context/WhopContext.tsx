@@ -4,10 +4,12 @@ import { env } from "@/config/env";
 
 type WhopContextType = {
   hasAccess: boolean;
+  loading: boolean;
 };
 
 const WhopContext = createContext<WhopContextType>({
   hasAccess: false,
+  loading: false,
 });
 
 export const useWhop = () => useContext(WhopContext);
@@ -16,7 +18,10 @@ export const WhopProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [hasAccess, setHasAccess] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   const getHasAccess = async () => {
+    setLoading(true);
     const whopToken = localStorage.getItem("whopToken");
     const product_id = env.PRODUCT_ID;
     try {
@@ -27,11 +32,11 @@ export const WhopProvider: React.FC<{ children: React.ReactNode }> = ({
       console.log("Whop API Response ============>", response.data.data);
       if (response.data.data.access) {
         setHasAccess(true);
-      } else {
-        setHasAccess(false);
       }
     } catch (error) {
-      console.error("Error checking access:", error);
+      setHasAccess(false);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -39,7 +44,7 @@ export const WhopProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   return (
-    <WhopContext.Provider value={{ hasAccess }}>
+    <WhopContext.Provider value={{ hasAccess, loading }}>
       {children}
     </WhopContext.Provider>
   );

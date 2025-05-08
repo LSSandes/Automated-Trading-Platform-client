@@ -14,7 +14,7 @@ import { useWhop } from "@/context/WhopContext";
 export default function Layout() {
   const navigate = useNavigate();
   const [user] = useAtom(userAtom);
-  const { hasAccess } = useWhop();
+  const { hasAccess, loading } = useWhop();
   const [menuCollapsed, setMenuCollapsed] = useState(false);
   const [activeView, setActiveView] = useState("landing");
   const location = useLocation(); // Get the current location
@@ -30,7 +30,7 @@ export default function Layout() {
     const jwtToken = localStorage.getItem("jwtToken");
     if (
       (!jwtToken && currentPath != "/") ||
-      (currentPath != "/" && hasAccess == false)
+      (currentPath != "/" && hasAccess == false && loading)
     ) {
       navigate("/"); // Redirect to login page if no token
     }
