@@ -3,7 +3,7 @@ import { Bell } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import UserMenu from "./UserMenu";
 import { jwtDecode } from "jwt-decode"; // Corrected import
-import { LogIn, UserRoundPlus } from "lucide-react";
+// import { LogIn, UserRoundPlus } from "lucide-react";
 import { FaCircleChevronRight, FaCircleChevronLeft } from "react-icons/fa6";
 import logo from "@/assets/dark-logo.png";
 import m_logo from "@/assets/m-dark-logo.png";
@@ -15,6 +15,7 @@ import { env } from "@/config/env";
 import { io } from "socket.io-client";
 import { dispatch, useSelector } from "@/app/store";
 import { addAlert } from "@/app/reducers/alert";
+import WHOP_LOGO from "@/assets/whop_logo.png";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -65,14 +66,18 @@ export default function Navbar() {
     if (str.length === 0) return "";
     return str.charAt(0).toUpperCase();
   };
-  const handleSignin = () => {
-    navigate("/login");
-  };
-  const handleSignup = () => {
-    navigate("/signup");
-  };
+  // const handleSignin = () => {
+  //   navigate("/login");
+  // };
+  // const handleSignup = () => {
+  //   navigate("/signup");
+  // };
   const handleOpenSideMenu = () => {
     setOpenSideMenu(!openSideMenu);
+  };
+  const handleLoginByWhop = () => {
+    const whopCheckoutLink = `https://whop.com/oauth?client_id=${env.CLINET_ID}&redirect_uri=${env.REDIRECT_URL}`;
+    window.location.href = whopCheckoutLink;
   };
   console.log("------navbar picture--------", userInfoGlobal?.picture);
   return (
@@ -126,7 +131,7 @@ export default function Navbar() {
           ) : (
             <>
               <div className="lg:flex justify-center items-center gap-4 hidden">
-                <div
+                {/* <div
                   className="text-[white] gap-2 flex justify-center items-center text-lg font-serif border border-accent/20 rounded-[10px] px-2 py-1 cursor-pointer hover:bg-accent/20"
                   onClick={handleSignin}
                 >
@@ -139,10 +144,31 @@ export default function Navbar() {
                 >
                   <UserRoundPlus className="h-5 w-5" />
                   Sign Up
+                </div> */}
+                <div
+                  className="text-white gap-2 flex justify-center items-center text-lg font-serif border border-accent/20  rounded-[10px] px-2 py-1 cursor-pointer  hover:bg-accent/20"
+                  onClick={handleLoginByWhop}
+                >
+                  <img
+                    src={WHOP_LOGO}
+                    alt=""
+                    className="w-5 h-5 rounded-full"
+                  />
+                  Sign In
                 </div>
               </div>
               <div className="flex justify-center items-center gap-4 lg:hidden">
                 <button
+                  className="rounded-full border border-white p-1"
+                  onClick={handleLoginByWhop}
+                >
+                  <img
+                    src={WHOP_LOGO}
+                    alt=""
+                    className="w-5 h-5 rounded-full"
+                  />
+                </button>
+                {/* <button
                   className=" rounded-full border border-white p-1"
                   onClick={handleSignin}
                 >
@@ -153,7 +179,7 @@ export default function Navbar() {
                   onClick={handleSignup}
                 >
                   <UserRoundPlus className="h-5 w-5" />
-                </button>
+                </button> */}
               </div>
             </>
           )}

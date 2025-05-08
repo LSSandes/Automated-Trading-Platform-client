@@ -20,6 +20,7 @@ import SignupView from "./views/SignupView";
 import SigninView from "./views/SigninView";
 import ProfileSettingView from "./views/ProfileSettingView";
 import { ToastContainer, Flip } from "react-toastify";
+import WhopCallbackView from "./views/WhopCallbackView";
 
 function App() {
   const [activeChats, setActiveChats] = useState<string[]>([]);
@@ -70,7 +71,6 @@ function App() {
     setIsLoggedIn(true);
     // setActiveView("dashboard");
   };
-  
 
   return (
     <Router>
@@ -85,6 +85,7 @@ function App() {
               <Route path="/test-login" element={<TestLoginView />} />
               <Route path="/signup" element={<SignupView />} />
               <Route path="/login" element={<SigninView />} />
+              <Route path="/callback/whop" element={<WhopCallbackView />} />
               <Route path="/" element={<Layout />}>
                 <Route
                   path="dashboard"
