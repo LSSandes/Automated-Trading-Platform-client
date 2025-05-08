@@ -28,7 +28,10 @@ export default function Layout() {
 
   useEffect(() => {
     const jwtToken = localStorage.getItem("jwtToken");
-    if (!jwtToken && currentPath != "/" && hasAccess == false) {
+    if (
+      (!jwtToken && currentPath != "/") ||
+      (currentPath != "/" && hasAccess == false)
+    ) {
       navigate("/"); // Redirect to login page if no token
     }
   }, [navigate, currentPath]);

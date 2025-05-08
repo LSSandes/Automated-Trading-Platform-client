@@ -79,7 +79,7 @@ export default function Navbar() {
     const whopCheckoutLink = `https://whop.com/oauth?client_id=${env.CLINET_ID}&redirect_uri=${env.REDIRECT_URL}`;
     window.location.href = whopCheckoutLink;
   };
-  console.log("------navbar picture--------", userInfoGlobal?.picture);
+  console.log("------navbar picture--------", userInfoGlobal?.email);
   return (
     <nav className="w-full bg-dark/80 backdrop-blur-xl border-b border-dark-300/50 z-50 py-5 lg:px-16 px-10">
       <div className="flex items-center justify-between h-10 w-full">
