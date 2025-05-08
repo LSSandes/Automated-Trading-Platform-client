@@ -30,7 +30,7 @@ export default function Layout() {
     const jwtToken = localStorage.getItem("jwtToken");
     if (
       (!jwtToken && currentPath != "/") ||
-      (currentPath != "/" && hasAccess == false && loading)
+      (currentPath != "/" && hasAccess == false && !loading)
     ) {
       navigate("/"); // Redirect to login page if no token
     }

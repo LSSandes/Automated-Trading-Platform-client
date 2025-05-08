@@ -34,7 +34,7 @@ const liveUpdates = [
 ];
 
 export default function HeroSection() {
-  const { hasAccess } = useWhop();
+  const { hasAccess, loading } = useWhop();
   const navigate = useNavigate();
   const [showDemo, setShowDemo] = useState(false);
   const [currentUpdate, setCurrentUpdate] = useState(0);
@@ -47,7 +47,7 @@ export default function HeroSection() {
   }, []);
   const handleGetAccess = async () => {
     console.log("--------ok------", hasAccess);
-    if (hasAccess) {
+    if (hasAccess && !loading) {
       navigate("/dashboard");
     } else {
       const whopCheckoutLink = `https://whop.com/checkout/plan_5ooq3Zpf6Xxzs?d2c=true`;
