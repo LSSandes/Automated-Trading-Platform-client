@@ -4,10 +4,12 @@ import { env } from "@/config/env";
 import axios from "axios";
 import { Loader } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const WhopCallbackView: React.FC = () => {
   const params = new URLSearchParams(window.location.search);
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
   const code = params.get("code");
   const client_id = env.CLINET_ID;
   const client_secret = env.CLIENT_SECRET;
@@ -24,6 +26,9 @@ const WhopCallbackView: React.FC = () => {
         });
         setLoading(false);
         console.log("whop response----->", response.data);
+        localStorage.setItem("jwtToken", response.data.jwtToken);
+        localStorage.setItem("whopToken", response.data.whopToken);
+        navigate("/");
       } catch (error: any) {
         toast.warn(error.response.data.message);
       }
