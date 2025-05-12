@@ -140,7 +140,7 @@ const PricingPage: React.FC = () => {
   const [selectedTier, setSelectedTier] = useState<PricingTier>(
     pricingTiers[1]
   );
-  const [accountCount, setAccountCount] = useState(1);
+  const [accountCount, setAccountCount] = useState<number>(1);
   const [hoveredPlatform, setHoveredPlatform] = useState<string | null>(null);
   const navigate = useNavigate();
   const calculateTotalPrice = () => {
@@ -182,7 +182,7 @@ const PricingPage: React.FC = () => {
           await axios.post("payment/update", {
             email: user?.email,
             role: roleParam,
-            accountCount: accountCountParam,
+            accountCount: Number(accountCountParam),
           });
         }
       }
