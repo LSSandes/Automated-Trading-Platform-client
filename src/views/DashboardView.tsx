@@ -1,5 +1,6 @@
 import { Zap } from "lucide-react";
 import QuickActions from "../components/QuickActions";
+import { useNavigate } from "react-router-dom";
 // import PerformanceChart from "../components/dashboard/PerformanceChart";
 import ActiveTrades from "../components/dashboard/ActiveTrades";
 // import SignalProviders from "../components/dashboard/SignalProviders";
@@ -51,6 +52,7 @@ export default function DashboardView({
       button: "Coming soon",
     },
   ];
+  const navigate = useNavigate();
   return (
     <div className="space-y-8" style={{ height: "calc(100vh - 80px)" }}>
       {/* Header */}
@@ -63,7 +65,10 @@ export default function DashboardView({
             Welcome back, your portfolio is up 23% this week
           </p>
         </div>
-        <button className="premium-button flex items-center space-x-2 px-6 self-start lg:self-auto">
+        <button
+          className="premium-button flex items-center space-x-2 px-6 self-start lg:self-auto"
+          onClick={() => navigate("/pricing")}
+        >
           <Zap className="h-5 w-5" />
           <div>
             <span className="block text-sm">Upgrade to Pro</span>
