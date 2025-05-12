@@ -11,6 +11,8 @@ import { PricingTier, TradingPlatform } from "../types/pricing";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
+import axios from "@/utils/api";
+import { env } from "@/config/env";
 
 const PricingPage: React.FC = () => {
   const upcomingPlatforms = [
@@ -155,7 +157,7 @@ const PricingPage: React.FC = () => {
   };
 
   const prices = calculateTotalPrice();
-  const handleGetStartedClick = () => {
+  const handleGetStartedClick = async () => {
     console.log(
       "Get Started button clicked------>",
       selectedTier.name,
@@ -164,6 +166,23 @@ const PricingPage: React.FC = () => {
       "user email------->",
       user?.email
     );
+    await axios.post("payment/update", {
+      email: user?.email,
+      role: selectedTier.name,
+      accountCount: accountCount,
+    });
+    await redirectWhopPageFunc(selectedTier.name, accountCount);
+  };
+  const redirectWhopPageFunc = async (name: string, accountCount: number) => {
+    if (name == "Basic" && accountCount == 1) {
+      window.location.href = `https://whop.com/checkout/${env.BASIC_PLAN_1}?d2c=true`;
+    } else if (name == "Premium" && accountCount == 1) {
+      window.location.href = `https://whop.com/checkout/${env.PREMIUM_PLAN_1}?d2c=true`;
+    } else if (name == "Advanced" && accountCount == 1) {
+      window.location.href = `https://whop.com/checkout/${env.ADVANCED_PLAN_1}?d2c=true`;
+    } else if (name == "Lifetime Partner" && accountCount == 1) {
+      window.location.href = `https://whop.com/checkout/${env.LIFETIME_PLAN_1}?d2c=true`;
+    }
   };
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-black to-slate-900 text-white py-8 px-4 md:py-16">

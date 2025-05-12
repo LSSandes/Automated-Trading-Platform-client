@@ -44,4 +44,9 @@ export const env = {
   CLIENT_SECRET: import.meta.env.VITE_CLIENT_SECRET,
   REDIRECT_URL: import.meta.env.VITE_REDIRECT_URL,
   PRODUCT_ID: import.meta.env.VITE_PRODUCT_ID,
+
+  BASIC_PLAN_1: import.meta.env.VITE_BASIC_PLAN_1,
+  PREMIUM_PLAN_1: import.meta.env.VITE_PREMIUM_PLAN_1,
+  ADVANCED_PLAN_1: import.meta.env.VITE_ADVANCED_PLAN_1,
+  LIFETIME_PLAN_1: import.meta.env.VITE_LIFETIME_PLAN_1,
 };
