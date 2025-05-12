@@ -21,13 +21,13 @@ export default function Layout() {
     user && dispatch(getAccounts(user?.email));
     user && dispatch(getAlerts(user?.email));
   }, [user]);
-  useEffect(() => {
-    const jwtToken = localStorage.getItem("jwtToken");
-    const whopToken = localStorage.getItem("whopToken");
-    if ((!jwtToken || !whopToken) && currentPath != "/") {
-      navigate("/"); 
-    }
-  }, [navigate, currentPath]);
+  // useEffect(() => {
+  //   const jwtToken = localStorage.getItem("jwtToken");
+  //   const whopToken = localStorage.getItem("whopToken");
+  //   if ((!jwtToken || !whopToken) && currentPath != "/") {
+  //     navigate("/"); 
+  //   }
+  // }, [navigate, currentPath]);
 
   useEffect(() => {
     const fetchData = async () => {
