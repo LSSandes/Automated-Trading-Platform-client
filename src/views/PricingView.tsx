@@ -13,7 +13,7 @@ import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
 import axios from "@/utils/api";
 import { env } from "@/config/env";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 const PricingPage: React.FC = () => {
   const upcomingPlatforms = [
