@@ -178,7 +178,7 @@ const PricingPage: React.FC = () => {
           "resCheckPayment------->",
           resCheckPayment.data.data.access
         );
-        if (resCheckPayment.data.data.access) {
+        if (resCheckPayment.data.data.access == true) {
           await axios.post("payment/update", {
             email: user?.email,
             role: roleParam,
