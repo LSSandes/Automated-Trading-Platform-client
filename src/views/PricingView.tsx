@@ -169,6 +169,7 @@ const PricingPage: React.FC = () => {
           roleParam,
           Number(accountCountParam)
         );
+        console.log("product ID, whopToken------->", product_id, whopToken);
         const resCheckPayment = await axios.post("payment/check", {
           product_id,
           whopToken,
