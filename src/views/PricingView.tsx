@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CheckIcon,
   ShieldIcon,
@@ -8,11 +8,12 @@ import {
   StarIcon,
 } from "lucide-react";
 import { PricingTier, TradingPlatform } from "../types/pricing";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
 import axios from "@/utils/api";
 import { env } from "@/config/env";
+import { toast } from "react-toastify";
 
 const PricingPage: React.FC = () => {
   const upcomingPlatforms = [
@@ -133,6 +134,9 @@ const PricingPage: React.FC = () => {
     },
   ];
   const [user] = useAtom(userAtom);
+  const [searchParams] = useSearchParams();
+  const roleParam = searchParams.get("role");
+  const accountCountParam = searchParams.get("accountCount");
   const [selectedTier, setSelectedTier] = useState<PricingTier>(
     pricingTiers[1]
   );
@@ -155,7 +159,35 @@ const PricingPage: React.FC = () => {
       monthly: Number((basePrice + additionalCost).toFixed(2)),
     };
   };
-
+  useEffect(() => {
+    const checkPayment = async () => {
+      if (roleParam && accountCountParam) {
+        console.log("searchParam------->", roleParam, accountCountParam);
+        const whopToken = localStorage.getItem("whopToken");
+        if (!whopToken) return;
+        const product_id = await defineProductId(
+          roleParam,
+          Number(accountCountParam)
+        );
+        const resCheckPayment = await axios.post("payment/check", {
+          product_id,
+          whopToken,
+        });
+        console.log(
+          "resCheckPayment------->",
+          resCheckPayment.data.data.access
+        );
+        if (resCheckPayment.data.data.access) {
+          await axios.post("payment/update", {
+            email: user?.email,
+            role: roleParam,
+            accountCount: accountCountParam,
+          });
+        }
+      }
+    };
+    checkPayment();
+  }, [roleParam, accountCountParam]);
   const prices = calculateTotalPrice();
   const handleGetStartedClick = async () => {
     console.log(
@@ -182,6 +214,17 @@ const PricingPage: React.FC = () => {
       window.location.href = `https://whop.com/checkout/${env.ADVANCED_PLAN_1}?d2c=true`;
     } else if (name == "Lifetime Partner" && accountCount == 1) {
       window.location.href = `https://whop.com/checkout/${env.LIFETIME_PLAN_1}?d2c=true`;
+    }
+  };
+  const defineProductId = async (name: string, accountCount: number) => {
+    if (name == "Basic" && accountCount == 1) {
+      return env.BASIC_PLAN_1_ID;
+    } else if (name == "Premium" && accountCount == 1) {
+      return env.PREMIUM_PLAN_1_ID;
+    } else if (name == "Advanced" && accountCount == 1) {
+      return env.ADVANCED_PLAN_1_ID;
+    } else if (name == "Lifetime Partner" && accountCount == 1) {
+      return env.LIFETIME_PLAN_1_ID;
     }
   };
   return (

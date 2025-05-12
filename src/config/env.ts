@@ -49,4 +49,9 @@ export const env = {
   PREMIUM_PLAN_1: import.meta.env.VITE_PREMIUM_PLAN_1,
   ADVANCED_PLAN_1: import.meta.env.VITE_ADVANCED_PLAN_1,
   LIFETIME_PLAN_1: import.meta.env.VITE_LIFETIME_PLAN_1,
+
+  BASIC_PLAN_1_ID: import.meta.env.VITE_BASIC_PLAN_1_ID,
+  PREMIUM_PLAN_1_ID: import.meta.env.VITE_PREMIUM_PLAN_1_ID,
+  ADVANCED_PLAN_1_ID: import.meta.env.VITE_ADVANCED_PLAN_1_ID,
+  LIFETIME_PLAN_1_ID: import.meta.env.VITE_LIFETIME_PLAN_1_ID,
 };
