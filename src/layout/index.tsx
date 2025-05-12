@@ -9,32 +9,25 @@ import { useAtom } from "jotai";
 import { getAccounts } from "@/app/reducers/metaAccount";
 import { getAlerts } from "@/app/reducers/alert";
 import { dispatch } from "@/app/store";
-import { useWhop } from "@/context/WhopContext";
 
 export default function Layout() {
   const navigate = useNavigate();
   const [user] = useAtom(userAtom);
-  const { hasAccess, loading } = useWhop();
   const [menuCollapsed, setMenuCollapsed] = useState(false);
   const [activeView, setActiveView] = useState("landing");
-  const location = useLocation(); // Get the current location
-  const currentPath = location.pathname; // Extract the current path
+  const location = useLocation(); 
+  const currentPath = location.pathname; 
   useEffect(() => {
     user && dispatch(getAccounts(user?.email));
     user && dispatch(getAlerts(user?.email));
   }, [user]);
-
-  console.log("has==========>", hasAccess);
-
   useEffect(() => {
     const jwtToken = localStorage.getItem("jwtToken");
-    if (
-      (!jwtToken && currentPath != "/") ||
-      (currentPath != "/" && hasAccess == false && !loading)
-    ) {
-      navigate("/"); // Redirect to login page if no token
+    const whopToken = localStorage.getItem("whopToken");
+    if ((!jwtToken || !whopToken) && currentPath != "/") {
+      navigate("/"); 
     }
-  }, [navigate, currentPath, hasAccess, loading]);
+  }, [navigate, currentPath]);
 
   useEffect(() => {
     const fetchData = async () => {

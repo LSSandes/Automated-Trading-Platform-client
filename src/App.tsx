@@ -16,8 +16,8 @@ import TestLoginView from "./views/TestLoginView";
 import ChatWindow from "./components/ChatWindow";
 import CheckoutModal from "./components/CheckoutModal";
 import Layout from "./layout";
-import SignupView from "./views/SignupView";
-import SigninView from "./views/SigninView";
+// import SignupView from "./views/SignupView";
+// import SigninView from "./views/SigninView";
 import ProfileSettingView from "./views/ProfileSettingView";
 import { ToastContainer, Flip } from "react-toastify";
 import WhopCallbackView from "./views/WhopCallbackView";
@@ -83,8 +83,8 @@ function App() {
           <div className="max-w-full mx-auto">
             <Routes>
               <Route path="/test-login" element={<TestLoginView />} />
-              <Route path="/signup" element={<SignupView />} />
-              <Route path="/login" element={<SigninView />} />
+              {/* <Route path="/signup" element={<SignupView />} /> */}
+              {/* <Route path="/login" element={<SigninView />} /> */}
               <Route path="/callback/whop" element={<WhopCallbackView />} />
               <Route path="/" element={<Layout />}>
                 <Route

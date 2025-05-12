@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import { Award, Star, Shield, Clock, ChevronRight } from "lucide-react";
 import DemoModal from "./DemoModal";
-import { useWhop } from "@/context/WhopContext";
-// import { env } from "@/config/env";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const tradingStats = [
@@ -35,8 +32,6 @@ const liveUpdates = [
 ];
 
 export default function HeroSection() {
-  const { hasAccess, loading } = useWhop();
-  const navigate = useNavigate();
   const [showDemo, setShowDemo] = useState(false);
   const [currentUpdate, setCurrentUpdate] = useState(0);
 
@@ -47,16 +42,9 @@ export default function HeroSection() {
     return () => clearInterval(interval);
   }, []);
   const handleGetAccess = async () => {
-    console.log("--------ok------", hasAccess);
     const jwtToken = localStorage.getItem("jwtToken");
     if (jwtToken) {
-      if (!hasAccess && loading) return;
-      if (hasAccess && !loading) {
-        navigate("/dashboard");
-      } else if (!hasAccess && !loading) {
-        const whopCheckoutLink = `https://whop.com/checkout/plan_5ooq3Zpf6Xxzs?d2c=true`;
-        window.location.href = whopCheckoutLink;
-      }
+      window.location.href = "/dashboard";
     } else {
       toast.warn("Please log in using Whop.");
     }
@@ -123,7 +111,7 @@ export default function HeroSection() {
                          transform hover:translate-y-[-2px] hover:shadow-xl hover:shadow-accent/20"
             onClick={handleGetAccess}
           >
-            <span className="text-lg font-medium">Get Access</span>
+            <span className="text-lg font-medium">Get Started</span>
             <ChevronRight className="h-5 w-5 transform group-hover:translate-x-1 transition-transform" />
           </button>
 
