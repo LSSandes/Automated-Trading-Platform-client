@@ -80,7 +80,7 @@ export default function DashboardView({
       </div>
       <div className="grid xl:grid-cols-4 lg:grid-cols-2 grid-cols-1 gap-2">
         {introduction.map((item, index) => (
-          <div className="flex flex-col justify-between items-start gap-2 bg-dark-200 p-4 rounded-lg">
+          <div key={index} className="flex flex-col justify-between items-start gap-2 bg-dark-200 p-4 rounded-lg">
             <div className="flex justify-between items-center gap-2 ">
               <span className="bg-blue-500 rounded-lg px-[8px] py-[1px]">
                 {index + 1}

@@ -86,7 +86,6 @@ function App() {
               <Route path="/test-login" element={<TestLoginView />} />
               {/* <Route path="/signup" element={<SignupView />} /> */}
               {/* <Route path="/login" element={<SigninView />} /> */}
-              <Route path="/pricing" element={<PricingView />} />
               <Route path="/callback/whop" element={<WhopCallbackView />} />
               <Route path="/" element={<Layout />}>
                 <Route
@@ -101,6 +100,7 @@ function App() {
                   }
                 />
                 <Route path="" element={<LandingView />} />
+                <Route path="/pricing" element={<PricingView />} />
                 <Route path="trades" element={<TradesView />} />
                 <Route path="signals" element={<SignalsView />} />
                 {/* <Route path="analytics" element={<AnalyticsView />} /> */}

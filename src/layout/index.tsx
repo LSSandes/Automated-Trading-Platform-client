@@ -15,19 +15,19 @@ export default function Layout() {
   const [user] = useAtom(userAtom);
   const [menuCollapsed, setMenuCollapsed] = useState(false);
   const [activeView, setActiveView] = useState("landing");
-  const location = useLocation(); 
-  const currentPath = location.pathname; 
+  const location = useLocation();
+  const currentPath = location.pathname;
   useEffect(() => {
     user && dispatch(getAccounts(user?.email));
     user && dispatch(getAlerts(user?.email));
   }, [user]);
-  // useEffect(() => {
-  //   const jwtToken = localStorage.getItem("jwtToken");
-  //   const whopToken = localStorage.getItem("whopToken");
-  //   if ((!jwtToken || !whopToken) && currentPath != "/") {
-  //     navigate("/"); 
-  //   }
-  // }, [navigate, currentPath]);
+  useEffect(() => {
+    const jwtToken = localStorage.getItem("jwtToken");
+    const whopToken = localStorage.getItem("whopToken");
+    if ((!jwtToken || !whopToken) && currentPath != "/") {
+      navigate("/");
+    }
+  }, [navigate, currentPath]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,18 +56,20 @@ export default function Layout() {
       <Navbar />
       <div className="flex left-0 w-full h-full">
         <div className="lg:flex hidden h-full">
-          {currentPath != "/" && (
+          {currentPath != "/" && currentPath != "/pricing" ? (
             <SideMenu
               activeView={activeView}
               onViewChange={setActiveView}
               isCollapsed={menuCollapsed}
               onCollapsedChange={setMenuCollapsed}
             />
-          )}
+          ) : null}
         </div>
         <div
           className={`flex-1 ${
-            currentPath == "/" ? "" : "lg:p-10 py-6 px-3"
+            currentPath == "/" || currentPath == "/pricing"
+              ? ""
+              : "lg:p-10 py-6 px-3"
           } overflow-y-auto h-full`}
           style={{ height: "calc(100vh - 82px)" }}
         >

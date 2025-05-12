@@ -8,6 +8,9 @@ import {
   StarIcon,
 } from "lucide-react";
 import { PricingTier, TradingPlatform } from "../types/pricing";
+import { useNavigate } from "react-router-dom";
+import { useAtom } from "jotai";
+import { userAtom } from "@/store/atoms";
 
 const PricingPage: React.FC = () => {
   const upcomingPlatforms = [
@@ -127,13 +130,13 @@ const PricingPage: React.FC = () => {
       ],
     },
   ];
-
+  const [user] = useAtom(userAtom);
   const [selectedTier, setSelectedTier] = useState<PricingTier>(
     pricingTiers[1]
   );
   const [accountCount, setAccountCount] = useState(1);
   const [hoveredPlatform, setHoveredPlatform] = useState<string | null>(null);
-
+  const navigate = useNavigate();
   const calculateTotalPrice = () => {
     if (selectedTier.isLifetime) {
       return {
@@ -157,7 +160,9 @@ const PricingPage: React.FC = () => {
       "Get Started button clicked------>",
       selectedTier.name,
       "accountCount------->",
-      accountCount
+      accountCount,
+      "user email------->",
+      user?.email
     );
   };
   return (
@@ -293,13 +298,20 @@ const PricingPage: React.FC = () => {
                     {prices.oneTime > 0 ? "one-time" : "/month"}
                   </span>
                 </div>
-
-                <button
-                  className="w-full md:w-auto bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:opacity-90 text-white px-8 py-4 rounded-xl font-medium transition-all duration-300 text-lg mb-4"
-                  onClick={handleGetStartedClick}
-                >
-                  {selectedTier.buttonText} →
-                </button>
+                <div className="flex lg:flex-row flex-col items-center gap-2 mb-4">
+                  <button
+                    className="w-full md:w-auto bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:opacity-90 text-white px-8 py-4 rounded-xl font-medium transition-all duration-300 text-lg mb-4"
+                    onClick={handleGetStartedClick}
+                  >
+                    {selectedTier.buttonText} →
+                  </button>
+                  <button
+                    className="w-full md:w-auto bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500 hover:opacity-90 text-white px-8 py-4 rounded-xl font-medium transition-all duration-300 text-lg mb-4"
+                    onClick={() => navigate("/dashboard")}
+                  >
+                    Cancel
+                  </button>
+                </div>
 
                 <p className="text-sm text-gray-400">
                   30-day money-back guarantee • Cancel anytime • No hidden fees
