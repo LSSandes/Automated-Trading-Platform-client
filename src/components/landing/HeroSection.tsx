@@ -44,7 +44,7 @@ export default function HeroSection() {
   const handleGetAccess = async () => {
     const jwtToken = localStorage.getItem("jwtToken");
     if (jwtToken) {
-      window.location.href = "/dashboard";
+      window.location.href = "/pricing";
     } else {
       toast.warn("Please log in using Whop.");
     }

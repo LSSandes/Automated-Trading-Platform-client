@@ -165,19 +165,14 @@ const PricingPage: React.FC = () => {
         console.log("searchParam------->", roleParam, accountCountParam);
         const whopToken = localStorage.getItem("whopToken");
         if (!whopToken) return;
-        const product_id = await defineProductId(
-          roleParam,
-          Number(accountCountParam)
-        );
+        const product_id = await defineProductId(roleParam);
         console.log("product ID, whopToken------->", product_id, whopToken);
         const resCheckPayment = await axios.post("payment/check", {
           product_id,
           whopToken,
         });
-        console.log(
-          "resCheckPayment------->",
-          resCheckPayment.data.data.access
-        );
+
+        console.log("Payment check successful");
         if (resCheckPayment.data.data.access == true) {
           await axios.post("payment/update", {
             email: user?.email,
@@ -199,33 +194,94 @@ const PricingPage: React.FC = () => {
       "user email------->",
       user?.email
     );
-    await axios.post("payment/update", {
-      email: user?.email,
-      role: selectedTier.name,
-      accountCount: accountCount,
-    });
     await redirectWhopPageFunc(selectedTier.name, accountCount);
   };
   const redirectWhopPageFunc = async (name: string, accountCount: number) => {
-    if (name == "Basic" && accountCount == 1) {
-      window.location.href = `https://whop.com/checkout/${env.BASIC_PLAN_1}?d2c=true`;
-    } else if (name == "Premium" && accountCount == 1) {
-      window.location.href = `https://whop.com/checkout/${env.PREMIUM_PLAN_1}?d2c=true`;
-    } else if (name == "Advanced" && accountCount == 1) {
-      window.location.href = `https://whop.com/checkout/${env.ADVANCED_PLAN_1}?d2c=true`;
+    if (name == "Basic") {
+      if (accountCount == 1) {
+        window.location.href = `https://whop.com/checkout/${env.BASIC_PLAN_1}?d2c=true`;
+      } else if (accountCount == 2) {
+        window.location.href = `https://whop.com/checkout/${env.BASIC_PLAN_2}?d2c=true`;
+      } else if (accountCount == 3) {
+        window.location.href = `https://whop.com/checkout/${env.BASIC_PLAN_3}?d2c=true`;
+      } else if (accountCount == 4) {
+        window.location.href = `https://whop.com/checkout/${env.BASIC_PLAN_4}?d2c=true`;
+      } else if (accountCount == 5) {
+        window.location.href = `https://whop.com/checkout/${env.BASIC_PLAN_5}?d2c=true`;
+      } else if (accountCount == 6) {
+        window.location.href = `https://whop.com/checkout/${env.BASIC_PLAN_6}?d2c=true`;
+      } else if (accountCount == 7) {
+        window.location.href = `https://whop.com/checkout/${env.BASIC_PLAN_7}?d2c=true`;
+      } else if (accountCount == 8) {
+        window.location.href = `https://whop.com/checkout/${env.BASIC_PLAN_8}?d2c=true`;
+      } else if (accountCount == 9) {
+        window.location.href = `https://whop.com/checkout/${env.BASIC_PLAN_9}?d2c=true`;
+      } else if (accountCount == 10) {
+        window.location.href = `https://whop.com/checkout/${env.BASIC_PLAN_10}?d2c=true`;
+      } else {
+        window.location.href = `https://whop.com/checkout/${env.BASIC_PLAN_11}?d2c=true`;
+      }
+    } else if (name == "Premium") {
+      if (accountCount == 1) {
+        window.location.href = `https://whop.com/checkout/${env.PREMIUM_PLAN_1}?d2c=true`;
+      } else if (accountCount == 2) {
+        window.location.href = `https://whop.com/checkout/${env.PREMIUM_PLAN_2}?d2c=true`;
+      } else if (accountCount == 3) {
+        window.location.href = `https://whop.com/checkout/${env.PREMIUM_PLAN_3}?d2c=true`;
+      } else if (accountCount == 4) {
+        window.location.href = `https://whop.com/checkout/${env.PREMIUM_PLAN_4}?d2c=true`;
+      } else if (accountCount == 5) {
+        window.location.href = `https://whop.com/checkout/${env.PREMIUM_PLAN_5}?d2c=true`;
+      } else if (accountCount == 6) {
+        window.location.href = `https://whop.com/checkout/${env.PREMIUM_PLAN_6}?d2c=true`;
+      } else if (accountCount == 7) {
+        window.location.href = `https://whop.com/checkout/${env.PREMIUM_PLAN_7}?d2c=true`;
+      } else if (accountCount == 8) {
+        window.location.href = `https://whop.com/checkout/${env.PREMIUM_PLAN_8}?d2c=true`;
+      } else if (accountCount == 9) {
+        window.location.href = `https://whop.com/checkout/${env.PREMIUM_PLAN_9}?d2c=true`;
+      } else if (accountCount == 10) {
+        window.location.href = `https://whop.com/checkout/${env.PREMIUM_PLAN_10}?d2c=true`;
+      } else {
+        window.location.href = `https://whop.com/checkout/${env.PREMIUM_PLAN_11}?d2c=true`;
+      }
+    } else if (name == "Advanced") {
+      if (accountCount == 1) {
+        window.location.href = `https://whop.com/checkout/${env.ADVANCED_PLAN_1}?d2c=true`;
+      } else if (accountCount == 2) {
+        window.location.href = `https://whop.com/checkout/${env.ADVANCED_PLAN_2}?d2c=true`;
+      } else if (accountCount == 3) {
+        window.location.href = `https://whop.com/checkout/${env.ADVANCED_PLAN_3}?d2c=true`;
+      } else if (accountCount == 4) {
+        window.location.href = `https://whop.com/checkout/${env.ADVANCED_PLAN_4}?d2c=true`;
+      } else if (accountCount == 5) {
+        window.location.href = `https://whop.com/checkout/${env.ADVANCED_PLAN_5}?d2c=true`;
+      } else if (accountCount == 6) {
+        window.location.href = `https://whop.com/checkout/${env.ADVANCED_PLAN_6}?d2c=true`;
+      } else if (accountCount == 7) {
+        window.location.href = `https://whop.com/checkout/${env.ADVANCED_PLAN_7}?d2c=true`;
+      } else if (accountCount == 8) {
+        window.location.href = `https://whop.com/checkout/${env.ADVANCED_PLAN_8}?d2c=true`;
+      } else if (accountCount == 9) {
+        window.location.href = `https://whop.com/checkout/${env.ADVANCED_PLAN_9}?d2c=true`;
+      } else if (accountCount == 10) {
+        window.location.href = `https://whop.com/checkout/${env.ADVANCED_PLAN_10}?d2c=true`;
+      } else {
+        window.location.href = `https://whop.com/checkout/${env.ADVANCED_PLAN_11}?d2c=true`;
+      }
     } else if (name == "Lifetime Partner" && accountCount == 1) {
       window.location.href = `https://whop.com/checkout/${env.LIFETIME_PLAN_1}?d2c=true`;
     }
   };
-  const defineProductId = async (name: string, accountCount: number) => {
-    if (name == "Basic" && accountCount == 1) {
-      return env.BASIC_PLAN_1_ID;
-    } else if (name == "Premium" && accountCount == 1) {
-      return env.PREMIUM_PLAN_1_ID;
-    } else if (name == "Advanced" && accountCount == 1) {
-      return env.ADVANCED_PLAN_1_ID;
-    } else if (name == "Lifetime Partner" && accountCount == 1) {
-      return env.LIFETIME_PLAN_1_ID;
+  const defineProductId = async (name: string) => {
+    if (name == "Basic") {
+      return env.BASIC_PLAN_ID;
+    } else if (name == "Premium") {
+      return env.PREMIUM_PLAN_ID;
+    } else if (name == "Advanced") {
+      return env.ADVANCED_PLAN_ID;
+    } else if (name == "Lifetime Partner") {
+      return env.LIFETIME_PLAN_ID;
     }
   };
   return (
@@ -372,7 +428,7 @@ const PricingPage: React.FC = () => {
                     className="w-full md:w-auto bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500 hover:opacity-90 text-white px-8 py-4 rounded-xl font-medium transition-all duration-300 text-lg mb-4"
                     onClick={() => navigate("/dashboard")}
                   >
-                    Cancel
+                    Go to Dashboard →
                   </button>
                 </div>
 
