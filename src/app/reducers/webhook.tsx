@@ -129,9 +129,9 @@ export function createBasicWebhook({
       );
       dispatch(webhook.actions.hasError(null));
       toast.success(response.data.message);
-    } catch (err) {
+    } catch (err: any) {
       dispatch(webhook.actions.hasError(err));
-      toast.warn("Internal Server Error");
+      toast.warn(err.response.data.message);
     }
   };
 }
