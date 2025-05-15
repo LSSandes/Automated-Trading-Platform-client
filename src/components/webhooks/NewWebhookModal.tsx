@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Tooltip from "../ui/Tooltip";
 import { NewWebhookModalProps } from "@/types/webhook";
 import { useAtom } from "jotai";
@@ -39,11 +39,15 @@ export default function NewWebhookModal({
   const [fixedSize, setFixedSize] = useState<number>(0);
   //**Basic webhook**//
   //-----------Create Order Params------------//
-  const [stopLoss_pips, setStopLoss] = useState<number>(200);
-  const [takeProfit_pips, setTakeProfit] = useState<number>(200);
+  const [stopLoss_pips, setStopLoss] = useState<number>(
+    orderType == "market" ? 200 : 10
+  );
+  const [takeProfit_pips, setTakeProfit] = useState<number>(
+    orderType == "market" ? 200 : 10
+  );
   const [trailingStopLoss, setTrailingStopLoss] = useState<number>(100); //market order
-  const [openPrice_pips, setOpenPrice] = useState<number>(50); //stop, limit order
-  const [stopLimit_pips, setStopLimit] = useState<number>(50); // stoplimit order
+  const [openPrice_pips, setOpenPrice] = useState<number>(10); //stop, limit order
+  const [stopLimit_pips, setStopLimit] = useState<number>(10); // stoplimit order
   //-----------Modify Order Params------------//
   const [modifyType, setModifyType] = useState<string>("StopLoss");
   const [moveStopLoss_pips, setMoveStopLoss] = useState<number>(200);
@@ -55,7 +59,7 @@ export default function NewWebhookModal({
   //**Premium webhook**//
   const [multiTakeProfit_pips, setMultiTakeProfit] = useState<number[]>([100]);
   const [timeBasedExitMinute, setTimeBasedExitMinute] = useState<number>(60);
-  const [breakenEvenSetting_pips, setBreakenEvenSetting] = useState<number>(30);
+  const [breakenEvenSetting_pips, setBreakenEvenSetting] = useState<number>(10);
   const [takeProfitSettingToogle, setTakeProfitSettingToogle] =
     useState<boolean>(false);
   const [stopLossSettingToogle, setStopLossSettingToogle] =
@@ -171,6 +175,11 @@ export default function NewWebhookModal({
       });
     }
   };
+  useEffect(() => {
+    orderType != "market"
+      ? setBreakEvenSettingToogle(true)
+      : setBreakEvenSettingToogle(false);
+  }, [orderType]);
 
   if (!isOpen) return null;
   console.log("-------orderType-------->", orderType);
@@ -470,6 +479,27 @@ export default function NewWebhookModal({
                       </div>
 
                       <div className="flex flex-col justify-center items-center w-full gap-4">
+                        {orderType !== "market" && (
+                          <div className="flex justify-between items-center w-full">
+                            <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
+                              <span>Open Price (pips)</span>
+                              <Tooltip content={tooltips.openPrice}>
+                                <HelpCircle className="h-4 w-4" />
+                              </Tooltip>
+                            </label>
+                            <input
+                              type="number"
+                              value={openPrice_pips}
+                              placeholder="0"
+                              step={1}
+                              onChange={(e) =>
+                                setOpenPrice(Number(e.target.value))
+                              }
+                              className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
+                                   border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0 text-sm"
+                            />
+                          </div>
+                        )}
                         <div className="flex justify-between items-center w-full">
                           <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
                             <span>Stop Loss (pips)</span>
@@ -529,27 +559,7 @@ export default function NewWebhookModal({
                             />
                           </div>
                         )}
-                        {orderType !== "market" && (
-                          <div className="flex justify-between items-center w-full">
-                            <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
-                              <span>Open Price (pips)</span>
-                              <Tooltip content={tooltips.openPrice}>
-                                <HelpCircle className="h-4 w-4" />
-                              </Tooltip>
-                            </label>
-                            <input
-                              type="number"
-                              value={openPrice_pips}
-                              placeholder="0"
-                              step={1}
-                              onChange={(e) =>
-                                setOpenPrice(Number(e.target.value))
-                              }
-                              className="w-1/2 bg-dark-200/30 text-white rounded-lg px-4 py-3
-                                   border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0 text-sm"
-                            />
-                          </div>
-                        )}
+
                         {orderType == "stopLimit" && (
                           <div className="flex justify-between items-center w-full">
                             <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
@@ -723,6 +733,7 @@ export default function NewWebhookModal({
                     >
                       <option value={"market"}>Market</option>
                       <option value={"limit"}>Limit</option>
+                      <option value={"stop"}>Stop</option>
                     </select>
                   </div>
                   <div className="flex justify-between items-center w-full">
@@ -913,6 +924,49 @@ export default function NewWebhookModal({
                       </div>
                     )}
                   </div>
+                  <div className="flex flex-col justify-center items-center gap-2 w-full">
+                    <div className="flex justify-between w-full items-center">
+                      <span className="text-sm text-gray-400">OpenPrice</span>
+                      <div className="flex justify-center items-center gap-2">
+                        <span className="text-gray-400 text-sm">Enable</span>
+                        <button
+                          onClick={() =>
+                            setBreakEvenSettingToogle(!breakEvenSettingToogle)
+                          }
+                          className={`relative inline-flex h-6 w-11 items-center rounded-full ${
+                            breakEvenSettingToogle
+                              ? "bg-purple-500"
+                              : "bg-dark-300"
+                          }`}
+                        >
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                              breakEvenSettingToogle
+                                ? "translate-x-6"
+                                : "translate-x-1"
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                    {breakEvenSettingToogle && (
+                      <div className="flex justify-center w-full relative">
+                        <input
+                          type="text"
+                          value={breakenEvenSetting_pips}
+                          onChange={(e) =>
+                            setBreakenEvenSetting(Number(e.target.value))
+                          }
+                          placeholder="Trailing Stop Loss"
+                          className="w-full bg-dark-50 text-white rounded-lg px-4 py-3
+                             border border-dashed border-gray-500 focus:border-purple-500 focus:ring-0 text-sm"
+                        />
+                        <span className="text-gray-400 text-sm absolute right-[15px] top-[15px]">
+                          Pips
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   <div className="flex flex-col justify-center items-center w-full gap-2">
                     <div className="flex justify-between items-center w-full">
                       <span className="text-sm text-gray-400">
@@ -1025,51 +1079,6 @@ export default function NewWebhookModal({
                           />
                           <span className="text-gray-400 text-sm absolute right-[15px] top-[15px]">
                             Minute
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-col justify-center items-center gap-2 w-full">
-                      <div className="flex justify-between w-full items-center">
-                        <span className="text-sm text-gray-400">
-                          Break-Even Setting
-                        </span>
-                        <div className="flex justify-center items-center gap-2">
-                          <span className="text-gray-400 text-sm">Enable</span>
-                          <button
-                            onClick={() =>
-                              setBreakEvenSettingToogle(!breakEvenSettingToogle)
-                            }
-                            className={`relative inline-flex h-6 w-11 items-center rounded-full ${
-                              breakEvenSettingToogle
-                                ? "bg-purple-500"
-                                : "bg-dark-300"
-                            }`}
-                          >
-                            <span
-                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-                                breakEvenSettingToogle
-                                  ? "translate-x-6"
-                                  : "translate-x-1"
-                              }`}
-                            />
-                          </button>
-                        </div>
-                      </div>
-                      {breakEvenSettingToogle && (
-                        <div className="flex justify-center w-full relative">
-                          <input
-                            type="text"
-                            value={breakenEvenSetting_pips}
-                            onChange={(e) =>
-                              setBreakenEvenSetting(Number(e.target.value))
-                            }
-                            placeholder="Trailing Stop Loss"
-                            className="w-full bg-dark-50 text-white rounded-lg px-4 py-3
-                             border border-dashed border-gray-500 focus:border-purple-500 focus:ring-0 text-sm"
-                          />
-                          <span className="text-gray-400 text-sm absolute right-[15px] top-[15px]">
-                            Pips
                           </span>
                         </div>
                       )}
