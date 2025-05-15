@@ -60,14 +60,12 @@ export default function SignalsView() {
           {webhooksState.find(
             (webhook) => webhook.webhookMode === "advanced"
           ) && (
-            <>
-              <div className="text-2xl mb-4 flex justify-start items-center gap-2">
-                <IoRocketOutline className="w-6 h-6 text-orange-500" />
-                <span className="text-orange-500 font-medium">
-                  Advanced webhooks
-                </span>
-              </div>
-            </>
+            <div className="text-2xl mb-4 flex justify-start items-center gap-2">
+              <IoRocketOutline className="w-6 h-6 text-orange-500" />
+              <span className="text-orange-500 font-medium">
+                Advanced webhooks
+              </span>
+            </div>
           )}
           <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4 h-min items-start">
             {webhooksState
@@ -106,14 +104,10 @@ export default function SignalsView() {
               ))}
           </div>
           {webhooksState.find((webhook) => webhook.webhookMode === "basic") && (
-            <>
-              <div className="text-2xl mb-4 flex justify-start items-center gap-2">
-                <AiOutlineSafety className="w-6 h-6 text-blue-500" />
-                <span className=" font-medium text-blue-500">
-                  Basic webhooks
-                </span>
-              </div>
-            </>
+            <div className="text-2xl mb-4 flex justify-start items-center gap-2">
+              <AiOutlineSafety className="w-6 h-6 text-blue-500" />
+              <span className=" font-medium text-blue-500">Basic webhooks</span>
+            </div>
           )}
           <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4 h-min items-start">
             {webhooksState
