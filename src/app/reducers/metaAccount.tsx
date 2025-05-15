@@ -60,12 +60,14 @@ export function addAccount({
   password,
   server,
   platform,
+  whopToken,
 }: {
   email: string;
   login: string;
   password: string;
   server: string;
   platform: string;
+  whopToken: string;
 }) {
   return async () => {
     try {
@@ -75,6 +77,7 @@ export function addAccount({
         password,
         server,
         platform,
+        whopToken,
       });
       dispatch(
         metaAccount.actions.addAccountSuccess(response.data.data.newAccount)

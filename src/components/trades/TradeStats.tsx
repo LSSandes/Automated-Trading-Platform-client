@@ -10,8 +10,6 @@ import {
 } from "lucide-react";
 import { dispatch, useSelector } from "@/app/store";
 import { getTotalTradesStats } from "@/app/reducers/trade";
-// import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 
 interface StatCardProps {
   label: string;

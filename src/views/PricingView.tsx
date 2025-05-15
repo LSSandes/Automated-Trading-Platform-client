@@ -178,6 +178,7 @@ const PricingPage: React.FC = () => {
             email: user?.email,
             role: roleParam,
             accountCount: Number(accountCountParam),
+            product_id,
           });
         }
       }

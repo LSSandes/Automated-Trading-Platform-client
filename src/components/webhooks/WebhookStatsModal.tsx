@@ -1,40 +1,6 @@
 import { X, TrendingUp, BarChart2, 
           Activity } from 'lucide-react';
 import { WebhookStatsModalProps } from '@/types/webhook';
-
-// const mockAlerts: Alert[] = [
-//   {
-//     id: '1',
-//     type: 'market_execution',
-//     symbol: 'EURUSD',
-//     message: 'Buy EURUSD at 1.0950',
-//     timestamp: '2 minutes ago',
-//     status: 'success',
-//     profitAmount: 125.50,
-//     profitPercentage: 1.25
-//   },
-//   {
-//     id: '2',
-//     type: 'modify_order',
-//     symbol: 'XAUUSD',
-//     message: 'Modified SL to 2010.00, TP to 2025.00',
-//     timestamp: '15 minutes ago',
-//     status: 'success',
-//     profitAmount: -45.20,
-//     profitPercentage: -0.45
-//   },
-//   {
-//     id: '3',
-//     type: 'close_trade',
-//     symbol: 'BTCUSD',
-//     message: 'Closed BTCUSD position',
-//     timestamp: '1 hour ago',
-//     status: 'success',
-//     profitAmount: 230.50,
-//     profitPercentage: 2.3
-//   }
-// ];
-
 export default function WebhookStatsModal({ isOpen, onClose, webhook }: WebhookStatsModalProps) {
   if (!isOpen) return null;
 
@@ -47,33 +13,6 @@ export default function WebhookStatsModal({ isOpen, onClose, webhook }: WebhookS
     { day: 'Fri', total: 6, long: 4, short: 2 },
     { day: 'Sat', total: 4, long: 3, short: 1 }
   ];
-
-  // const getActionIcon = (type: string) => {
-  //   switch (type) {
-  //     case 'market_execution':
-  //       return <PlayCircle className="h-4 w-4 text-emerald-400" />;
-  //     case 'modify_order':
-  //       return <Edit3 className="h-4 w-4 text-yellow-400" />;
-  //     case 'close_trade':
-  //       return <X className="h-4 w-4 text-red-400" />;
-  //     default:
-  //       return null;
-  //   }
-  // };
-
-  // const getStatusIcon = (status: string) => {
-  //   switch (status) {
-  //     case 'success':
-  //       return <CheckCircle2 className="h-4 w-4 text-emerald-400" />;
-  //     case 'pending':
-  //       return <Clock className="h-4 w-4 text-yellow-400" />;
-  //     case 'error':
-  //       return <AlertCircle className="h-4 w-4 text-red-400" />;
-  //     default:
-  //       return null;
-  //   }
-  // };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
@@ -255,61 +194,6 @@ export default function WebhookStatsModal({ isOpen, onClose, webhook }: WebhookS
               </div>
             </div>
           </div>
-
-          {/* Recent Alerts */}
-          {/* <div className="glass-panel rounded-xl p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-2">
-                <Info className="h-5 w-5 text-accent" />
-                <h3 className="text-lg font-medium text-white">Recent Alerts</h3>
-              </div>
-              <button className="text-accent hover:text-accent-dark transition-colors">
-                View All Alerts
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              {mockAlerts.map((alert) => (
-                <div 
-                  key={alert.id}
-                  className="glass-panel rounded-lg p-4 hover:bg-dark-200/30 transition-colors"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start space-x-3">
-                      <div className="p-2 bg-dark-200/50 rounded-lg">
-                        {getActionIcon(alert.type)}
-                      </div>
-                      <div>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-white font-medium">{alert.symbol}</span>
-                          <span className="text-xs text-gray-400">{alert.timestamp}</span>
-                        </div>
-                        <p className="text-sm text-gray-400 mt-1">{alert.message}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      {alert.profitAmount !== undefined && (
-                        <div className={`flex items-center space-x-1 ${
-                          alert.profitAmount >= 0 ? 'text-emerald-400' : 'text-red-400'
-                        }`}>
-                          {alert.profitAmount >= 0 ? (
-                            <TrendingUp className="h-4 w-4" />
-                          ) : (
-                            <TrendingDown className="h-4 w-4" />
-                          )}
-                          <span>
-                            {alert.profitAmount >= 0 ? '+' : ''}
-                            ${Math.abs(alert.profitAmount).toFixed(2)}
-                          </span>
-                        </div>
-                      )}
-                      {getStatusIcon(alert.status)}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div> */}
         </div>
       </div>
     </div>

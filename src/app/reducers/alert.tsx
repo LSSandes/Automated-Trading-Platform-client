@@ -22,6 +22,11 @@ const alert = createSlice({
     addAlertSuccess(state, action) {
       state.alerts = [...state.alerts, action.payload];
     },
+    updateAlertSuccess(state, action) {
+      state.alerts = state.alerts.map((alert) =>
+        alert.id === action.payload.id ? action.payload : alert
+      );
+    },
   },
 });
 
@@ -54,7 +59,21 @@ export function addAlert(newAlert: any) {
   };
 }
 
-export function updateAlert(email: string) {
+export function updateAlert(updatedAlert: any) {
+  return async () => {
+    try {
+      console.log(
+        "-------updated alert redux-------->",
+        updatedAlert.updatedAlert
+      );
+      dispatch(alert.actions.updateAlertSuccess(updatedAlert.updatedAlert));
+    } catch (err) {
+      dispatch(alert.actions.hasError(err));
+    }
+  };
+}
+
+export function updateAlertView(email: string) {
   return async () => {
     try {
       const response = await axios.post("alert/update/alert", {

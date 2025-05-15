@@ -86,6 +86,11 @@ export default function AddAccountModal({
     if (!validateForm()) {
       return;
     }
+    const whopToken = localStorage.getItem("whopToken");
+    if (!whopToken) {
+      setErrors({ general: "Whop token is required" });
+      return;
+    }
     setIsConnecting(true);
     setErrors({});
     try {
@@ -97,6 +102,7 @@ export default function AddAccountModal({
             password,
             server,
             platform,
+            whopToken,
           }) as any
         ).then(() => {
           setTimeout(() => {
@@ -188,31 +194,6 @@ export default function AddAccountModal({
 
           {/* Form Fields */}
           <div className="space-y-4">
-            {/* <div>
-              <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
-                <span>Broker Name</span>
-                <Tooltip content="Enter your broker's name (e.g., IC Markets, Pepperstone)">
-                  <HelpCircle className="h-4 w-4" />
-                </Tooltip>
-              </label>
-              <input
-                type="text"
-                value={broker}
-                onChange={(e) => setBroker(e.target.value)}
-                placeholder="e.g., IC Markets"
-                className={`w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
-                         border focus:outline-none focus:ring-1 transition-colors
-                         ${
-                           errors.broker
-                             ? "border-red-500 focus:ring-red-500/50"
-                             : "border-dark-300/50 focus:ring-accent/50"
-                         }`}
-              />
-              {errors.broker && (
-                <p className="text-red-400 text-sm mt-1">{errors.broker}</p>
-              )}
-            </div> */}
-
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="flex items-center space-x-2 text-sm text-gray-400">
@@ -315,31 +296,6 @@ export default function AddAccountModal({
                 <p className="text-red-400 text-sm mt-1">{errors.password}</p>
               )}
             </div>
-
-            {/* <div>
-              <label className="flex items-center space-x-2 text-sm text-gray-400 mb-2">
-                <span>Account Name</span>
-                <Tooltip content="A friendly name to identify this account">
-                  <HelpCircle className="h-4 w-4" />
-                </Tooltip>
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g., IC Markets Main"
-                className={`w-full bg-dark-200/50 text-white rounded-lg px-4 py-2.5
-                         border focus:outline-none focus:ring-1 transition-colors
-                         ${
-                           errors.name
-                             ? "border-red-500 focus:ring-red-500/50"
-                             : "border-dark-300/50 focus:ring-accent/50"
-                         }`}
-              />
-              {errors.name && (
-                <p className="text-red-400 text-sm mt-1">{errors.name}</p>
-              )}
-            </div> */}
           </div>
 
           {/* General Error */}

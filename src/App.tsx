@@ -4,17 +4,12 @@ import LandingView from "./views/LandingView";
 import DashboardView from "./views/DashboardView";
 import TradesView from "./views/TradesView";
 import SignalsView from "./views/SignalsView";
-// import AnalyticsView from "./views/AnalyticsView";
 import MarketsView from "./views/MarketsView";
 import AlertsView from "./views/AlertsView";
 import MetaTraderView from "./views/MetaTraderView";
 import TradeLockerView from "./views/TradeLockerView";
 // import LeaderboardView from "./views/LeaderboardView";
-// import TelegramView from "./views/TelegramView";
-// import AdminView from "./views/AdminView";
-import TestLoginView from "./views/TestLoginView";
 import ChatWindow from "./components/ChatWindow";
-import CheckoutModal from "./components/CheckoutModal";
 import Layout from "./layout";
 // import SignupView from "./views/SignupView";
 // import SigninView from "./views/SigninView";
@@ -25,40 +20,10 @@ import PricingView from "./views/PricingView";
 
 function App() {
   const [activeChats, setActiveChats] = useState<string[]>([]);
-  const [copyingTraders, setCopyingTraders] = useState<string[]>([]);
-  const [checkoutTrader, setCheckoutTrader] = useState<any>(null);
   const menuCollapsed: boolean = false;
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [activeView, setActiveView] = useState("landing");
   console.log(activeView);
-
-  const handleCopyTrader = (
-    traderId: string,
-    name: string,
-    profit: number,
-    winRate: number,
-    price: number
-  ) => {
-    if (copyingTraders.includes(traderId)) {
-      setCopyingTraders((prev) => prev.filter((id) => id !== traderId));
-    } else {
-      const avatarUrl = `https://images.unsplash.com/photo-$
-        {
-          name === "Alex Trading" ? "1560250097-0b93528c311a" :
-          name === "Pro Signals" ? "1573497019940-1c28c88b4f3e" :
-          "1566492031773-4f4e44671857"
-        }?auto=format&fit=crop&w=80&h=80`;
-
-      setCheckoutTrader({ traderId, name, profit, winRate, price, avatarUrl });
-    }
-  };
-
-  const handleSubscribe = () => {
-    if (checkoutTrader) {
-      // setCopyingTraders((prev) => [...prev, checkoutTrader.traderId]);
-      setCheckoutTrader(null);
-    }
-  };
 
   const toggleChat = (traderId: string) => {
     setActiveChats((prev) =>
@@ -83,7 +48,6 @@ function App() {
         >
           <div className="max-w-full mx-auto">
             <Routes>
-              <Route path="/test-login" element={<TestLoginView />} />
               {/* <Route path="/signup" element={<SignupView />} /> */}
               {/* <Route path="/login" element={<SigninView />} /> */}
               <Route path="/callback/whop" element={<WhopCallbackView />} />
@@ -92,9 +56,7 @@ function App() {
                   path="dashboard"
                   element={
                     <DashboardView
-                      onCopyTrader={handleCopyTrader}
                       onChat={toggleChat}
-                      copyingTraders={copyingTraders}
                       onViewChange={setActiveView}
                     />
                   }
@@ -103,12 +65,9 @@ function App() {
                 <Route path="/pricing" element={<PricingView />} />
                 <Route path="trades" element={<TradesView />} />
                 <Route path="signals" element={<SignalsView />} />
-                {/* <Route path="analytics" element={<AnalyticsView />} /> */}
                 <Route path="markets" element={<MarketsView />} />
                 <Route path="alerts" element={<AlertsView />} />
                 <Route path="settings" element={<ProfileSettingView />} />
-                {/* <Route path="leaderboard" element={<LeaderboardView />} /> */}
-                {/* <Route path="admin" element={<AdminView />} /> */}
                 <Route
                   path="metatrader"
                   element={
@@ -119,8 +78,6 @@ function App() {
                   }
                 />
                 <Route path="tradelocker" element={<TradeLockerView />} />
-                {/* <Route path="telegram" element={<TelegramView />} /> */}
-                {/* <Route path="*" element={<LandingView />} /> */}
               </Route>
             </Routes>
           </div>
@@ -135,14 +92,6 @@ function App() {
             />
           ))}
         </div>
-        {checkoutTrader && (
-          <CheckoutModal
-            isOpen={true}
-            onClose={() => setCheckoutTrader(null)}
-            trader={checkoutTrader}
-            onSubscribe={handleSubscribe}
-          />
-        )}
         <ToastContainer
           autoClose={3000}
           hideProgressBar={false}

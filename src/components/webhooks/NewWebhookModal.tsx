@@ -15,6 +15,7 @@ import { X, Plus, HelpCircle } from "lucide-react";
 import { AiOutlineSafety } from "react-icons/ai";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
 import { IoRocketOutline } from "react-icons/io5";
+import { Loader } from "lucide-react";
 
 type WebhookMode = "basic" | "premium" | "advanced";
 type OrderType = "Create Order" | "Modify Order" | "Close Order";
@@ -24,6 +25,7 @@ export default function NewWebhookModal({
   onClose,
 }: NewWebhookModalProps) {
   const [user] = useAtom(userAtom);
+  const [isLoading, setIsLoading] = useState(false);
   const [mode, setMode] = useState<WebhookMode>("basic");
   const [orderClass, setOrderClass] = useState<OrderType>("Create Order");
 
@@ -93,7 +95,10 @@ export default function NewWebhookModal({
     setMultiTakeProfit(newPips);
   };
   const handleCreateWebhook = async () => {
+    setIsLoading(true);
     if (!user?.email) return;
+    const whopToken = localStorage.getItem("whopToken");
+    if (!whopToken) return;
     const commonData = {
       email: user.email,
       webhookName,
@@ -118,8 +123,12 @@ export default function NewWebhookModal({
         moveTakeProfit_pips: String(moveTakeProfit_pips),
         partialClose: String(partialClose),
         allTrades,
+        whopToken,
       };
-      dispatch(createBasicWebhook(orderData));
+      dispatch(createBasicWebhook(orderData)).then(() => {
+        setIsLoading(false);
+        onClose();
+      });
     } else if (mode == "premium") {
       const orderData = {
         ...commonData,
@@ -144,14 +153,22 @@ export default function NewWebhookModal({
         breakenEvenSetting_pips: breakEvenSettingToogle
           ? String(breakenEvenSetting_pips)
           : "0",
+        whopToken,
       };
-      dispatch(createPremiumWebhook(orderData));
+      dispatch(createPremiumWebhook(orderData)).then(() => {
+        setIsLoading(false);
+        onClose();
+      });
     } else if (mode == "advanced") {
       const orderData = {
         ...commonData,
         volume: fixedSize.toString(),
+        whopToken,
       };
-      dispatch(createAdvancedWebhook(orderData));
+      dispatch(createAdvancedWebhook(orderData)).then(() => {
+        setIsLoading(false);
+        onClose();
+      });
     }
   };
 
@@ -1141,6 +1158,7 @@ export default function NewWebhookModal({
               className="premium-button lg:px-6 px-4 py-2 flex items-center space-x-2
                        disabled:opacity-50 disabled:cursor-not-allowed text-sm bg-blue-500 outline-1 outline-dashed outline-blue-500 outline-offset-2"
             >
+              {isLoading && <Loader className="h-5 w-5 mr-2 animate-spin" />}
               <span>Create Webhook</span>
               <Plus className="h-5 w-5" />
             </button>

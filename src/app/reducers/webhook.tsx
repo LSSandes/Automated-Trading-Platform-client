@@ -81,6 +81,7 @@ export function createBasicWebhook({
   moveTakeProfit_pips,
   partialClose,
   allTrades,
+  whopToken,
 }: {
   email: string;
   webhookName: string;
@@ -99,6 +100,7 @@ export function createBasicWebhook({
   moveTakeProfit_pips: string;
   partialClose: string;
   allTrades: boolean;
+  whopToken: string;
 }) {
   return async () => {
     try {
@@ -120,6 +122,7 @@ export function createBasicWebhook({
         moveTakeProfit_pips,
         partialClose,
         allTrades,
+        whopToken,
       });
       dispatch(
         webhook.actions.addWebhookSuccess(response.data.data.newWebhook)
@@ -147,6 +150,7 @@ export function createPremiumWebhook({
   activationTrigger_pips,
   timeBasedExitMinute,
   breakenEvenSetting_pips,
+  whopToken,
 }: {
   email: string;
   webhookName: string;
@@ -161,6 +165,7 @@ export function createPremiumWebhook({
   activationTrigger_pips: string;
   timeBasedExitMinute: string;
   breakenEvenSetting_pips: string;
+  whopToken: string;
 }) {
   return async () => {
     try {
@@ -178,6 +183,7 @@ export function createPremiumWebhook({
         activationTrigger_pips,
         timeBasedExitMinute,
         breakenEvenSetting_pips,
+        whopToken,
       });
       dispatch(
         webhook.actions.addWebhookSuccess(response.data.data.newWebhook)
@@ -197,12 +203,14 @@ export function createAdvancedWebhook({
   webhookMode,
   symbol,
   volume,
+  whopToken
 }: {
   email: string;
   webhookName: string;
   webhookMode: string;
   symbol: string;
   volume: string;
+  whopToken: string;
 }) {
   return async () => {
     try {
@@ -212,6 +220,7 @@ export function createAdvancedWebhook({
         webhookMode,
         symbol,
         volume,
+        whopToken,
       });
       dispatch(
         webhook.actions.addWebhookSuccess(response.data.data.newWebhook)

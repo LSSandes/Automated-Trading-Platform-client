@@ -32,6 +32,7 @@ import { MdWebhook } from "react-icons/md";
 import { toast } from "react-toastify";
 import OpenTradeModal from "./OpenTradeModal";
 import { UserParams } from "@/types/tradeLocker";
+import { env } from "@/config/env";
 
 export default function WebhookCard({
   webhook,
@@ -107,11 +108,8 @@ export default function WebhookCard({
   }, []);
   //  ***************************Handle the URL**********************************//
   const handleCopy = () => {
-    // navigator.clipboard.writeText(
-    //   `http://localhost:5000/api/alert/${webhook.hashedWebhook}`
-    // );
     navigator.clipboard.writeText(
-      `https://automated-trading-platform-server.onrender.com/api/alert/${webhook.hashedWebhook}`
+      `${env.BASE_URL}/alert/${webhook.hashedWebhook}`
     );
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

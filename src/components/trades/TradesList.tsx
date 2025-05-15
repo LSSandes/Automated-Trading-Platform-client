@@ -14,7 +14,6 @@ export default function TradesList({
   onModify,
   onClose,
 }: TradesListProps) {
-  // const [selectedTrades] = useState<string[]>([]);
   const [filterType, setFilterType] = useState<"all" | "buy" | "sell">("all");
 
   const tradeCounts = trades.reduce(
@@ -24,15 +23,6 @@ export default function TradesList({
     }),
     { buys: 0, sells: 0 }
   );
-
-  // const handleBulkModify = () => {
-  //   console.log("Modifying trades:", selectedTrades);
-  // };
-
-  // const handleBulkClose = () => {
-  //   console.log("Closing trades:", selectedTrades);
-  // };
-
   const filteredTrades = trades.filter((trade) => {
     if (filterType === "all") return true;
     return trade.type === filterType.toUpperCase();

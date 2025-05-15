@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Bell, Filter, Search } from "lucide-react";
 import { dispatch, useSelector } from "@/app/store";
 import AlertsList from "@/components/AlertsList";
-import { getAlerts, updateAlert } from "@/app/reducers/alert";
+import { getAlerts, updateAlertView } from "@/app/reducers/alert";
 import { useAtom } from "jotai";
 import { userAtom } from "@/store/atoms";
 
@@ -13,7 +13,7 @@ export default function AlertsView() {
   const alerts = useSelector((state) => state.alert.alerts);
   useEffect(() => {
     user && dispatch(getAlerts(user?.email));
-    user && dispatch(updateAlert(user?.email));
+    user && dispatch(updateAlertView(user?.email));
   }, []);
   console.log("-----------alert2------------>", alerts);
   return (

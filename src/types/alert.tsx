@@ -1,4 +1,5 @@
 export interface AlertConfig {
+  id: string;
   userId: number;
   orderType: string;
   webhookName: string;

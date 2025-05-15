@@ -1,31 +1,16 @@
 import { Zap } from "lucide-react";
 import QuickActions from "../components/QuickActions";
 import { useNavigate } from "react-router-dom";
-// import PerformanceChart from "../components/dashboard/PerformanceChart";
 import ActiveTrades from "../components/dashboard/ActiveTrades";
-// import SignalProviders from "../components/dashboard/SignalProviders";
 import RecentAlerts from "../components/dashboard/RecentAlerts";
 import AccountsOverview from "../components/dashboard/AccountsOverview";
 
 interface DashboardViewProps {
-  onCopyTrader: (
-    traderId: string,
-    name: string,
-    profit: number,
-    winRate: number,
-    price: number
-  ) => void;
   onChat: (traderId: string) => void;
-  copyingTraders: string[];
   onViewChange: (view: string) => void;
 }
 
-export default function DashboardView({
-  // onCopyTrader,
-  // onChat,
-  // copyingTraders,
-  onViewChange,
-}: DashboardViewProps) {
+export default function DashboardView({ onViewChange }: DashboardViewProps) {
   const introduction = [
     {
       title: "MAKE YOUR OWN BOTS",
@@ -55,7 +40,6 @@ export default function DashboardView({
   const navigate = useNavigate();
   return (
     <div className="space-y-8" style={{ height: "calc(100vh - 80px)" }}>
-      {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-medium text-white tracking-tight">
@@ -80,7 +64,10 @@ export default function DashboardView({
       </div>
       <div className="grid xl:grid-cols-4 lg:grid-cols-2 grid-cols-1 gap-2">
         {introduction.map((item, index) => (
-          <div key={index} className="flex flex-col justify-between items-start gap-2 bg-dark-200 p-4 rounded-lg">
+          <div
+            key={index}
+            className="flex flex-col justify-between items-start gap-2 bg-dark-200 p-4 rounded-lg"
+          >
             <div className="flex justify-between items-center gap-2 ">
               <span className="bg-blue-500 rounded-lg px-[8px] py-[1px]">
                 {index + 1}
@@ -98,52 +85,21 @@ export default function DashboardView({
           </div>
         ))}
       </div>
-      {/* Quick Actions */}
       <QuickActions
         onNewWebhook={() => /*setShowWebhookModal(true)*/ {}}
         onViewChange={onViewChange}
       />
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 w-full gap-8">
-        {/* Left Column - Performance Chart */}
-
-        {/* <PerformanceChart /> */}
-
-        {/* Right Column - Active Trades */}
-      </div>
-
-      {/* Bottom Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Connected Accounts */}
         <div>
           <AccountsOverview />
         </div>
         <div>
           <ActiveTrades onViewChange={onViewChange} />
         </div>
-
-        {/* Signal Providers */}
-        {/* <div>
-          <SignalProviders
-            copyingTraders={copyingTraders}
-            onCopyTrader={onCopyTrader}
-            onChat={onChat}
-            onViewChange={onViewChange}
-          />
-        </div> */}
-
-        {/* Recent Alerts */}
         <div>
           <RecentAlerts />
         </div>
       </div>
-
-      {/* <NewWebhookModal
-        isOpen={showWebhookModal}
-        onClose={() => setShowWebhookModal(false)}
-        onCreateWebhook={handleCreateWebhook}
-      /> */}
     </div>
   );
 }

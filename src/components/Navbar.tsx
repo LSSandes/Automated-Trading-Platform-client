@@ -6,7 +6,7 @@ import { userAtom } from "@/store/atoms";
 import { useSetAtom, useAtom } from "jotai";
 import { io } from "socket.io-client";
 import { dispatch, useSelector } from "@/app/store";
-import { addAlert } from "@/app/reducers/alert";
+import { addAlert, updateAlert } from "@/app/reducers/alert";
 import axios from "axios";
 import { env } from "@/config/env";
 import SideMenu_M from "./SideMenu_M";
@@ -51,16 +51,24 @@ export default function Navbar() {
     asyncFn();
   }, []);
 
+  //--------------alert socket-------------------//
   const socket = io(env.AVATAR_URL);
   useEffect(() => {
-    const handleAlert = (newAlert: string) => {
+    const handleNewAlert = (newAlert: string) => {
       dispatch(addAlert({ newAlert }));
     };
-    socket.on(`${userInfoGlobal?.email}`, handleAlert);
+    const handleUpdatedAlert = (updatedAlert: string) => {
+      dispatch(updateAlert({ updatedAlert }));
+    };
+    socket.on(`${userInfoGlobal?.email}_new`, handleNewAlert);
+    socket.on(`${userInfoGlobal?.email}_update`, handleUpdatedAlert);
     return () => {
-      socket.off(`${userInfoGlobal?.email}`, handleAlert);
+      socket.off(`${userInfoGlobal?.email}_new`, handleNewAlert);
+      socket.off(`${userInfoGlobal?.email}_update`, handleUpdatedAlert);
     };
   }, []);
+  // ----------------------------------//
+
   const getFirstLetterUppercase = (str: string) => {
     if (str.length === 0) return "";
     return str.charAt(0).toUpperCase();

@@ -15,69 +15,8 @@ export default function TradesCalendar({
 }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [hoveredDay, setHoveredDay] = useState<number | null>(null);
-
-  // Mock data for calendar stats with realistic numbers
-  // const monthStats: { [key: number]: DayStats } = {
-  //   1: {
-  //     trades: 15,
-  //     profit: 1250,
-  //     winRate: 92,
-  //     bestTrade: 450,
-  //     worstTrade: -120,
-  //   },
-  //   5: {
-  //     trades: 12,
-  //     profit: -320,
-  //     winRate: 75,
-  //     bestTrade: 280,
-  //     worstTrade: -450,
-  //   },
-  //   8: {
-  //     trades: 18,
-  //     profit: 2450,
-  //     winRate: 89,
-  //     bestTrade: 850,
-  //     worstTrade: -180,
-  //   },
-  //   12: {
-  //     trades: 14,
-  //     profit: 1780,
-  //     winRate: 86,
-  //     bestTrade: 620,
-  //     worstTrade: -250,
-  //   },
-  //   15: {
-  //     trades: 16,
-  //     profit: -500,
-  //     winRate: 81,
-  //     bestTrade: 380,
-  //     worstTrade: -480,
-  //   },
-  //   19: {
-  //     trades: 20,
-  //     profit: 3380,
-  //     winRate: 95,
-  //     bestTrade: 1250,
-  //     worstTrade: -150,
-  //   },
-  //   22: {
-  //     trades: 17,
-  //     profit: 2290,
-  //     winRate: 88,
-  //     bestTrade: 780,
-  //     worstTrade: -220,
-  //   },
-  //   25: {
-  //     trades: 13,
-  //     profit: -450,
-  //     winRate: 77,
-  //     bestTrade: 320,
-  //     worstTrade: -520,
-  //   },
-  // };
   const monthStats = useSelector((state) => state.trade.monthStats);
   const totalTradesStats = useSelector((state) => state.trade.totalTradesStats);
-
   const daysInMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth() + 1,
@@ -125,7 +64,6 @@ export default function TradesCalendar({
 
   return (
     <div className="glass-panel rounded-xl p-6">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
           <div className="p-2 bg-accent/10 rounded-lg">
@@ -154,10 +92,7 @@ export default function TradesCalendar({
           </button>
         </div>
       </div>
-
-      {/* Calendar Grid */}
       <div className="grid grid-cols-7 gap-1">
-        {/* Day Headers */}
         {DAYS.map((day) => (
           <div
             key={day}
@@ -166,13 +101,9 @@ export default function TradesCalendar({
             {day}
           </div>
         ))}
-
-        {/* Empty cells for previous month */}
         {Array.from({ length: firstDayOfMonth }).map((_, index) => (
           <div key={`empty-start-${index}`} className="aspect-square" />
         ))}
-
-        {/* Calendar Days */}
         {Array.from({ length: daysInMonth }).map((_, index) => {
           const day = index + 1;
           const stats = monthStats[day];

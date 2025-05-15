@@ -1,6 +1,15 @@
-import { BarChart2, Webhook, Globe, ChevronDown, Box, LineChart, Bell } from "lucide-react";
+import {
+  BarChart2,
+  Webhook,
+  Globe,
+  ChevronDown,
+  Box,
+  LineChart,
+  Bell,
+} from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "@/app/store";
 const SideMenu_M = ({
   isOpen,
   onClose,
@@ -11,7 +20,10 @@ const SideMenu_M = ({
   const sideMenuRef = useRef<HTMLDivElement>(null);
   const [isAppsExpanded, setIsAppsExpanded] = useState(true);
   const navigate = useNavigate();
-
+  const alerts = useSelector((state) => state.alert.alerts);
+  console.log("alerts--->", alerts);
+  const unviewedAlerts = alerts.filter((alert) => alert.view === false);
+  console.log("unviewedAlerts--->", unviewedAlerts);
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -37,21 +49,15 @@ const SideMenu_M = ({
       id: "alerts",
       icon: <Bell className="h-5 w-5" />,
       label: "Alerts",
-      badge: "3",
+      badge: unviewedAlerts.length,
     },
     { id: "trades", icon: <LineChart className="h-5 w-5" />, label: "Trades" },
     {
       id: "signals",
       icon: <Webhook className="h-5 w-5" />,
       label: "Webhooks",
-      badge: "5",
     },
     { id: "markets", icon: <Globe className="h-5 w-5" />, label: "Markets" },
-    // {
-    //   id: "leaderboard",
-    //   icon: <Trophy className="h-5 w-5" />,
-    //   label: "Leaderboard",
-    // },
   ];
   const apps = [
     {

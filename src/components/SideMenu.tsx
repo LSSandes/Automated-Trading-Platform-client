@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "@/app/store";
 import { useSetAtom } from "jotai";
 import { collapsedAtom } from "@/store/atoms";
-// import { SignalProvider } from "@/types/sidemenu";
 import { SideMenuProps } from "@/types/sidemenu";
 import {
   BarChart2,
@@ -16,8 +15,6 @@ import {
   Box,
   Bell,
 } from "lucide-react";
-// import { useMetaAccounts } from "../hooks/useMetaAccount";
-
 const SideMenu = ({
   activeView,
   onViewChange,
@@ -30,34 +27,6 @@ const SideMenu = ({
   console.log("alerts--->", alerts);
   const unviewedAlerts = alerts.filter((alert) => alert.view === false);
   console.log("unviewedAlerts--->", unviewedAlerts);
-  // const { data: accounts } = useMetaAccounts();
-
-  // const [activeProviders, setActiveProviders] = useState<SignalProvider[]>([
-  //   {
-  //     id: "1",
-  //     name: "Gold Scalper Pro",
-  //     rank: 1,
-  //     subscribers: 1234,
-  //     monthlyRevenue: 12450,
-  //     active: true,
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "Crypto Momentum",
-  //     rank: 2,
-  //     subscribers: 856,
-  //     monthlyRevenue: 8890,
-  //     active: true,
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "Forex Elite",
-  //     rank: 3,
-  //     subscribers: 2341,
-  //     monthlyRevenue: 15680,
-  //     active: true,
-  //   },
-  // ]);
   const navigate = useNavigate();
   const menuItems = [
     {
@@ -78,11 +47,6 @@ const SideMenu = ({
       label: "Webhooks",
     },
     { id: "markets", icon: <Globe className="h-5 w-5" />, label: "Markets" },
-    // {
-    //   id: "leaderboard",
-    //   icon: <Trophy className="h-5 w-5" />,
-    //   label: "Leaderboard",
-    // },
   ];
   const apps = [
     {
