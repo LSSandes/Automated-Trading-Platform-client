@@ -56,7 +56,7 @@ export default function SignalsView() {
 
       {/* Webhooks Sections */}
       {webhooksState.length > 0 && (
-        <div className="flex flex-col gap-6 justify-start items-start">
+        <div className="space-y-3">
           {webhooksState.find(
             (webhook) => webhook.webhookMode === "advanced"
           ) && (
