@@ -56,7 +56,7 @@ export default function SignalsView() {
 
       {/* Webhooks Sections */}
       {webhooksState.length > 0 && (
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6 justify-start items-start">
           {webhooksState.find(
             (webhook) => webhook.webhookMode === "advanced"
           ) && (
@@ -85,14 +85,12 @@ export default function SignalsView() {
           {webhooksState.find(
             (webhook) => webhook.webhookMode === "premium"
           ) && (
-            <>
-              <div className="text-2xl mb-4 flex justify-start items-center gap-2">
-                <MdOutlineWorkspacePremium className="w-6 h-6 text-purple-500" />
-                <span className="text-purple-500 font-medium">
-                  Premium webhooks
-                </span>
-              </div>
-            </>
+            <div className="text-2xl mb-4 flex justify-start items-center gap-2">
+              <MdOutlineWorkspacePremium className="w-6 h-6 text-purple-500" />
+              <span className="text-purple-500 font-medium">
+                Premium webhooks
+              </span>
+            </div>
           )}
           <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4 h-min items-start">
             {webhooksState
