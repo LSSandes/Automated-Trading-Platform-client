@@ -57,42 +57,48 @@ export default function FaqSection() {
   const [activeId, setActiveId] = useState<number | null>(null);
 
   return (
-    <div className="py-20 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center px-4 py-2 rounded-full bg-accent/10 text-accent mb-8
+    <div className="py-12 md:py-20 relative overflow-hidden">
+      {/* Background gradient effects */}
+      <div className="absolute inset-0 bg-gradient-to-b from-dark-100/10 to-dark/80 z-0"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,122,255,0.1),transparent_50%)] z-0"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(124,58,237,0.1),transparent_50%)] z-0"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-8 md:mb-16">
+          <div className="inline-flex items-center px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-accent/10 text-accent mb-4 md:mb-8
                         border border-accent/20 backdrop-blur-sm">
-            <HelpCircle className="h-4 w-4 mr-2" />
-            <span>Frequently Asked Questions</span>
+            <HelpCircle className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1.5 md:mr-2" />
+            <span className="text-xs md:text-base">Frequently Asked Questions</span>
           </div>
-          <h2 className="text-4xl font-bold text-white mb-4">
+          <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 md:mb-4 text-shadow-glow">
             Got Questions? We've Got Answers
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <p className="text-base md:text-xl text-gray-400 max-w-3xl mx-auto">
             Everything you need to know about automated trading
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto space-y-4">
+        <div className="max-w-3xl mx-auto space-y-3 md:space-y-4">
           {faqs.map((faq) => (
             <div
               key={faq.id}
-              className="glass-panel rounded-xl overflow-hidden transition-all duration-300"
+              className="glass-panel rounded-xl overflow-hidden transition-all duration-300 border border-dark-300/30 hover:border-accent/20"
             >
               <button
                 onClick={() => setActiveId(activeId === faq.id ? null : faq.id)}
-                className="w-full flex items-center justify-between p-6 text-left"
+                className="w-full flex items-center justify-between p-3 md:p-6 text-left"
+                aria-expanded={activeId === faq.id}
               >
-                <div className="flex items-center space-x-4">
-                  <div className="p-2 bg-dark-200/50 rounded-lg">
+                <div className="flex items-center space-x-3 md:space-x-4">
+                  <div className="p-1.5 md:p-2 bg-dark-200/50 rounded-lg">
                     {faq.icon}
                   </div>
-                  <span className="text-lg font-medium text-white">
+                  <span className="text-sm md:text-lg font-medium text-white">
                     {faq.question}
                   </span>
                 </div>
                 <ChevronDown 
-                  className={`h-5 w-5 text-gray-400 transition-transform duration-300 ${
+                  className={`h-4 w-4 md:h-5 md:w-5 text-gray-400 transition-transform duration-300 flex-shrink-0 ${
                     activeId === faq.id ? 'rotate-180' : ''
                   }`} 
                 />
@@ -105,7 +111,7 @@ export default function FaqSection() {
                     : 'max-h-0 opacity-0'
                 } overflow-hidden`}
               >
-                <div className="p-6 pt-0 text-gray-400 border-t border-dark-300/30">
+                <div className="p-3 md:p-6 pt-0 text-gray-400 border-t border-dark-300/30">
                   {faq.answer}
                 </div>
               </div>
@@ -114,14 +120,19 @@ export default function FaqSection() {
         </div>
 
         {/* Support CTA */}
-        <div className="mt-16 text-center">
-          <p className="text-gray-400 mb-4">
+        <div className="mt-8 md:mt-16 text-center">
+          <p className="text-gray-400 mb-3 md:mb-4 text-sm md:text-base">
             Still have questions? We're here to help!
           </p>
-          <button className="premium-button inline-flex items-center px-8 py-3">
-            <MessageCircle className="h-5 w-5 mr-2" />
+          <a 
+            href="https://discord.gg/RU5t7ErGEE" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="premium-button bg-gradient-to-r from-accent to-purple-500 hover:from-accent-dark hover:to-purple-600 inline-flex items-center px-4 md:px-8 py-2 md:py-3 text-sm md:text-base shadow-lg shadow-accent/10"
+          >
+            <MessageCircle className="h-4 w-4 md:h-5 md:w-5 mr-2" />
             Contact Support
-          </button>
+          </a>
         </div>
       </div>
     </div>

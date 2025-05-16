@@ -4,7 +4,7 @@ interface LiveStat {
   avatar: string;
   profit: number;
   symbol: string;
-  type: 'buy' | 'sell';
+  type: string;
   time: string;
 }
 
@@ -27,7 +27,7 @@ export default function LiveProfitsSection({ stats }: LiveProfitsSectionProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {stats.map((stat) => (
-            <div 
+            <div
               key={stat.id}
               className="glass-panel rounded-xl p-6 animate-float-medium"
             >
@@ -45,11 +45,13 @@ export default function LiveProfitsSection({ stats }: LiveProfitsSectionProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <span className="text-gray-400">{stat.symbol}</span>
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    stat.type === 'buy' 
-                      ? 'bg-emerald-500/20 text-emerald-400'
-                      : 'bg-red-500/20 text-red-400'
-                  }`}>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs ${
+                      stat.type === "buy"
+                        ? "bg-emerald-500/20 text-emerald-400"
+                        : "bg-red-500/20 text-red-400"
+                    }`}
+                  >
                     {stat.type.toUpperCase()}
                   </span>
                 </div>
