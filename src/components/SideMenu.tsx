@@ -71,85 +71,10 @@ const SideMenu = ({
       ),
       label: "TradeLocker",
     },
-    // {
-    //   id: "binance",
-    //   icon: <Coins className="h-5 w-5" />,
-    //   label: "Binance",
-    //   status: (
-    //     <div className="space-y-1">
-    //       <div className="flex items-center text-gray-400 text-xs">
-    //         <div className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-1"></div>
-    //         Not Connected
-    //       </div>
-    //       <div className="flex items-center space-x-2 text-xs text-gray-500">
-    //         <Clock className="h-3 w-3 mr-1" />
-    //         <span>No data</span>
-    //       </div>
-    //     </div>
-    //   ),
-    // },
-    // {
-    //   id: "bitget",
-    //   icon: (
-    //     <img
-    //       src="/bitget-logo.svg"
-    //       alt="Bitget"
-    //       className="h-5 w-5 filter invert opacity-60"
-    //     />
-    //   ),
-    //   label: "Bitget",
-    //   status: (
-    //     <div className="space-y-1">
-    //       <div className="flex items-center text-gray-400 text-xs">
-    //         <div className="w-1.5 h-1.5 rounded-full bg-gray-400 mr-1"></div>
-    //         Not Connected
-    //       </div>
-    //       <div className="flex items-center space-x-2 text-xs text-gray-500">
-    //         <Clock className="h-3 w-3 mr-1" />
-    //         <span>No data</span>
-    //       </div>
-    //     </div>
-    //   ),
-    // },
-    // {
-    //   id: "telegram",
-    //   icon: <MessageCircle className="h-5 w-5" />,
-    //   label: "Telegram",
-    //   status: (
-    //     <div className="space-y-1">
-    //       <div className="flex items-center text-emerald-400 text-xs">
-    //         <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1"></div>
-    //         99.9% Uptime
-    //       </div>
-    //       <div className="flex items-center space-x-2 text-xs">
-    //         <div className="flex items-center text-accent">
-    //           <Zap className="h-3 w-3 mr-1" />
-    //           <span>0.1s latency</span>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   ),
-    // },
   ];
   const handleNavigate = (item: string) => {
     navigate(`/${item}`);
   };
-
-  // const bottomMenuItems = [
-  //   { id: 'admin', icon: <Lock className="h-5 w-5" />, label: 'Admin Panel', adminOnly: true },
-  //   { id: 'settings', icon: <Settings className="h-5 w-5" />, label: 'Settings' }
-  // ];
-
-  // const toggleProvider = (id: string) => {
-  //   setActiveProviders(providers =>
-  //     providers.map(provider =>
-  //       provider.id === id ? { ...provider, active: !provider.active } : provider
-  //     )
-  //   );
-  // };
-
-  // Simulated admin check - replace with actual auth logic
-  // const isAdmin = true;
 
   return (
     <div
@@ -173,25 +98,6 @@ const SideMenu = ({
       </button>
 
       <div className="p-4 h-full flex flex-col overflow-y-auto">
-        {/* {!isCollapsed && (
-          <div className="grid grid-cols-2 gap-2 mb-6">
-            <div className="bg-dark-200/30 rounded-lg p-3">
-              <div className="flex items-center space-x-2 text-gray-400 mb-1">
-                <Trophy className="h-4 w-4" />
-                <span className="text-xs">Top Rank</span>
-              </div>
-              <div className="text-xl font-semibold text-white">#12</div>
-            </div>
-            <div className="bg-dark-200/30 rounded-lg p-3">
-              <div className="flex items-center space-x-2 text-gray-400 mb-1">
-                <DollarSign className="h-4 w-4" />
-                <span className="text-xs">Revenue</span>
-              </div>
-              <div className="text-xl font-semibold text-emerald-400">$15.2K</div>
-            </div>
-          </div>
-        )} */}
-
         <nav className="space-y-2">
           {menuItems.map((item) => (
             <button
@@ -225,7 +131,6 @@ const SideMenu = ({
             </button>
           ))}
         </nav>
-
         <div className="my-6 border-t border-dark-400">
           <button
             onClick={() => !isCollapsed && setIsAppsExpanded(!isAppsExpanded)}
@@ -245,7 +150,6 @@ const SideMenu = ({
               />
             )}
           </button>
-
           {(isAppsExpanded || isCollapsed) && (
             <div className="w-full justify-end items-center flex">
               <div className="space-y-1 mt-1 w-[90%] flex flex-col justify-center items-center">
@@ -277,76 +181,6 @@ const SideMenu = ({
             </div>
           )}
         </div>
-        {/* 
-        <nav className="space-y-2">
-          {bottomMenuItems
-            .filter(item => !item.adminOnly || isAdmin)
-            .map((item) => (
-              <button
-                key={item.id}
-                onClick={() => onViewChange(item.id)}
-                className={`w-full flex items-center ${
-                  isCollapsed ? 'justify-center' : 'justify-between'
-                } p-3 text-gray-300 hover:bg-dark-100/80 rounded-lg transition-all duration-300
-                  ${activeView === item.id ? 'bg-dark-100/80 text-white' : ''}`}
-              >
-                <div className="flex items-center space-x-3">
-                  <div className={activeView === item.id ? 'text-white' : 'text-gray-500'}>
-                    {item.icon}
-                  </div>
-                  {!isCollapsed && <span>{item.label}</span>}
-                </div>
-              </button>
-            ))}
-        </nav> */}
-
-        {/* {!isCollapsed && (
-          <div className="mt-8">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-gray-400">Top Signal Providers</h3>
-              <button className="text-accent text-sm hover:text-accent-dark transition-colors">
-                View All
-              </button>
-            </div>
-            <div className="space-y-3">
-              {activeProviders.map(provider => (
-                <div
-                  key={provider.id}
-                  className="bg-dark-200/30 rounded-lg p-3 border border-dark-300/30"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center space-x-2">
-                      <Trophy className="h-4 w-4 text-yellow-400" />
-                      <span className="text-sm text-white">{provider.name}</span>
-                    </div>
-                    <button
-                      onClick={() => toggleProvider(provider.id)}
-                      className={`relative inline-flex h-5 w-9 items-center rounded-full ${
-                        provider.active ? 'bg-accent' : 'bg-dark-300'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
-                          provider.active ? 'translate-x-5' : 'translate-x-1'
-                        }`}
-                      />
-                    </button>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <div className="flex items-center space-x-2">
-                      <Users className="h-3 w-3 text-accent" />
-                      <span className="text-gray-400">{provider.subscribers} subs</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <DollarSign className="h-3 w-3 text-emerald-400" />
-                      <span className="text-emerald-400">${provider.monthlyRevenue.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )} */}
       </div>
     </div>
   );

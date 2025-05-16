@@ -1,17 +1,33 @@
+import { useState } from "react";
 import { AlertConfig } from "@/types/alert";
 import { HiOutlineBellAlert } from "react-icons/hi2";
+
 interface AlertsListProps {
   alerts: AlertConfig[];
   expanded: boolean;
 }
+
 export default function AlertsList({ alerts, expanded }: AlertsListProps) {
+  const [visibleCount, setVisibleCount] = useState(10); // State to track how many alerts to show
+
+  // Sort alerts by createdAt in descending order
+  const sortedAlerts = [...alerts].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
+  // Slice the sorted alerts to show only the visibleCount
+  const visibleAlerts = sortedAlerts.slice(0, visibleCount);
+
+  const handleLoadMore = () => {
+    setVisibleCount((prevCount) => Math.min(prevCount + 10, sortedAlerts.length)); // Ensure we don't exceed the total alerts
+  };
+
   return (
     <>
       <div className="grid grid-cols-1 gap-4">
-        {alerts.map((alert, index) => (
+        {visibleAlerts.map((alert, index) => (
           <button
             key={index}
-            // onClick={() => setSelectedTrade(alert)}
             className="w-full text-left glass-panel rounded-xl p-4 hover:bg-dark-200/30 transition-colors duration-300 outline-1 outline-dashed outline-dark-200 outline-offset-2"
           >
             <div className="flex justify-between items-center">
@@ -84,8 +100,11 @@ export default function AlertsList({ alerts, expanded }: AlertsListProps) {
           </button>
         ))}
 
-        {expanded && (
-          <button className="glass-panel rounded-xl p-4 text-center text-accent hover:bg-dark-200/30 transition-colors duration-300">
+        {expanded && visibleCount < sortedAlerts.length && (
+          <button
+            onClick={handleLoadMore}
+            className="glass-panel rounded-xl p-4 text-center text-accent hover:bg-dark-200/30 transition-colors duration-300"
+          >
             Load More Alerts
           </button>
         )}

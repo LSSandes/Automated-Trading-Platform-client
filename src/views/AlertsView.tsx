@@ -31,8 +31,6 @@ export default function AlertsView() {
           </div>
         </div>
       </div>
-
-      {/* Filters and Search */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
@@ -64,33 +62,6 @@ export default function AlertsView() {
           />
         </div>
       </div>
-
-      {/* Stats */}
-      {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="glass-panel rounded-xl p-4">
-          <div className="text-gray-400 text-sm mb-1">Total Alerts</div>
-          <div className="text-2xl font-semibold text-white">
-            {alerts.length}
-          </div>
-        </div>
-        <div className="glass-panel rounded-xl p-4">
-          <div className="text-gray-400 text-sm mb-1">Active Trades</div>
-          <div className="text-2xl font-semibold text-white">
-            {alerts.filter((a) => a.tradeStatus === "active").length}
-          </div>
-        </div>
-        <div className="glass-panel rounded-xl p-4">
-          <div className="text-gray-400 text-sm mb-1">Today's Profit</div>
-          <div className="text-2xl font-semibold text-emerald-400">
-            +$
-            {alerts
-              .reduce((sum, alert) => sum + (alert.profitAmount || 0), 0)
-              .toFixed(2)}
-          </div>
-        </div>
-      </div> */}
-
-      {/* Alerts List */}
       <AlertsList alerts={alerts} expanded={true} />
     </div>
   );
