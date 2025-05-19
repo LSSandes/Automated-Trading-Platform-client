@@ -17,6 +17,7 @@ import ProfileSettingView from "./views/ProfileSettingView";
 import { ToastContainer, Flip } from "react-toastify";
 import WhopCallbackView from "./views/WhopCallbackView";
 import PricingView from "./views/PricingView";
+import ActTraderView from "./views/ActTraderView";
 
 function App() {
   const [activeChats, setActiveChats] = useState<string[]>([]);
@@ -78,6 +79,7 @@ function App() {
                   }
                 />
                 <Route path="tradelocker" element={<TradeLockerView />} />
+                <Route path="acttrader" element={<ActTraderView />} />
               </Route>
             </Routes>
           </div>

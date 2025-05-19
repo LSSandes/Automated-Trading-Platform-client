@@ -71,6 +71,17 @@ const SideMenu = ({
       ),
       label: "TradeLocker",
     },
+    {
+      id: "acttrader",
+      icon: (
+        <img
+          src="/acttrader.svg"
+          alt="acttrader"
+          className="h-5 w-5 opacity-60"
+        />
+      ),
+      label: "ActTrader",
+    },
   ];
   const handleNavigate = (item: string) => {
     navigate(`/${item}`);

@@ -2,67 +2,33 @@ import { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { Loader } from "lucide-react";
 import { CiLogin } from "react-icons/ci";
-import { toast } from "react-toastify";
-import axios from "../../utils/api";
-interface LoginProps {
-  onAuthSuccess: () => void;
-}
-interface LoginResponse {
-  data: {
-    accessToken: string;
-    refreshToken: string;
-    user: {
-      email: string;
-      server: string;
-      accountType: string;
-    };
-  };
-}
-const TradeLockerLogin: React.FC<LoginProps> = ({ onAuthSuccess }) => {
-  const [email, setEmail] = useState<string>("");
+
+export default function ActTraderLogin() {
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [server, setServer] = useState<string>("");
   const [accountType, setAccountType] = useState<string>("DEMO");
   const [loading, setLoading] = useState<boolean>(false);
-  const handleLogin = async (): Promise<void> => {
-    try {
-      setLoading(true);
-      const response = await axios.post<LoginResponse>("tradelocker/login", {
-        email,
-        password,
-        server,
-        accountType,
-      });
-      const accessToken = response.data.data.accessToken;
-      const refreshToken = response.data.data.refreshToken;
-      console.log("-----------tradelocker authtoken------->", accessToken);
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-      localStorage.setItem("user", JSON.stringify(response.data.data.user));
-      if (accessToken.length > 0) {
-        onAuthSuccess();
-      }
-    } catch (error) {
-      toast.warn("Login info is wrong");
-    } finally {
-      setLoading(false);
-    }
+  const handleLogin = () => {
+    setLoading(false);
   };
   return (
-    <div className="">
+    <div>
       <div className="bg-[#070707] p-6 rounded shadow-md w-96 border border-[#333333] border-dashed">
         <div className="flex flex-col justify-center items-center w-full gap-2">
-          <img src="/tradelocker-white.svg" alt="" className="w-1/3 h-auto" />
+          <div className="flex justify-center items-center gap-2">
+            <img src="/acttrader_logo.svg" alt="" className="w-[40px] h-auto" />
+            <h1 className="text-2xl text-blue-400">ActTrader</h1>
+          </div>
           <div className="mb-4 w-[80%] space-y-2">
             <label className="block text-gray-700 text-sm" htmlFor="email">
-              Email
+              Username
             </label>
             <input
-              type="email"
-              id="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              id="username"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className=" bg-[#070707] text-white rounded-lg px-3 py-2
                              w-full order border-dashed border-gray-700 focus:border-blue-500 focus:ring-0 text-sm"
               required
@@ -109,16 +75,6 @@ const TradeLockerLogin: React.FC<LoginProps> = ({ onAuthSuccess }) => {
                 </span>
               </div>
             </div>
-            <input
-              type="text"
-              id="server"
-              placeholder="Server"
-              value={server}
-              onChange={(e) => setServer(e.target.value)}
-              className=" bg-[#070707] text-white rounded-lg px-3 py-2
-                             w-full order border-dashed border-gray-700 focus:border-blue-500 focus:ring-0 text-sm"
-              required
-            />
           </div>
           <div className="mb-4 w-[80%]">
             <button
@@ -134,6 +90,4 @@ const TradeLockerLogin: React.FC<LoginProps> = ({ onAuthSuccess }) => {
       </div>
     </div>
   );
-};
-
-export default TradeLockerLogin;
+}

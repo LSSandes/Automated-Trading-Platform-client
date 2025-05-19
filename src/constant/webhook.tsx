@@ -13,6 +13,12 @@ export const apps: WebhookApp[] = [
     description: "Execute trades directly on TradeLocker",
     icon: "/tradelocker-logo.svg",
   },
+  {
+    id: "acttrader",
+    appName:  "ActTrader",
+    description: "Execute trades directly on ActTrader",
+    icon: "/acttrader_logo.svg",
+  }
 ];
 
 export const tooltips = {

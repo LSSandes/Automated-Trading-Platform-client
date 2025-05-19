@@ -11,7 +11,9 @@ export default function TradeLockerAccountList({
   onLogout,
 }: TradeLockerAccountListProps) {
   const accounts = useSelector((state) => state.tradelocker.accounts);
-  const accountInfo = useSelector((state) => state.tradelockerInfo?.accountInfo);
+  const accountInfo = useSelector(
+    (state) => state.tradelockerInfo?.accountInfo
+  );
   const accessToken = localStorage.getItem("accessToken");
   const tradelockerUser: UserParams | null = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user") as string)
@@ -76,6 +78,12 @@ export default function TradeLockerAccountList({
                 <div className="flex flex-col justify-start items-start">
                   <span>{account.name}</span>
                   <div className="flex justify-center items-center gap-2">
+                    <div className="flex justify-center items-center gap-2 text-gray-400">
+                      <span>ID: </span>
+                      <span className="text-sm">
+                        {account.id}-{account.accNum}
+                      </span>
+                    </div>
                     <div className="w-2 h-2 rounded-full bg-green-500"></div>
                     <span className="text-[12px] text-green-500">
                       {account.status}
@@ -87,12 +95,6 @@ export default function TradeLockerAccountList({
                 </div>
               </div>
               <div className="grid md:grid-cols-2 gap-2 grid-cols-1">
-                <div className="glass-panel flex justify-between items-center rounded-lg p-3 gap-3">
-                  <span className="text-gray-400 text-sm">Number-ID: </span>
-                  <span className="text-lg">
-                    {account.id}-{account.accNum}
-                  </span>
-                </div>
                 <div className="glass-panel flex justify-between items-center rounded-lg p-3 gap-3">
                   <span className="text-gray-400 text-sm">Balance </span>
                   <span className="text-md">{account.accountBalance}</span>
@@ -112,12 +114,6 @@ export default function TradeLockerAccountList({
                 <div className="glass-panel flex justify-between items-center rounded-lg p-3 gap-3">
                   <span className="text-gray-400 text-sm">Margin: </span>
                   <span className="text-md">{info?.initialMarginReq}</span>
-                </div>
-                <div className="glass-panel flex justify-between items-center rounded-lg p-3 gap-3">
-                  <span className="text-gray-400 text-sm">
-                    Warning Margin:{" "}
-                  </span>
-                  <span className="text-md">{info?.warningMarginReq}</span>
                 </div>
               </div>
             </div>

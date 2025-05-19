@@ -33,6 +33,7 @@ export default function WebhookAppsModal({
   const [selectedTradeLocker, setSelectedTradeLocker] = useState<string>(
     webhook.accountId_t
   );
+  const [selectedActTrader, setSelectedActTrader] = useState<string>("default");
   const [selectedAccNum, setSelectedAccNum] = useState<string>(""); //TradeLocker....
   const [selectedAccountType, setSelectedAccountType] = useState<string>("");
   const [refreshToken, setRefreshToken] = useState<string>("");
@@ -208,7 +209,7 @@ export default function WebhookAppsModal({
                         value={selectedMetaTrader}
                         onChange={(e) => setSelectedMetaTrader(e.target.value)}
                         className="w-full bg-dark-200/30 text-white rounded-lg px-3 py-2
-                             border border-dashed border-blue-500 focus:outline-none 
+                            border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0
                               text-sm m-1"
                       >
                         <option value="default">default</option>
@@ -224,7 +225,7 @@ export default function WebhookAppsModal({
                         value={selectedTradeLocker}
                         onChange={(e) => setSelectedTradeLocker(e.target.value)}
                         className="w-full bg-dark-200/30 text-white rounded-lg px-3 py-2
-                             border border-dashed border-blue-500 focus:outline-none 
+                             border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0
                               text-sm m-1"
                       >
                         <option value="default">default</option>
@@ -233,6 +234,17 @@ export default function WebhookAppsModal({
                             {account.accNum}-{account.id}
                           </option>
                         ))}
+                      </select>
+                    )}
+                    {app.appName == "ActTrader" && (
+                      <select
+                        value={selectedActTrader}
+                        onChange={(e) => setSelectedActTrader(e.target.value)}
+                        className="w-full bg-dark-200/30 text-white rounded-lg px-3 py-2
+                           border border-dashed border-gray-500 focus:border-blue-500 focus:ring-0
+                            text-sm m-1"
+                      >
+                        <option value="default">default</option>
                       </select>
                     )}
                   </div>
