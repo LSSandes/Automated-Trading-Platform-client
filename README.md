@@ -27,17 +27,22 @@ LandingPage View:
 Metatrader Account Registration Page:
 ![Metatrader](assets/metatrader.png)
 
-Forex trading Market Analysis Page in the real-time:
-![Market](assets/market.gif)
+| 📊 Forex Trading Market Analysis (Real-Time) |
+|----------------------------------------------|
+| ![Forex Trading Market](assets/market.gif)   |
 
-Trades Analysis Page (win, lost, equity, margin, trades,...)
-![Trades](assets/trades.gif)
+| 📈 Trades Analysis and Data Visualization (Win, Loss, Equity, Margin, Trades, etc.) |
+|-------------------------------------------------------------------------------------|
+| ![Trades](assets/tradeanalysis.gif)                                                 |
 
-Integration with Tradingview in the real time
-![Tradingviw](assets/tradingview.gif)
+| 📡 Integration with TradingView (Real-Time) |
+|---------------------------------------------|
+| ![TradingView](assets/tradingview.gif)      |
 
-Mobile version
-![Mobile](assets/mobile.gif)
+| 📱 Mobile Version |
+|-------------------|
+| ![Mobile](assets/mobile.gif) |
+
 
 
 
