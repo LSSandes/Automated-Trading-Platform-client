@@ -18,8 +18,8 @@ An **AI-powered automated trading system** that integrates with popular brokers 
 - **APIs:** MetaTrader, TradeLocker, ActTrader, TradingView  
 - **Data:** WebSockets, PostgreSQL/Supabase  
 - **Frontend (Dashboard):** React / Next.js (optional)  
-- **Infrastructure:** Docker, GCP/AWS  
+- **Infrastructure:** Docker, GCP/AWS
 
----
+## 📊 Demo / Screenshots
+https://vimeo.com/1122344452
 
-## 📂 Project Structure
