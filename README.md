@@ -23,14 +23,19 @@ An **AI-powered automated trading system** that integrates with popular brokers 
 ## 📊 Demo / Screenshots
 LandingPage View:
 ![Landingpage](assets/dashboard.png)
+
 Metatrader Account Registration Page:
 ![Metatrader](assets/metatrader.png)
+
 Forex trading Market Analysis Page in the real-time:
 ![Market](assets/market.gif)
+
 Trades Analysis Page (win, lost, equity, margin, trades,...)
 ![Trades](assets/trades.gif)
+
 Integration with Tradingview in the real time
 ![Tradingviw](assets/tradingview.gif)
+
 Mobile version
 ![Mobile](assets/mobile.gif)
 
