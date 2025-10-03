@@ -21,5 +21,13 @@ An **AI-powered automated trading system** that integrates with popular brokers 
 - **Infrastructure:** Docker, GCP/AWS
 
 ## 📊 Demo / Screenshots
-https://vimeo.com/1122344452
+LandingPage View:
+![Landingpage](assets/dashboard.png)
+Metatrader Account Registration Page:
+![Metatrader](assets/metatrader.png)
+Forex trading Market Analysis Page in the real-time:
+![Market](assets/market.mp4)
+Trades Analysis Page (win, lost, equity, margin, trades,...)
+
+
 
