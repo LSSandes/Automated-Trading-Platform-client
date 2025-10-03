@@ -21,5 +21,6 @@ An **AI-powered automated trading system** that integrates with popular brokers 
 - **Infrastructure:** Docker, GCP/AWS
 
 ## 📊 Demo / Screenshots
-https://vimeo.com/1122344452
+LandingPage View:
+![Landingpage](assets/dashboard.png)
 
